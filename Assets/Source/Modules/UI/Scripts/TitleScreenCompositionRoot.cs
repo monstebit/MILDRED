@@ -5,6 +5,7 @@ namespace UU.MILDRED.UI
 {
     public class TitleScreenCompositionRoot : MonoBehaviour
     {
+        [SerializeField] private SceneLoader _sceneLoader;
         [SerializeField] private NetworkLauncher _networkLauncher;
         [SerializeField] private TitleScreenView _titleScreenView;
         
@@ -12,7 +13,7 @@ namespace UU.MILDRED.UI
 
         private void OnEnable()
         {
-            _titleScreenPresenter = new TitleScreenPresenter(_networkLauncher, _titleScreenView);
+            _titleScreenPresenter = new TitleScreenPresenter(_sceneLoader, _networkLauncher, _titleScreenView);
         }
 
         private void OnDisable()

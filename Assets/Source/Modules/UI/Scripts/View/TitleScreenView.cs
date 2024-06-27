@@ -26,11 +26,24 @@ namespace UU.MILDRED.UI
         private void OnPressStartButtonPressed()
         {
             PressStartButtonPressed?.Invoke();
+
+            HideButton(_pressStartButton);
+            ShowButton(_startNewGameButton);
         }
         
         private void OnStartNewGameButtonHandleClick()
         {
             StartNewGameButtonPressed?.Invoke();
+        }
+
+        private void HideButton(Button button)
+        {
+            button.gameObject.SetActive(false);
+        }
+        
+        private void ShowButton(Button button)
+        {
+            button.gameObject.SetActive(true);
         }
     }
 }
