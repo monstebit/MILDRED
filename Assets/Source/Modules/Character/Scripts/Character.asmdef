@@ -1,7 +1,16 @@
 {
     "name": "Character",
     "rootNamespace": "UU.MILDRED.Character",
-    "references": [],
+    "references": [
+        "Unity.Netcode.Components",
+        "Unity.Netcode.Editor",
+        "Unity.Netcode.Runtime",
+        "Unity.Netcode.EditorTests",
+        "Unity.Netcode.RuntimeTests",
+        "Unity.Netcode.Editor.CodeGen",
+        "Unity.Netcode.Editor.PackageChecker",
+        "Unity.Netcode.TestHelpers.Runtime"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
