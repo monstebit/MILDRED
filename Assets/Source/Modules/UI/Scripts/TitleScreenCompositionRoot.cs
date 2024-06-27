@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Source.Modules.UI.Scripts
+namespace UU.MILDRED.UI
 {
     public class TitleScreenCompositionRoot : MonoBehaviour
     {
