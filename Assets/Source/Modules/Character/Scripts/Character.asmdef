@@ -2,6 +2,7 @@
     "name": "Character",
     "rootNamespace": "UU.MILDRED.Character",
     "references": [
+        "Unity.TextMeshPro",
         "Unity.Netcode.Components",
         "Unity.Netcode.Editor",
         "Unity.Netcode.Runtime",

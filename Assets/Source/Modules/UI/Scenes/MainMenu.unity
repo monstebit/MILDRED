@@ -1371,9 +1371,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e41e8de6589dee469868e963284d972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sceneLoader: {fileID: 135412520}
-  _networkLauncher: {fileID: 1436198330}
   _titleScreenView: {fileID: 412037119}
+  _networkLauncher: {fileID: 1436198330}
+  _sceneLoader: {fileID: 135412520}
 --- !u!4 &1933836291
 Transform:
   m_ObjectHideFlags: 0
