@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,39 +7,36 @@ namespace UU.MILDRED.UI
     {
         [SerializeField] private Button _pressStartButton;
         [SerializeField] private Button _startNewGameButton;
-        
-        public event Action PressStartButtonPressed;
-        public event Action StartNewGameButtonPressed;
-        
-        private void Awake()
+
+        private TitleScreenPresenter _titleScreenPresenter;
+
+        public void Init(TitleScreenPresenter titleScreenPresenter)
         {
-            _pressStartButton.onClick.AddListener(OnPressStartButtonPressed);
-            _startNewGameButton.onClick.AddListener(OnStartNewGameButtonHandleClick);
+            _titleScreenPresenter = titleScreenPresenter;
+            _pressStartButton.onClick.AddListener(_titleScreenPresenter.OnPressStartButtonPressed);
+            _startNewGameButton.onClick.AddListener(_titleScreenPresenter.OnPressNewGameButtonPressed);
         }
 
         private void OnDisable()
         {
-            _pressStartButton.onClick.RemoveListener(OnPressStartButtonPressed);
+            if (_titleScreenPresenter != null)
+            {
+                _pressStartButton.onClick.RemoveListener(_titleScreenPresenter.OnPressStartButtonPressed);
+                _startNewGameButton.onClick.RemoveListener(_titleScreenPresenter.OnPressNewGameButtonPressed);
+            }
         }
 
-        private void OnPressStartButtonPressed()
+        public void ShowStartNewGameButton()
         {
-            PressStartButtonPressed?.Invoke();
-
             HideButton(_pressStartButton);
             ShowButton(_startNewGameButton);
-        }
-        
-        private void OnStartNewGameButtonHandleClick()
-        {
-            StartNewGameButtonPressed?.Invoke();
         }
 
         private void HideButton(Button button)
         {
             button.gameObject.SetActive(false);
         }
-        
+
         private void ShowButton(Button button)
         {
             button.gameObject.SetActive(true);

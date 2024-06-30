@@ -1,38 +1,33 @@
 using System;
-using UnityEngine.SceneManagement;
 using UU.MILDRED.Character;
 
 namespace UU.MILDRED.UI
 {
-    public class TitleScreenPresenter : IDisposable
+    public class TitleScreenPresenter
     {
         private readonly SceneLoader _sceneLoader;
         private readonly NetworkLauncher _networkLauncher;
         private readonly TitleScreenView _titleScreenView;
 
-        public TitleScreenPresenter(SceneLoader sceneLoader, NetworkLauncher networkLauncher,
-            TitleScreenView titleScreenView)
+        public TitleScreenPresenter(
+            TitleScreenView titleScreenView,
+            SceneLoader sceneLoader, 
+            NetworkLauncher networkLauncher)
         {
+            _titleScreenView = titleScreenView ?? throw new ArgumentNullException(nameof(titleScreenView));
             _sceneLoader = sceneLoader ?? throw new ArgumentNullException(nameof(sceneLoader));
             _networkLauncher = networkLauncher ?? throw new ArgumentNullException(nameof(networkLauncher));
-            _titleScreenView = titleScreenView ?? throw new ArgumentNullException(nameof(titleScreenView));
-
-            _titleScreenView.PressStartButtonPressed += OnPressStartButtonPressed;
-            _titleScreenView.StartNewGameButtonPressed += OnPressNewGameButtonPressed;
+            
+            _titleScreenView.Init(this);
         }
 
-        public void Dispose()
-        {
-            _titleScreenView.PressStartButtonPressed -= OnPressStartButtonPressed;
-            _titleScreenView.StartNewGameButtonPressed -= OnPressNewGameButtonPressed;
-        }
-
-        private void OnPressStartButtonPressed()
+        public void OnPressStartButtonPressed()
         {
             _networkLauncher.StartNetworkAsHost();
+            _titleScreenView.ShowStartNewGameButton();
         }
 
-        private void OnPressNewGameButtonPressed()
+        public void OnPressNewGameButtonPressed()
         {
             _sceneLoader.StartWork();
         }

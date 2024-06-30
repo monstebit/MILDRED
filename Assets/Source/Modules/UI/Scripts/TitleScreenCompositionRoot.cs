@@ -5,24 +5,21 @@ namespace UU.MILDRED.UI
 {
     public class TitleScreenCompositionRoot : MonoBehaviour
     {
-        [SerializeField] private SceneLoader _sceneLoader;
-        [SerializeField] private NetworkLauncher _networkLauncher;
         [SerializeField] private TitleScreenView _titleScreenView;
-        
+        [SerializeField] private NetworkLauncher _networkLauncher;
+        [SerializeField] private SceneLoader _sceneLoader;
+
         private TitleScreenPresenter _titleScreenPresenter;
 
-        private void OnEnable()
+        private void Awake()
         {
-            _titleScreenPresenter = new TitleScreenPresenter(_sceneLoader, _networkLauncher, _titleScreenView);
+            _titleScreenPresenter = new TitleScreenPresenter(_titleScreenView, _sceneLoader, _networkLauncher);
         }
 
         private void OnDisable()
         {
-            if (_titleScreenPresenter is not null)
-            {
-                _titleScreenPresenter.Dispose();
-                _titleScreenPresenter = null;
-            }
+            // Если требуется, можете добавить код для очистки ресурсов
+            _titleScreenPresenter = null;
         }
     }
 }
