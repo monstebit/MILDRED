@@ -9,8 +9,8 @@ namespace UU.MILDRED.Character
     public class NetworkLauncher : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI logsText;
-        [SerializeField] private float fadeDuration = 0.2f; // Длительность анимации скрытия и показа
-        [SerializeField] private float delayDuration = 0.2f; // Задержка перед показом следующего лога
+        [SerializeField] private float fadeDuration; // Длительность анимации скрытия и показа
+        [SerializeField] private float delayDuration; // Задержка перед показом следующего лога
 
         private Queue<string> logQueue = new Queue<string>();
         private Coroutine logUpdateCoroutine;
@@ -49,12 +49,8 @@ namespace UU.MILDRED.Character
                 string logMessage = logQueue.Dequeue();
 
                 // Плавное скрытие текущего текста
-                for (float t = 0; t < fadeDuration; t += Time.deltaTime)
-                {
-                    logsText.alpha = 1 - (t / fadeDuration);
-                    yield return null;
-                }
-                logsText.alpha = 0;
+                yield return StartCoroutine(FadeOutText());
+
                 logsText.text = ""; // Очистка текста после скрытия
 
                 yield return new WaitForSeconds(delayDuration); // Задержка перед показом нового лога
@@ -62,26 +58,38 @@ namespace UU.MILDRED.Character
                 logsText.text = logMessage;
 
                 // Плавное появление нового текста
-                for (float t = 0; t < fadeDuration; t += Time.deltaTime)
-                {
-                    logsText.alpha = t / fadeDuration;
-                    yield return null;
-                }
-                logsText.alpha = 1;
+                yield return StartCoroutine(FadeInText());
 
                 // Задержка перед переходом к следующему логу
                 yield return new WaitForSeconds(delayDuration);
             }
 
             // Плавное скрытие последнего лога
+            yield return StartCoroutine(FadeOutText());
+
+            logsText.alpha = 0;
+
+            logUpdateCoroutine = null; // Сброс корутины после завершения
+        }
+
+        private IEnumerator FadeOutText()
+        {
             for (float t = 0; t < fadeDuration; t += Time.deltaTime)
             {
                 logsText.alpha = 1 - (t / fadeDuration);
                 yield return null;
             }
             logsText.alpha = 0;
+        }
 
-            logUpdateCoroutine = null;
+        private IEnumerator FadeInText()
+        {
+            for (float t = 0; t < fadeDuration; t += Time.deltaTime)
+            {
+                logsText.alpha = t / fadeDuration;
+                yield return null;
+            }
+            logsText.alpha = 1;
         }
     }
 }
