@@ -1,7 +1,10 @@
+using Source.Modules.Character.Scripts;
+using Source.Modules.UI.Scripts.Model;
+using Source.Modules.UI.Scripts.Presenter;
+using Source.Modules.UI.Scripts.View;
 using UnityEngine;
-using UU.MILDRED.Character;
 
-namespace UU.MILDRED.UI
+namespace Source.Modules.UI.Scripts
 {
     public class TitleScreenCompositionRoot : MonoBehaviour
     {

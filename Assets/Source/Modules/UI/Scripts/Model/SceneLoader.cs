@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UU.MILDRED.UI
+namespace Source.Modules.UI.Scripts.Model
 {
     public class SceneLoader : MonoBehaviour
     {

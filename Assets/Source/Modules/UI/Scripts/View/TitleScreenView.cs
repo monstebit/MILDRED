@@ -1,7 +1,8 @@
+using Source.Modules.UI.Scripts.Presenter;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UU.MILDRED.UI
+namespace Source.Modules.UI.Scripts.View
 {
     public class TitleScreenView : MonoBehaviour
     {
