@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-namespace UU.MILDRED.Character
+namespace Source.Modules.Character.Scripts.Player
 {
     public class PlayerClientLauncher : MonoBehaviour
     {

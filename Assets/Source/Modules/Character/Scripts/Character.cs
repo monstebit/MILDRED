@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UU.MILDRED.Character.Source.Modules.Character.Scripts
+namespace Source.Modules.Character.Scripts
 {
     public class Character : MonoBehaviour
     {

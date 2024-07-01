@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace UU.MILDRED.Character
+namespace Source.Modules.Character.Scripts.Player
 {
     public class PlayerUICompositionRoot : MonoBehaviour
     {

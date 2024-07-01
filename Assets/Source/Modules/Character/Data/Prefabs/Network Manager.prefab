@@ -111,5 +111,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logsText: {fileID: 0}
-  fadeDuration: 0.1
-  delayDuration: 0.1
+  fadeDuration: 0.2
+  delayDuration: 0.2
