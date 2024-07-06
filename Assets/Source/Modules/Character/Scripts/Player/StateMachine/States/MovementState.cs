@@ -28,16 +28,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         
         private readonly PlayerInputHandler _playerInputHandler;
         private CharacterNetworkManager _characterNetworkManager;
+        private CameraMovement _cameraMovement;
         
         public MovementState(
             IStateSwitcher stateSwitcher, 
             PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager, 
+            CharacterNetworkManager characterNetworkManager,
+            CameraMovement cameraMovement,
             StateMachineData data)
         {
             StateSwitcher = stateSwitcher;
             _playerInputHandler = playerInputHandler;
             _characterNetworkManager = characterNetworkManager;
+            _cameraMovement = cameraMovement;
             Data = data;
         }
         
@@ -46,7 +49,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
         public virtual void Enter()
         {
-            Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
+            // Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
             
             playerCameraYRotation = Data.SavedLeftAndRightLookAngle;
             playerCameraXRotation = Data.SavedUpAndDownLookAngle;
@@ -129,8 +132,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         
         private void HandleFollowTarget()
         {
-            CameraMovement.instance.transform.position = Vector3.SmoothDamp(
-                CameraMovement.instance.transform.position,
+            _cameraMovement.transform.position = Vector3.SmoothDamp(
+                _cameraMovement.transform.position,
                 _playerInputHandler.transform.position,
                 ref _cameraVelocity,
                 _cameraSmoothSpeed * Time.deltaTime);
@@ -138,7 +141,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         
         private void HandleCameraRotation()
         {
-            Quaternion playerCameraPivotRotation = CameraMovement.instance.cameraPivotTransform.rotation;
+            Quaternion playerCameraPivotRotation = _cameraMovement.cameraPivotTransform.rotation;
             playerCameraYRotation += Data.CameraHorizontalInput * sensitivity;
             playerCameraXRotation -= Data.CameraVerticalInput * sensitivity;
             playerCameraXRotation = Mathf.Clamp(playerCameraXRotation, _minimumPivot, _maximumPivot);
@@ -148,7 +151,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
                 playerCameraYRotation,
                 playerCameraPivotRotation.eulerAngles.z);
             
-            CameraMovement.instance.cameraPivotTransform.localRotation = playerCameraPivotRotation;
+            _cameraMovement.cameraPivotTransform.localRotation = playerCameraPivotRotation;
         }
 
         public void HandleAllMovement()
@@ -159,8 +162,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         
         private void HandleGroundedMovement()
         {
-            Vector3 forward = CameraMovement.instance.cameraPivotTransform.forward;
-            Vector3 right = CameraMovement.instance.cameraPivotTransform.right;
+            Vector3 forward = _cameraMovement.cameraPivotTransform.forward;
+            Vector3 right = _cameraMovement.cameraPivotTransform.right;
             
             _moveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
             _moveDirection.y = 0;
@@ -171,7 +174,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         
         private void HandleRotation()
         {
-            Transform cameraObjectTransform = CameraMovement.instance.CameraObject.transform;
+            Transform cameraObjectTransform = _cameraMovement.CameraObject.transform;
 
             Vector3 cameraObjectForward = cameraObjectTransform.forward;
             Vector3 cameraObjectRight = cameraObjectTransform.right;

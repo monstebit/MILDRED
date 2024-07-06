@@ -6,10 +6,11 @@ namespace Source.Modules.Character.Scripts.Player
 {
     public class PlayerInputHandler : NetworkBehaviour
     {
-        private CharacterNetworkManager characterNetworkManager;
+        private CharacterNetworkManager _characterNetworkManager;
         
         [SerializeField] private PlayerConfig _playerConfig;
         [SerializeField] private PlayerView _playerView;
+        [SerializeField] private CameraMovement _cameraMovement;
         
         private PlayerControls _playerControls;
         private PlayerStateMachine _playerStateMachine;
@@ -25,9 +26,9 @@ namespace Source.Modules.Character.Scripts.Player
             PlayerView.Initialize();
             
             _characterController = GetComponent<CharacterController>();
-            characterNetworkManager = GetComponent<CharacterNetworkManager>();
+            _characterNetworkManager = GetComponent<CharacterNetworkManager>();
             _playerControls = new PlayerControls();
-            _playerStateMachine = new PlayerStateMachine(this, this.characterNetworkManager);
+            _playerStateMachine = new PlayerStateMachine(this, this._characterNetworkManager, this._cameraMovement);
         }
 
         private void Update()

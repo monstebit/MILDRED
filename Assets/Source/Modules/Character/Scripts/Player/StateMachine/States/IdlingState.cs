@@ -8,7 +8,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             IStateSwitcher stateSwitcher, 
             PlayerInputHandler playerInputHandler, 
             CharacterNetworkManager characterNetworkManager, 
-            StateMachineData data) : base(stateSwitcher, playerInputHandler, characterNetworkManager, data)
+            CameraMovement cameraMovement,
+            StateMachineData data) : base(
+            stateSwitcher, 
+            playerInputHandler, 
+            characterNetworkManager, 
+            cameraMovement, 
+            data)
         {
         }
         

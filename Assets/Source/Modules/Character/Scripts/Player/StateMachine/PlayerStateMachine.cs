@@ -10,15 +10,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         private List<IState> _states;
         private IState _currentState;
 
-        public PlayerStateMachine(PlayerInputHandler playerInputHandler, CharacterNetworkManager characterNetworkManager)
+        public PlayerStateMachine(
+            PlayerInputHandler playerInputHandler, 
+            CharacterNetworkManager characterNetworkManager,
+            CameraMovement cameraMovement)
         {
             StateMachineData data = new StateMachineData();
             
             _states = new List<IState>()
             {
-                new IdlingState(this, playerInputHandler, characterNetworkManager, data),
-                new WalkingState(this, playerInputHandler, characterNetworkManager, data),
-                new SprintingState(this, playerInputHandler, characterNetworkManager, data),
+                new IdlingState(this, playerInputHandler, characterNetworkManager, cameraMovement,data),
+                new WalkingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
+                new SprintingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
             };
 
             _currentState = _states[0];
