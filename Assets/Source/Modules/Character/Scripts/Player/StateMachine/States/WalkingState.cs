@@ -34,9 +34,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         {
             base.Update();
 
-            if (!IsPlayerWalking())
+            if (IsPlayerIdling())
             {
                 StateSwitcher.SwitchState<IdlingState>();
+            }
+            else if (IsPlayerWalking())
+            {
+                StateSwitcher.SwitchState<WalkingState>();
             }
             else if (IsPlayerSprinting())
             {

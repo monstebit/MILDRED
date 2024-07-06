@@ -33,14 +33,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         public override void Update()
         {
             base.Update();
-        
-            if (!IsPlayerSprinting())
+            
+            if (IsPlayerIdling())
             {
-                StateSwitcher.SwitchState<WalkingState>();
+                StateSwitcher.SwitchState<IdlingState>();
             }
             else if (IsPlayerWalking())
             {
-                StateSwitcher.SwitchState<IdlingState>();
+                StateSwitcher.SwitchState<WalkingState>();
+            }
+            else if (IsPlayerSprinting())
+            {
+                StateSwitcher.SwitchState<SprintingState>();
             }
         }
         

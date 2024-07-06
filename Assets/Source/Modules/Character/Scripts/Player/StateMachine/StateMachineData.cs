@@ -5,27 +5,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
     public class StateMachineData
     {
-        public float SavedLeftAndRightLookAngle { get; set; }
-        public float SavedUpAndDownLookAngle { get; set; }
-        
-        // MOVEMENT
-        public float RotationSpeed = 5f;
-
-        // Movement input
         private float _verticalInput;
         private float _horizontalInput;
-        public Vector2 MovementInput { get; set; }
-
-        // Camera input
         private float _cameraVerticalInput;
         private float _cameraHorizontalInput;
-        public Vector2 CameraInput { get; set; }
-
-        // Parameters
         private float _moveAmount;
         private float _speed;
-
-        // Movement
         public float VerticalInput
         {
             get => _verticalInput;
@@ -37,7 +22,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 _verticalInput = value;
             }
         }
-
         public float HorizontalInput
         {
             get => _horizontalInput;
@@ -49,8 +33,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 _horizontalInput = value;
             }
         }
-
-        // Camera
         public float CameraVerticalInput
         {
             get => _cameraVerticalInput;
@@ -62,7 +44,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 _cameraVerticalInput = value;
             }
         }
-
         public float CameraHorizontalInput
         {
             get => _cameraHorizontalInput;
@@ -74,8 +55,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 _cameraHorizontalInput = value;
             }
         }
-
-        // Parameters
         public float MoveAmount
         {
             get => _moveAmount;
@@ -87,7 +66,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 _moveAmount = value;
             }
         }
-
         public float Speed
         {
             get => _speed;
@@ -99,5 +77,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 _speed = value;
             }
         }
+        
+        public float SavedLeftAndRightLookAngle { get; set; }
+        public float SavedUpAndDownLookAngle { get; set; }
+        public Vector2 MovementInput { get; set; }
+        public Vector2 CameraInput { get; set; }
     }
 }

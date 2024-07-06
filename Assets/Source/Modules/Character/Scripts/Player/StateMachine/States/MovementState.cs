@@ -5,26 +5,23 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 {
     public abstract class MovementState : IState
     {
+        private Vector3 _moveDirection;
+        private Vector3 _targetRotationDirection;
         private float sensitivity = 1.5f;
         private float yOffset = 1.5f;
-        private float playerCameraXRotation;
-        private float playerCameraYRotation;
-        //  CAMERA
         private float _leftAndRightRotationSpeed = 220;
         private float _upAndDownRotationSpeed = 220;
         private float _minimumPivot = -30;
         private float _maximumPivot = 80;
-        // private float _cameraSmoothSpeed = 1;
-        private float _cameraSmoothSpeed = 0.125f;
+        private float _rotationSpeed = 15;
+        
         private Vector3 _cameraVelocity = Vector3.zero;
         private Vector3 _cameraObjectPosition;
+        private float playerCameraXRotation;
+        private float playerCameraYRotation;
+        private float _cameraSmoothSpeed = 0.125f;
         private float _cameraZPosition;
         private float _targetCameraZPosition;
-        // private float _cameraObjectPositionZInterpolation = 0.2f;
-        //  MOVEMENT
-        private Vector3 _moveDirection;
-        private Vector3 _targetRotationDirection;
-        private float _rotationSpeed = 15;
         
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
@@ -32,8 +29,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         private readonly PlayerInputHandler _playerInputHandler;
         private CharacterNetworkManager _characterNetworkManager;
         
-        // public MovementState(IStateSwitcher stateSwitcher, PlayerInputManager playerInputManager, StateMachineData data)
-        public MovementState(IStateSwitcher stateSwitcher, PlayerInputHandler playerInputHandler, CharacterNetworkManager characterNetworkManager,StateMachineData data)
+        public MovementState(
+            IStateSwitcher stateSwitcher, 
+            PlayerInputHandler playerInputHandler, 
+            CharacterNetworkManager characterNetworkManager, 
+            StateMachineData data)
         {
             StateSwitcher = stateSwitcher;
             _playerInputHandler = playerInputHandler;
@@ -42,13 +42,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         }
         
         protected PlayerControls PlayerControls => _playerInputHandler.PlayerControls;
-        protected CharacterController CharacterController => _playerInputHandler.CharacterController;
         protected PlayerView PlayerView => _playerInputHandler.PlayerView;
 
         public virtual void Enter()
         {
-            //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
-            // Debug.Log(GetType());
+            Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
             
             playerCameraYRotation = Data.SavedLeftAndRightLookAngle;
             playerCameraXRotation = Data.SavedUpAndDownLookAngle;
@@ -81,7 +79,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             Data.CameraVerticalInput = Data.CameraInput.y;
             Data.CameraHorizontalInput = Data.CameraInput.x;
             
-            //
             if (_playerInputHandler.IsOwner)
             {
                 _characterNetworkManager.NetworkPosition.Value = _playerInputHandler.transform.position;
@@ -106,8 +103,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
                 return;
             
             HandleAllMovement();
-            
-            
         }
 
         public virtual void LateUpdate()
@@ -118,15 +113,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             HandleAllCameraActions();
         }
         
+        protected bool IsPlayerIdling() => Data.MoveAmount == 0;
         protected bool IsPlayerWalking() => Data.MoveAmount > 0 && Data.MoveAmount <= 0.5f;
-        
         protected bool IsPlayerSprinting() => Data.MoveAmount > 0.5f;
         
         private Vector2 ReadMovementInput() => PlayerControls.PlayerMovement.Movement.ReadValue<Vector2>();
         
         private Vector2 ReadCameraInput() => PlayerControls.PlayerCamera.Movement.ReadValue<Vector2>();
         
-        //  КАМЕРА
         public void HandleAllCameraActions()
         {
             HandleFollowTarget();
@@ -154,40 +148,25 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
                 playerCameraYRotation,
                 playerCameraPivotRotation.eulerAngles.z);
             
-            // CameraMovement.instance.cameraPivotTransform.rotation = playerCameraPivotRotation;
             CameraMovement.instance.cameraPivotTransform.localRotation = playerCameraPivotRotation;
         }
 
-        //  PLAYER MOVEMENT
         public void HandleAllMovement()
         {
-            //  ДОБАВИЛ ПРОВЕРКУ НА INPUT
-            // if (IsMovementInputZero())
-            //     return;
-            
             HandleGroundedMovement();
             HandleRotation();
         }
         
         private void HandleGroundedMovement()
         {
-            // Получаем направление камеры
-            // Рассчитываем forward и right направления камеры
             Vector3 forward = CameraMovement.instance.cameraPivotTransform.forward;
             Vector3 right = CameraMovement.instance.cameraPivotTransform.right;
             
-            // Рассчитываем направление движения на основе ввода и направлений камеры
             _moveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
-            
-            // Убираем влияние высоты
             _moveDirection.y = 0;
-            // Нормализация вектора направления
             _moveDirection.Normalize();
 
-            // Перемещение персонажа
             _playerInputHandler.CharacterController.Move(_moveDirection * Data.Speed * Time.deltaTime);
-            
-            Debug.DrawRay(CameraMovement.instance.cameraPivotTransform.position, _moveDirection, Color.blue);
         }
         
         private void HandleRotation()
@@ -199,10 +178,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
             _targetRotationDirection = cameraObjectForward * Data.VerticalInput;
             _targetRotationDirection = _targetRotationDirection + cameraObjectRight * Data.HorizontalInput;
-            _targetRotationDirection.y = 0; // Убираем влияние высоты
-            _targetRotationDirection.Normalize(); // Нормализуем вектор
+            _targetRotationDirection.y = 0;
+            _targetRotationDirection.Normalize();
 
-            // Проверка на ненулевое направление
             if (_targetRotationDirection != Vector3.zero)
             {
                 Quaternion newRotation = Quaternion.LookRotation(_targetRotationDirection);

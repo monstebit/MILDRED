@@ -17,19 +17,6 @@ namespace Source.Modules.Character.Scripts.Player
             }
         }
         
-        // private void Update()
-        // {
-        //     if (startGameAsClient)
-        //     {
-        //         startGameAsClient = false;
-        //         //  WE MUST FIRST SHUT DOWN, BECOUSE WE HAVE STARTED AS A HOST DURING THE TITLE SCREEN 
-        //         NetworkManager.Singleton.Shutdown();
-        //
-        //         //  WE MUST RESTART, AS A CLIENT
-        //         NetworkManager.Singleton.StartClient();
-        //     }
-        // }
-
         private void StartGameAsClient()
         {
             if (NetworkManager.Singleton == null)
