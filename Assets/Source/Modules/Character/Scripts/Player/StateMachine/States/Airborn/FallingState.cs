@@ -24,22 +24,23 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
         {
             base.Update();
 
-            // if (_groundChecker.isTouches)
-            // {
-            //     Debug.Log("isTouches");
-            //     if (IsPlayerIdling())
-            //     {
-            //         StateSwitcher.SwitchState<IdlingState>();
-            //     }
-            //     else if (IsPlayerWalking())
-            //     {
-            //         StateSwitcher.SwitchState<WalkingState>();
-            //     }
-            //     else if (IsPlayerSprinting())
-            //     {
-            //         StateSwitcher.SwitchState<SprintingState>();
-            //     }
-            // }
+            if (_groundChecker.isTouches)
+            {
+                Data.YVelocity = 0;
+                
+                if (IsPlayerIdling())
+                {
+                    StateSwitcher.SwitchState<IdlingState>();
+                }
+                else if (IsPlayerWalking())
+                {
+                    StateSwitcher.SwitchState<WalkingState>();
+                }
+                else if (IsPlayerSprinting())
+                {
+                    StateSwitcher.SwitchState<SprintingState>();
+                }
+            }
         }
     }
 }

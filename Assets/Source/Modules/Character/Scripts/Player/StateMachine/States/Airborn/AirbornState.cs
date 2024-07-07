@@ -7,6 +7,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
     public abstract class AirbornState : MovementState
     {
         private readonly AirbornStateConfig _airbornStateConfig;
+        private readonly CharacterController _characterController;
         
         public AirbornState(
             IStateSwitcher stateSwitcher,
@@ -19,20 +20,22 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
             cameraMovement,
             data)
             => _airbornStateConfig = playerInputHandler.PlayerConfig.AirbornStateConfig;
+            // {
+            //     _characterController = playerInputHandler.CharacterController;
+            // }
 
         public override void Enter()
         {
             base.Enter();
 
-            // Data.Speed = _airbornStateConfig.Speed;
-            // Debug.Log($"Скорость в воздухе = {Data.Speed}");
+            Data.Speed = _airbornStateConfig.Speed;
         }
 
         public override void Update()
         {
             base.Update();
-            
-            // Data.VerticalInput -= _airbornStateConfig.BaseGravity * Time.deltaTime;
+
+            Data.YVelocity -= _airbornStateConfig.BaseGravity * Time.deltaTime;
         }
     }
 }

@@ -1,6 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
-using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
 {
@@ -23,11 +22,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
         public override void Enter()
         {
             base.Enter();
+            
+            Data.YVelocity = _jumpingStateConfig.StartYVelocity;
         }
 
         public override void Update()
         {
             base.Update();
+            
+            if (Data.YVelocity < 0)
+            {
+                StateSwitcher.SwitchState<FallingState>();
+            }
         }
     }
 }

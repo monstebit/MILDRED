@@ -28,7 +28,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             //  ОБРУБАЕТ УПРАВЛЕНИЕ
             if (_groundChecker.isTouches == false)
             {
-                // StateSwitcher.SwitchState<FallingState>();
+                StateSwitcher.SwitchState<FallingState>();
             }
         }
 
@@ -49,7 +49,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         // private void OnJumpButtonPressed(InputAction.CallbackContext obj) => StateSwitcher.SwitchState<JumpingState>();
         private void OnJumpButtonPressed(InputAction.CallbackContext obj)
         {
-            // StateSwitcher.SwitchState<JumpingState>();
+            StateSwitcher.SwitchState<JumpingState>();
         }
     }
 }
