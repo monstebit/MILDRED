@@ -1,9 +1,9 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States
+namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
 {
-    public class SprintingState : MovementState
+    public class SprintingState : GroundedState
     {
         private SprintingStateConfig _sprintingStateConfig;
 
@@ -39,7 +39,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         public override void Update()
         {
             base.Update();
-            
+    
             if (IsPlayerIdling())
             {
                 StateSwitcher.SwitchState<IdlingState>();
@@ -47,10 +47,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             else if (IsPlayerWalking())
             {
                 StateSwitcher.SwitchState<WalkingState>();
-            }
-            else if (IsPlayerSprinting())
-            {
-                StateSwitcher.SwitchState<SprintingState>();
             }
         }
         

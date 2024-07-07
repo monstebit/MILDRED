@@ -34,7 +34,7 @@ namespace Source.Modules.UI.Scripts.Model
             while (!asyncLoad.isDone)
             {
                 // Здесь можно добавить отображение прогресса загрузки
-                Debug.Log($"Loading progress: {asyncLoad.progress * 100}%");
+                // Debug.Log($"Loading progress: {asyncLoad.progress * 100}%");
                 yield return null;
             }
         }

@@ -1,4 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine;
+using Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -11,15 +12,18 @@ namespace Source.Modules.Character.Scripts.Player
         [SerializeField] private PlayerConfig _playerConfig;
         [SerializeField] private PlayerView _playerView;
         [SerializeField] private CameraMovement _cameraMovement;
+        [SerializeField] private GroundChecker _groundChecker;
         
         private PlayerControls _playerControls;
         private PlayerStateMachine _playerStateMachine;
         private CharacterController _characterController;
+        // public CharacterController _characterController;
         
         public PlayerControls PlayerControls => _playerControls;
         public CharacterController CharacterController => _characterController;
         public PlayerConfig PlayerConfig => _playerConfig;
         public PlayerView PlayerView => _playerView;
+        public GroundChecker GroundChecker => _groundChecker;
         
         private void Awake()
         {

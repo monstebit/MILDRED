@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   _walkingStateConfig:
-    _walkingSpeed: 2
+    _walkingSpeed: 3
   _sprintingStateConfig:
-    _sprintingSpeed: 5
+    _sprintingSpeed: 6
+  _airbornStateConfig:
+    _speed: 5
+    _jumpingStateConfig:
+      _maxHeight: 4
+      _timeToReachMaxHeight: 0.5

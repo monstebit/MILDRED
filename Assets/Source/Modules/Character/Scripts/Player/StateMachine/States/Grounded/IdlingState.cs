@@ -1,16 +1,13 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States
+namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
 {
-    public class WalkingState : MovementState
+    public class IdlingState : GroundedState
     {
-        private WalkingStateConfig _walkingStateConfig;
-
-        public WalkingState(
+        public IdlingState(
             IStateSwitcher stateSwitcher, 
             PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager,
+            CharacterNetworkManager characterNetworkManager, 
             CameraMovement cameraMovement,
             StateMachineData data) : base(
             stateSwitcher, 
@@ -18,22 +15,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             characterNetworkManager, 
             cameraMovement, 
             data)
-            => _walkingStateConfig = playerInputHandler.PlayerConfig.WalkingStateConfig;
+        {
+        }
         
         public override void Enter()
         {
             base.Enter();
             
-            Data.Speed = _walkingStateConfig.WalkingSpeed;
-            
-            PlayerView.StartWalking();
+            PlayerView.StartIdling();
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopWalking();
+            PlayerView.StopIdling();
         }
 
         public override void Update()
@@ -42,9 +38,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
             if (IsPlayerIdling())
             {
-                StateSwitcher.SwitchState<IdlingState>();
+                return;
             }
-            else if (IsPlayerWalking())
+    
+            if (IsPlayerWalking())
             {
                 StateSwitcher.SwitchState<WalkingState>();
             }
@@ -53,7 +50,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
                 StateSwitcher.SwitchState<SprintingState>();
             }
         }
-        
+
         public override void LateUpdate()
         {
             base.LateUpdate();

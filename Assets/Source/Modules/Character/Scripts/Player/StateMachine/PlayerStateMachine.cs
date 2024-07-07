@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.States;
+using Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn;
+using Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
@@ -22,6 +24,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 new IdlingState(this, playerInputHandler, characterNetworkManager, cameraMovement,data),
                 new WalkingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
                 new SprintingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
+                new JumpingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
+                new FallingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
             };
 
             _currentState = _states[0];
@@ -30,14 +34,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
         public void SwitchState<State>() where State : IState
         {
-            //  НАШЛИ ТЕКУЩЕЕ СОСТОЯНИЕ
-            IState state = _states.FirstOrDefault(state => state is State);
-            //  ВЫХОДИМ ИЗ ТЕКУЩЕГО СОСТОЯНИЯ
-            _currentState.Exit();
-            //  ПРИСВАЕВАЕМ ТЕКУЩЕМУ СОСТОЯНИЮ НОВОЕ
-            _currentState = state;
-            //  ВХОДИМ В НОВОЕ СОСТОЯНИЕ
-            _currentState.Enter();
+            IState state = _states.FirstOrDefault(state => state is State); //  НАШЛИ ТЕКУЩЕЕ СОСТОЯНИЕ
+            _currentState.Exit();   //  ВЫХОДИМ ИЗ ТЕКУЩЕГО СОСТОЯНИЯ
+            _currentState = state;  //  ПРИСВАЕВАЕМ ТЕКУЩЕМУ СОСТОЯНИЮ НОВОЕ
+            _currentState.Enter();  //  ВХОДИМ В НОВОЕ СОСТОЯНИЕ
         }
         
         public void HandleInput() => _currentState.HandleInput();

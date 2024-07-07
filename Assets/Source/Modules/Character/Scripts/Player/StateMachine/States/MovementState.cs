@@ -5,6 +5,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 {
     public abstract class MovementState : IState
     {
+        //  JUMP TEST
+        private Vector3 jumpDirection = Vector3.zero;
+        public float speed = 5.0f;
+        public float jumpSpeed = 8.0f;
+        public float gravity = 20.0f;
+        private bool isGrounded;
+        
         private Vector3 _moveDirection;
         private Vector3 _targetRotationDirection;
         private float sensitivity = 1.5f;
@@ -25,6 +32,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
+        protected bool IsPlayerIdling() => Data.MoveAmount == 0;
+        protected bool IsPlayerWalking() => Data.MoveAmount > 0 && Data.MoveAmount <= 0.5f;
+        protected bool IsPlayerSprinting() => Data.MoveAmount > 0.5f;
         
         private readonly PlayerInputHandler _playerInputHandler;
         private CharacterNetworkManager _characterNetworkManager;
@@ -49,7 +59,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
         public virtual void Enter()
         {
-            // Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
+            Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
+            AddInputActionsCallbacks();
             
             playerCameraYRotation = Data.SavedLeftAndRightLookAngle;
             playerCameraXRotation = Data.SavedUpAndDownLookAngle;
@@ -57,6 +68,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
         public virtual void Exit()
         {
+            RemoveInputActionsCallbacks();
+
             Data.SavedLeftAndRightLookAngle = playerCameraYRotation;
             Data.SavedUpAndDownLookAngle = playerCameraXRotation;
         }
@@ -99,13 +112,29 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
                     _characterNetworkManager.NetworkRotation.Value, _characterNetworkManager.NetworkRotationSmoothTime);
             }
         }
-
+        
         public virtual void Update()
         {
             if (!_playerInputHandler.IsOwner)
                 return;
             
             HandleAllMovement();
+            HandleJumpingMovement(); //  JUMP TEST
+        }
+
+        //  JUMP TEST
+        private void HandleJumpingMovement()
+        {
+            if (_playerInputHandler.GroundChecker.isTouches)
+            {
+                if (Input.GetButtonDown("Jump"))
+                {
+                    jumpDirection.y = jumpSpeed;
+                }
+            }
+            
+            jumpDirection.y -= gravity * Time.deltaTime;    // Применение гравитации всегда
+            _playerInputHandler.CharacterController.Move(jumpDirection * Time.deltaTime);  // Перемещение персонажа
         }
 
         public virtual void LateUpdate()
@@ -115,16 +144,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             
             HandleAllCameraActions();
         }
-        
-        protected bool IsPlayerIdling() => Data.MoveAmount == 0;
-        protected bool IsPlayerWalking() => Data.MoveAmount > 0 && Data.MoveAmount <= 0.5f;
-        protected bool IsPlayerSprinting() => Data.MoveAmount > 0.5f;
+
+        protected virtual void AddInputActionsCallbacks()
+        {
+        }
+
+        protected virtual void RemoveInputActionsCallbacks()
+        {
+        }
         
         private Vector2 ReadMovementInput() => PlayerControls.PlayerMovement.Movement.ReadValue<Vector2>();
-        
         private Vector2 ReadCameraInput() => PlayerControls.PlayerCamera.Movement.ReadValue<Vector2>();
         
-        public void HandleAllCameraActions()
+        private void HandleAllCameraActions()
         {
             HandleFollowTarget();
             HandleCameraRotation();
@@ -154,7 +186,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             _cameraMovement.cameraPivotTransform.localRotation = playerCameraPivotRotation;
         }
 
-        public void HandleAllMovement()
+        private void HandleAllMovement()
         {
             HandleGroundedMovement();
             HandleRotation();

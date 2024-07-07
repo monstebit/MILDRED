@@ -1,13 +1,16 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States
+namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
 {
-    public class IdlingState : MovementState
+    public class WalkingState : MovementState
     {
-        public IdlingState(
+        private WalkingStateConfig _walkingStateConfig;
+
+        public WalkingState(
             IStateSwitcher stateSwitcher, 
             PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager, 
+            CharacterNetworkManager characterNetworkManager,
             CameraMovement cameraMovement,
             StateMachineData data) : base(
             stateSwitcher, 
@@ -15,41 +18,38 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             characterNetworkManager, 
             cameraMovement, 
             data)
-        {
-        }
+            => _walkingStateConfig = playerInputHandler.PlayerConfig.WalkingStateConfig;
         
         public override void Enter()
         {
             base.Enter();
             
-            PlayerView.StartIdling();
+            Data.Speed = _walkingStateConfig.WalkingSpeed;
+            
+            PlayerView.StartWalking();
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopIdling();
+            PlayerView.StopWalking();
         }
 
         public override void Update()
         {
             base.Update();
-
+            
             if (IsPlayerIdling())
             {
                 StateSwitcher.SwitchState<IdlingState>();
-            }
-            else if (IsPlayerWalking())
-            {
-                StateSwitcher.SwitchState<WalkingState>();
             }
             else if (IsPlayerSprinting())
             {
                 StateSwitcher.SwitchState<SprintingState>();
             }
         }
-
+        
         public override void LateUpdate()
         {
             base.LateUpdate();

@@ -11,13 +11,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         private float _cameraHorizontalInput;
         private float _moveAmount;
         private float _speed;
+        
         public float VerticalInput
         {
             get => _verticalInput;
             set
             {
-                if (value < -1 || value > 1)
-                    throw new ArgumentOutOfRangeException(nameof(value), "Vertical input must be between -1 and 1");
+                // if (value < -1 || value > 1)
+                //     throw new ArgumentOutOfRangeException(nameof(value), "Vertical input must be between -1 and 1");
 
                 _verticalInput = value;
             }
@@ -27,12 +28,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             get => _horizontalInput;
             set
             {
-                if (value < -1 || value > 1)
-                    throw new ArgumentOutOfRangeException(nameof(value), "Horizontal input must be between -1 and 1");
+                // if (value < -1 || value > 1)
+                //     throw new ArgumentOutOfRangeException(nameof(value), "Horizontal input must be between -1 and 1");
 
                 _horizontalInput = value;
             }
         }
+        
         public float CameraVerticalInput
         {
             get => _cameraVerticalInput;
@@ -55,6 +57,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 _cameraHorizontalInput = value;
             }
         }
+        
         public float MoveAmount
         {
             get => _moveAmount;

@@ -8,8 +8,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     {
         [SerializeField] private WalkingStateConfig _walkingStateConfig;
         [SerializeField] private SprintingStateConfig _sprintingStateConfig;
+        [SerializeField] private AirbornStateConfig _airbornStateConfig;
 
         public WalkingStateConfig WalkingStateConfig => _walkingStateConfig;
         public SprintingStateConfig SprintingStateConfig => _sprintingStateConfig;
+        public AirbornStateConfig AirbornStateConfig => _airbornStateConfig;
     }
 }
