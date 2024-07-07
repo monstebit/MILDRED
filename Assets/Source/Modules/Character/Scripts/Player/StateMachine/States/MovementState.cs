@@ -5,12 +5,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 {
     public abstract class MovementState : IState
     {
-        //  JUMP TEST
-        public Vector3 jumpDirection = Vector3.zero;
-        public float jumpSpeed = 8.0f;
-        public float gravity = 20.0f;
-        
-        // private Vector3 _moveDirection;
+        private Vector3 _moveDirection;
         private Vector3 _targetRotationDirection;
         private float sensitivity = 1.5f;
         private float yOffset = 1.5f;
@@ -118,31 +113,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
                 return;
             
             HandleAllMovement();
-            // HandleJumpingMovement();
-            // HandleJump();
-        }
-
-        //  JUMP TEST
-        private void HandleJumpingMovement()
-        {
-            if (_playerInputHandler.GroundChecker.isTouches)
-            {
-                if (Input.GetButtonDown("Jump"))
-                {
-                    jumpDirection.y = jumpSpeed;
-                }
-            }
-            
-            jumpDirection.y -= gravity * Time.deltaTime;    // Применение гравитации всегда
-            _playerInputHandler.CharacterController.Move(jumpDirection * Time.deltaTime);  // Перемещение персонажа
-        }
-
-        private void HandleJump()
-        {
-            if (_playerInputHandler.GroundChecker.isTouches)
-            {
-                Data.MoveDirection.y = Data.YVelocity;
-            }
         }
 
         public virtual void LateUpdate()
@@ -205,12 +175,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             Vector3 forward = _cameraMovement.cameraPivotTransform.forward;
             Vector3 right = _cameraMovement.cameraPivotTransform.right;
             
-            Data.MoveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
-            // Data.MoveDirection.y = 0;
-            Data.MoveDirection.y = Data.YVelocity;
-            Data.MoveDirection.Normalize();
+            _moveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
+            // _moveDirection.y = 0;
+            _moveDirection.y = Data.YVelocity;
+            _moveDirection.Normalize();
 
-            _playerInputHandler.CharacterController.Move(Data.MoveDirection * Data.Speed * Time.deltaTime);
+            _playerInputHandler.CharacterController.Move(_moveDirection * Data.Speed * Time.deltaTime);
         }
         
         private void HandleRotation()
