@@ -1,5 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn;
+using Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne;
 using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
@@ -21,11 +21,24 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             data) 
             => _groundChecker = playerInputHandler.GroundChecker;
 
+        public override void Enter()
+        {
+            base.Enter();
+            
+            PlayerView.StartGrounded();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopGrounded();
+        }
+
         public override void Update()
         {
             base.Update();
 
-            //  ОБРУБАЕТ УПРАВЛЕНИЕ
             if (_groundChecker.isTouches == false)
             {
                 StateSwitcher.SwitchState<FallingState>();
@@ -46,7 +59,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             PlayerControls.PlayerMovement.Jump.started -= OnJumpButtonPressed;
         }
 
-        // private void OnJumpButtonPressed(InputAction.CallbackContext obj) => StateSwitcher.SwitchState<JumpingState>();
         private void OnJumpButtonPressed(InputAction.CallbackContext obj)
         {
             StateSwitcher.SwitchState<JumpingState>();

@@ -3,11 +3,11 @@ using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
 {
-    public class SprintingState : GroundedState
+    public class RunningState : GroundedState
     {
-        private SprintingStateConfig _sprintingStateConfig;
+        private RunningStateConfig _runningStateConfig;
 
-        public SprintingState(
+        public RunningState(
             IStateSwitcher stateSwitcher,
             PlayerInputHandler playerInputHandler,
             CharacterNetworkManager characterNetworkManager,
@@ -18,22 +18,22 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             characterNetworkManager, 
             cameraMovement, 
             data)
-            => _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+            => _runningStateConfig = playerInputHandler.PlayerConfig.RunningStateConfig;
         
         public override void Enter()
         {
             base.Enter();
 
-            Data.Speed = _sprintingStateConfig.SprintingSpeed;
+            Data.Speed = _runningStateConfig.RunningSpeed;
             
-            PlayerView.StartSprinting();
+            PlayerView.StartRunning();
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopSprinting();
+            PlayerView.StopRunning();
         }
 
         public override void Update()

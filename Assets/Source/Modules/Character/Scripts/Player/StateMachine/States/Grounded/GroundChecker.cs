@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
@@ -10,7 +9,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         
         public bool isTouches { get; private set; }
         
-        // private void Update() => isTouches = Physics.CheckSphere(transform.position, _distanceToCheck, _ground);
         private void Update()
         {
             isTouches = Physics.CheckSphere(transform.position, _distanceToCheck, _ground);

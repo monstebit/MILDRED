@@ -5,6 +5,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 {
     public abstract class MovementState : IState
     {
+        //  TODO:   ПРИБРАТЬ
         private Vector3 _moveDirection;
         private Vector3 _targetRotationDirection;
         private float sensitivity = 1.5f;
@@ -14,7 +15,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         private float _minimumPivot = -30;
         private float _maximumPivot = 80;
         private float _rotationSpeed = 15;
-        
+        //  TODO:   И ЭТО
         private Vector3 _cameraVelocity = Vector3.zero;
         private Vector3 _cameraObjectPosition;
         private float playerCameraXRotation;
@@ -27,7 +28,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         protected readonly StateMachineData Data;
         protected bool IsPlayerIdling() => Data.MoveAmount == 0;
         protected bool IsPlayerWalking() => Data.MoveAmount > 0 && Data.MoveAmount <= 0.5f;
-        protected bool IsPlayerSprinting() => Data.MoveAmount > 0.5f;
+        protected bool IsPlayerRunning() => Data.MoveAmount > 0.5f;
         
         private readonly PlayerInputHandler _playerInputHandler;
         private CharacterNetworkManager _characterNetworkManager;
@@ -52,7 +53,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
         public virtual void Enter()
         {
-            Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
+            // Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
             AddInputActionsCallbacks();
             
             playerCameraYRotation = Data.SavedLeftAndRightLookAngle;
@@ -123,13 +124,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             HandleAllCameraActions();
         }
 
-        protected virtual void AddInputActionsCallbacks()
-        {
-        }
+        protected virtual void AddInputActionsCallbacks() { }
 
-        protected virtual void RemoveInputActionsCallbacks()
-        {
-        }
+        protected virtual void RemoveInputActionsCallbacks() { }
         
         private Vector2 ReadMovementInput() => PlayerControls.PlayerMovement.Movement.ReadValue<Vector2>();
         private Vector2 ReadCameraInput() => PlayerControls.PlayerCamera.Movement.ReadValue<Vector2>();

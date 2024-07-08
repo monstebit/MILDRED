@@ -45,9 +45,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             {
                 StateSwitcher.SwitchState<WalkingState>();
             }
-            else if (IsPlayerSprinting())
+            else if (IsPlayerRunning())
             {
-                StateSwitcher.SwitchState<SprintingState>();
+                StateSwitcher.SwitchState<RunningState>();
             }
         }
 

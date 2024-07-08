@@ -1,10 +1,9 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded;
-using UnityEngine;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
+namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
 {
-    public class FallingState : AirbornState
+    public class FallingState : AirborneState
     {
         private readonly GroundChecker _groundChecker;
 
@@ -19,6 +18,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
             cameraMovement,
             data)
             => _groundChecker = playerInputHandler.GroundChecker;
+
+        public override void Enter()
+        {
+            base.Enter();
+            
+            PlayerView.StartFalling();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopFalling();
+        }
 
         public override void Update()
         {
@@ -36,9 +49,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
                 {
                     StateSwitcher.SwitchState<WalkingState>();
                 }
-                else if (IsPlayerSprinting())
+                else if (IsPlayerRunning())
                 {
-                    StateSwitcher.SwitchState<SprintingState>();
+                    StateSwitcher.SwitchState<RunningState>();
                 }
             }
         }

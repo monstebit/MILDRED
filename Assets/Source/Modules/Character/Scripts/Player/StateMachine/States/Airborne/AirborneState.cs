@@ -2,14 +2,13 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
 using UnityEngine;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
+namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
 {
-    public abstract class AirbornState : MovementState
+    public abstract class AirborneState : MovementState
     {
-        private readonly AirbornStateConfig _airbornStateConfig;
-        private readonly CharacterController _characterController;
+        private readonly AirborneStateConfig _airborneStateConfig;
         
-        public AirbornState(
+        public AirborneState(
             IStateSwitcher stateSwitcher,
             PlayerInputHandler playerInputHandler,
             CharacterNetworkManager characterNetworkManager,
@@ -19,16 +18,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
             characterNetworkManager,
             cameraMovement,
             data)
-            => _airbornStateConfig = playerInputHandler.PlayerConfig.AirbornStateConfig;
-            // {
-            //     _characterController = playerInputHandler.CharacterController;
-            // }
+            => _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
 
         public override void Enter()
         {
             base.Enter();
 
-            Data.Speed = _airbornStateConfig.Speed;
+            Data.Speed = _airborneStateConfig.Speed;
             
             PlayerView.StartAirborne();
         }
@@ -44,7 +40,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
         {
             base.Update();
 
-            Data.YVelocity -= _airbornStateConfig.BaseGravity * Time.deltaTime;
+            Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
         }
     }
 }

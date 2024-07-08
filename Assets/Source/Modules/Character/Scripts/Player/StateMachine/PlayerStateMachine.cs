@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.States;
-using Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn;
+using Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
@@ -23,7 +23,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             {
                 new IdlingState(this, playerInputHandler, characterNetworkManager, cameraMovement,data),
                 new WalkingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
-                new SprintingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
+                new RunningState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
                 new JumpingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
                 new FallingState(this, playerInputHandler, characterNetworkManager, cameraMovement, data),
             };

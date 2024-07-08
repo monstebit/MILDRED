@@ -4,10 +4,10 @@ using UnityEngine;
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Configs
 {
     [Serializable]
-    public class SprintingStateConfig
+    public class RunningStateConfig
     {
-        [SerializeField, Range(0, 10)] private float _sprintingSpeed;
+        [SerializeField, Range(0, 10)] private float _runningSpeed;
 
-        public float SprintingSpeed => _sprintingSpeed;
+        public float RunningSpeed => _runningSpeed;
     }
 }

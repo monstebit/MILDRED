@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _walkingStateConfig:
     _walkingSpeed: 3
-  _sprintingStateConfig:
-    _sprintingSpeed: 6
-  _airbornStateConfig:
+  runningStateConfig:
+    _runningSpeed: 6
+  airborneStateConfig:
     _speed: 5
     _jumpingStateConfig:
-      _maxHeight: 4
-      _timeToReachMaxHeight: 0.5
+      _maxHeight: 1.8
+      _timeToReachMaxHeight: 0.6

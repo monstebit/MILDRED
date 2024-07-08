@@ -7,11 +7,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     public class PlayerConfig : ScriptableObject
     {
         [SerializeField] private WalkingStateConfig _walkingStateConfig;
-        [SerializeField] private SprintingStateConfig _sprintingStateConfig;
-        [SerializeField] private AirbornStateConfig _airbornStateConfig;
+        [SerializeField] private RunningStateConfig runningStateConfig;
+        [SerializeField] private AirborneStateConfig airborneStateConfig;
 
         public WalkingStateConfig WalkingStateConfig => _walkingStateConfig;
-        public SprintingStateConfig SprintingStateConfig => _sprintingStateConfig;
-        public AirbornStateConfig AirbornStateConfig => _airbornStateConfig;
+        public RunningStateConfig RunningStateConfig => runningStateConfig;
+        public AirborneStateConfig AirborneStateConfig => airborneStateConfig;
     }
 }

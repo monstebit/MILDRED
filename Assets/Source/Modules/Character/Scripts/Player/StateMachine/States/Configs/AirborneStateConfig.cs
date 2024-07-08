@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Configs
 {
     [Serializable]
-    public class AirbornStateConfig
+    public class AirborneStateConfig
     {
         [SerializeField, Range(0, 10)] private float _speed;
         [SerializeField] private JumpingStateConfig _jumpingStateConfig;
