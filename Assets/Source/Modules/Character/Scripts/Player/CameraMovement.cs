@@ -9,7 +9,7 @@ namespace Source.Modules.Character.Scripts.Player
         
         private void Start()
         {
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
     }
 }
