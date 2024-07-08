@@ -29,6 +29,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborn
             base.Enter();
 
             Data.Speed = _airbornStateConfig.Speed;
+            
+            PlayerView.StartAirborne();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopAirborne();
         }
 
         public override void Update()
