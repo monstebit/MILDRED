@@ -356,7 +356,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5070716594951421364}
-  - component: {fileID: 7749432058006707128}
+  - component: {fileID: 5624563302191773171}
   m_Layer: 0
   m_Name: Player Camera
   m_TagString: Untagged
@@ -380,7 +380,7 @@ Transform:
   - {fileID: 1914071689693900990}
   m_Father: {fileID: 4175553896352746951}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7749432058006707128
+--- !u!114 &5624563302191773171
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -389,11 +389,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1418021803673356877}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 426787fa059c9c34080e219c7d420f09, type: 3}
+  m_Script: {fileID: 11500000, guid: ca3a819a83aeaca449abb62bb6f94c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CameraObject: {fileID: 7433256940983990525}
-  cameraPivotTransform: {fileID: 1914071689693900990}
+  CameraPivotTransform: {fileID: 1914071689693900990}
+  CameraVelocity: {x: 0, y: 0, z: 0}
+  CameraObjectPosition: {x: 0, y: 0, z: 0}
+  PlayerCameraXRotation: 0
+  PlayerCameraYRotation: 0
+  CameraSmoothSpeed: 0.125
+  CameraZPosition: 0
+  TargetCameraZPosition: 0
 --- !u!1 &1469515255428881270
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,7 +579,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerConfig: {fileID: 11400000, guid: a0f151924a2d23c428c0ef7e8c12708b, type: 2}
   _playerView: {fileID: 5985968876740594145}
-  _cameraMovement: {fileID: 7749432058006707128}
+  playerCameraMovement: {fileID: 5624563302191773171}
   _groundChecker: {fileID: 4083188193081805519}
 --- !u!1 &2109200014847870042
 GameObject:

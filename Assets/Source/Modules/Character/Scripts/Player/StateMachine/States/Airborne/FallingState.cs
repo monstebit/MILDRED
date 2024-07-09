@@ -11,11 +11,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
             IStateSwitcher stateSwitcher,
             PlayerInputHandler playerInputHandler,
             CharacterNetworkManager characterNetworkManager,
-            CameraMovement cameraMovement,
+            PlayerCameraMovement playerCameraMovement,
             StateMachineData data) : base(
             stateSwitcher, playerInputHandler,
             characterNetworkManager,
-            cameraMovement,
+            playerCameraMovement,
             data)
             => _groundChecker = playerInputHandler.GroundChecker;
 

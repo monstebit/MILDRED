@@ -14,10 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _walkingStateConfig:
     _walkingSpeed: 3
-  runningStateConfig:
-    _runningSpeed: 6
-  airborneStateConfig:
-    _speed: 5
+  _runningStateConfig:
+    _runningSpeed: 5
+  _airborneStateConfig:
+    _speed: 8
     _jumpingStateConfig:
-      _maxHeight: 1.8
+      _maxHeight: 2
       _timeToReachMaxHeight: 0.6
+  _movementStateConfig:
+    MoveDirection: {x: 0, y: 0, z: 0}
+    TargetRotationDirection: {x: 0, y: 0, z: 0}
+    _sensitivity: 1.5
+    _minimumPivot: -30
+    _maximumPivot: 80
+    _rotationSpeed: 15

@@ -8,12 +8,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             IStateSwitcher stateSwitcher, 
             PlayerInputHandler playerInputHandler, 
             CharacterNetworkManager characterNetworkManager, 
-            CameraMovement cameraMovement,
+            PlayerCameraMovement playerCameraMovement,
             StateMachineData data) : base(
             stateSwitcher, 
             playerInputHandler, 
             characterNetworkManager, 
-            cameraMovement, 
+            playerCameraMovement, 
             data)
         {
         }

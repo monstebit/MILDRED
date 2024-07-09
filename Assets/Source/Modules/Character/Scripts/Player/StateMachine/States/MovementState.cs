@@ -1,28 +1,27 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 {
     public abstract class MovementState : IState
     {
-        //  TODO:   ПРИБРАТЬ
-        private Vector3 _moveDirection;
-        private Vector3 _targetRotationDirection;
-        private float sensitivity = 1.5f;
-        private float yOffset = 1.5f;
-        private float _leftAndRightRotationSpeed = 220;
-        private float _upAndDownRotationSpeed = 220;
-        private float _minimumPivot = -30;
-        private float _maximumPivot = 80;
-        private float _rotationSpeed = 15;
-        //  TODO:   И ЭТО
-        private Vector3 _cameraVelocity = Vector3.zero;
-        private Vector3 _cameraObjectPosition;
-        private float playerCameraXRotation;
-        private float playerCameraYRotation;
-        private float _cameraSmoothSpeed = 0.125f;
-        private float _cameraZPosition;
-        private float _targetCameraZPosition;
+        // private Vector3 _moveDirection;
+        // private Vector3 _targetRotationDirection;
+        // private float sensitivity = 1.5f;
+        // private float yOffset = 1.5f;
+        // private float _leftAndRightRotationSpeed = 220;
+        // private float _upAndDownRotationSpeed = 220;
+        // private float _minimumPivot = -30;
+        // private float _maximumPivot = 80;
+        // private float _rotationSpeed = 15;
+        // private Vector3 _cameraVelocity = Vector3.zero;
+        // private Vector3 _cameraObjectPosition;
+        // private float playerCameraXRotation;
+        // private float playerCameraYRotation;
+        // private float _cameraSmoothSpeed = 0.125f;
+        // private float _cameraZPosition;
+        // private float _targetCameraZPosition;
         
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
@@ -32,19 +31,22 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         
         private readonly PlayerInputHandler _playerInputHandler;
         private CharacterNetworkManager _characterNetworkManager;
-        private CameraMovement _cameraMovement;
+        private PlayerCameraMovement _playerCameraMovement;
+        private MovementStateConfig _movementStateConfig;
         
         public MovementState(
             IStateSwitcher stateSwitcher, 
             PlayerInputHandler playerInputHandler, 
             CharacterNetworkManager characterNetworkManager,
-            CameraMovement cameraMovement,
+            PlayerCameraMovement playerCameraMovement,
             StateMachineData data)
         {
             StateSwitcher = stateSwitcher;
             _playerInputHandler = playerInputHandler;
             _characterNetworkManager = characterNetworkManager;
-            _cameraMovement = cameraMovement;
+            _playerCameraMovement = playerCameraMovement;
+            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+            
             Data = data;
         }
         
@@ -56,16 +58,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             // Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
             AddInputActionsCallbacks();
             
-            playerCameraYRotation = Data.SavedLeftAndRightLookAngle;
-            playerCameraXRotation = Data.SavedUpAndDownLookAngle;
+            _playerCameraMovement.PlayerCameraYRotation = Data.SavedLeftAndRightLookAngle;
+            _playerCameraMovement.PlayerCameraXRotation = Data.SavedUpAndDownLookAngle;
         }
 
         public virtual void Exit()
         {
             RemoveInputActionsCallbacks();
 
-            Data.SavedLeftAndRightLookAngle = playerCameraYRotation;
-            Data.SavedUpAndDownLookAngle = playerCameraXRotation;
+            Data.SavedLeftAndRightLookAngle = _playerCameraMovement.PlayerCameraYRotation;
+            Data.SavedUpAndDownLookAngle = _playerCameraMovement.PlayerCameraXRotation;
         }
 
         public virtual void HandleInput()
@@ -139,26 +141,29 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         
         private void HandleFollowTarget()
         {
-            _cameraMovement.transform.position = Vector3.SmoothDamp(
-                _cameraMovement.transform.position,
+            _playerCameraMovement.transform.position = Vector3.SmoothDamp(
+                _playerCameraMovement.transform.position,
                 _playerInputHandler.transform.position,
-                ref _cameraVelocity,
-                _cameraSmoothSpeed * Time.deltaTime);
+                ref _playerCameraMovement.CameraVelocity,
+                _playerCameraMovement.CameraSmoothSpeed * Time.deltaTime);
         }
         
         private void HandleCameraRotation()
         {
-            Quaternion playerCameraPivotRotation = _cameraMovement.cameraPivotTransform.rotation;
-            playerCameraYRotation += Data.CameraHorizontalInput * sensitivity;
-            playerCameraXRotation -= Data.CameraVerticalInput * sensitivity;
-            playerCameraXRotation = Mathf.Clamp(playerCameraXRotation, _minimumPivot, _maximumPivot);
+            Quaternion playerCameraPivotRotation = _playerCameraMovement.CameraPivotTransform.rotation;
+            _playerCameraMovement.PlayerCameraYRotation += Data.CameraHorizontalInput * _movementStateConfig.Sensitivity;
+            _playerCameraMovement.PlayerCameraXRotation -= Data.CameraVerticalInput * _movementStateConfig.Sensitivity;;
+            _playerCameraMovement.PlayerCameraXRotation = Mathf.Clamp(
+                _playerCameraMovement.PlayerCameraXRotation, 
+                _movementStateConfig.MinimumPivot, 
+                _movementStateConfig.MaximumPivot);
             
             playerCameraPivotRotation = Quaternion.Euler(
-                playerCameraXRotation,
-                playerCameraYRotation,
+                _playerCameraMovement.PlayerCameraXRotation,
+                _playerCameraMovement.PlayerCameraYRotation,
                 playerCameraPivotRotation.eulerAngles.z);
             
-            _cameraMovement.cameraPivotTransform.localRotation = playerCameraPivotRotation;
+            _playerCameraMovement.CameraPivotTransform.localRotation = playerCameraPivotRotation;
         }
 
         private void HandleAllMovement()
@@ -169,37 +174,37 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         
         private void HandleGroundedMovement()
         {
-            Vector3 forward = _cameraMovement.cameraPivotTransform.forward;
-            Vector3 right = _cameraMovement.cameraPivotTransform.right;
+            Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
+            Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
             
-            _moveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
+            _movementStateConfig.MoveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
             // _moveDirection.y = 0;
-            _moveDirection.y = Data.YVelocity;
-            _moveDirection.Normalize();
+            _movementStateConfig.MoveDirection.y = Data.YVelocity;
+            _movementStateConfig.MoveDirection.Normalize();
 
-            _playerInputHandler.CharacterController.Move(_moveDirection * Data.Speed * Time.deltaTime);
+            _playerInputHandler.CharacterController.Move(_movementStateConfig.MoveDirection * Data.Speed * Time.deltaTime);
         }
         
         private void HandleRotation()
         {
-            Transform cameraObjectTransform = _cameraMovement.CameraObject.transform;
+            Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
 
             Vector3 cameraObjectForward = cameraObjectTransform.forward;
             Vector3 cameraObjectRight = cameraObjectTransform.right;
 
-            _targetRotationDirection = cameraObjectForward * Data.VerticalInput;
-            _targetRotationDirection = _targetRotationDirection + cameraObjectRight * Data.HorizontalInput;
-            _targetRotationDirection.y = 0;
-            _targetRotationDirection.Normalize();
+            _movementStateConfig.TargetRotationDirection = cameraObjectForward * Data.VerticalInput;
+            _movementStateConfig.TargetRotationDirection = _movementStateConfig.TargetRotationDirection + cameraObjectRight * Data.HorizontalInput;
+            _movementStateConfig.TargetRotationDirection.y = 0;
+            _movementStateConfig.TargetRotationDirection.Normalize();
 
-            if (_targetRotationDirection != Vector3.zero)
+            if (_movementStateConfig.TargetRotationDirection != Vector3.zero)
             {
-                Quaternion newRotation = Quaternion.LookRotation(_targetRotationDirection);
+                Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig.TargetRotationDirection);
                 
                 Quaternion targetRotation = Quaternion.Slerp(
                     PlayerView.transform.rotation,
                     newRotation,
-                    _rotationSpeed * Time.deltaTime);
+                    _movementStateConfig.RotationSpeed * Time.deltaTime);
                 
                 PlayerView.transform.rotation = targetRotation;
             }
