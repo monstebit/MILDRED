@@ -6,23 +6,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 {
     public abstract class MovementState : IState
     {
-        // private Vector3 _moveDirection;
-        // private Vector3 _targetRotationDirection;
-        // private float sensitivity = 1.5f;
-        // private float yOffset = 1.5f;
-        // private float _leftAndRightRotationSpeed = 220;
-        // private float _upAndDownRotationSpeed = 220;
-        // private float _minimumPivot = -30;
-        // private float _maximumPivot = 80;
-        // private float _rotationSpeed = 15;
-        // private Vector3 _cameraVelocity = Vector3.zero;
-        // private Vector3 _cameraObjectPosition;
-        // private float playerCameraXRotation;
-        // private float playerCameraYRotation;
-        // private float _cameraSmoothSpeed = 0.125f;
-        // private float _cameraZPosition;
-        // private float _targetCameraZPosition;
-        
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
         protected bool IsPlayerIdling() => Data.MoveAmount == 0;
