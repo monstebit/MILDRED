@@ -8,11 +8,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
     {
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
-        protected bool IsPlayerIdling() => Data.MoveAmount == 0;
-        protected bool IsPlayerWalking() => Data.MoveAmount > 0 && Data.MoveAmount <= 0.5f;
-        protected bool IsPlayerRunning() => Data.MoveAmount > 0.5f;
+        
+        protected bool IsIdling() => Data.MoveAmount == 0;
+        protected bool IsWalking() => Data.MoveAmount > 0 && Data.MoveAmount <= 0.5f;
+        protected bool IsRunning() => Data.MoveAmount > 0.5f;
         
         private readonly PlayerInputHandler _playerInputHandler;
+        
         private CharacterNetworkManager _characterNetworkManager;
         private PlayerCameraMovement _playerCameraMovement;
         private MovementStateConfig _movementStateConfig;

@@ -41,15 +41,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
             {
                 Data.YVelocity = 0;
                 
-                if (IsPlayerIdling())
+                if (IsIdling())
                 {
                     StateSwitcher.SwitchState<IdlingState>();
                 }
-                else if (IsPlayerWalking())
+                else if (IsWalking())
                 {
                     StateSwitcher.SwitchState<WalkingState>();
                 }
-                else if (IsPlayerRunning())
+                else if (IsRunning())
                 {
                     StateSwitcher.SwitchState<RunningState>();
                 }

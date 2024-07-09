@@ -11,6 +11,8 @@ namespace Source.Modules.Character.Scripts.Player
         public float PlayerCameraXRotation;
         public float PlayerCameraYRotation;
         public float CameraSmoothSpeed = 0.125f;
+        
+        //  TODO: CAMERA COLLIDING LOGIC
         public float CameraZPosition;
         public float TargetCameraZPosition;
         

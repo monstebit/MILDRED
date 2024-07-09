@@ -36,16 +36,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         {
             base.Update();
 
-            if (IsPlayerIdling())
+            if (IsIdling())
             {
                 return;
             }
     
-            if (IsPlayerWalking())
+            if (IsWalking())
             {
                 StateSwitcher.SwitchState<WalkingState>();
             }
-            else if (IsPlayerRunning())
+            else if (IsRunning())
             {
                 StateSwitcher.SwitchState<RunningState>();
             }
