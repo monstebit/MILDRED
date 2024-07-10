@@ -3,7 +3,7 @@ using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
 {
-    public class WalkingState : MovementState
+    public class WalkingState : GroundedState
     {
         private WalkingStateConfig _walkingStateConfig;
 
@@ -40,8 +40,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         {
             base.Update();
             
-            if (!IsWalking())
+            if (IsIdling())
                 StateSwitcher.SwitchState<IdlingState>();
+            else if (IsWalking())
+                StateSwitcher.SwitchState<WalkingState>();
             else if (IsRunning())
                 StateSwitcher.SwitchState<RunningState>();
             else if (IsDodging())

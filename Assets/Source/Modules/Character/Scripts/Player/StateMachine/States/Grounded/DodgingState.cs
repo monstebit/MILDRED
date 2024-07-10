@@ -8,7 +8,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
     {
         private bool isExiting = false;
         private float exitTimer = 0f;
-        private const float delay = 2f;
+        private const float delay = 0.6f;
 
         // Вызывается для начала процесса выхода
         public void StartExitProcess()
@@ -68,9 +68,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
                 }
             }
             
-            if (IsIdling())
-                return;
-            
             if (!IsDodging())
             {
                 if (IsRunning())
@@ -86,22 +83,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
                     StateSwitcher.SwitchState<IdlingState>();
                 }
             }
-            // if (_movementStateConfig.IsPerformingAction && _movementStateConfig.isDodging)
-            // {
-            //     StateSwitcher.SwitchState<DodgingState>();
-            // }
-            // else if (IsIdling())
-            // {
-            //     StateSwitcher.SwitchState<IdlingState>();
-            // }
-            // else if (IsWalking())
-            // {
-            //     StateSwitcher.SwitchState<WalkingState>();
-            // }
-            // else if (IsRunning())
-            // {
-            //     StateSwitcher.SwitchState<RunningState>();
-            // }
         }
         
         public override void LateUpdate()

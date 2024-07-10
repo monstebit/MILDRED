@@ -66,6 +66,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
         public virtual void HandleInput()
         {
+            // if (IsDodging())    //  TEST
+            //     return;
+            
             Data.MovementInput = ReadMovementInput();
             
             Data.VerticalInput = Data.MovementInput.y;
@@ -167,24 +170,47 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             HandleRotation();
         }
         
+        //  ВАРИАНТ БЕЗ ПЕРЕКАТА
+        // private void HandleGroundedMovement()
+        // {
+        //     Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
+        //     Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
+        //     
+        //     _movementStateConfig.MoveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
+        //     // _moveDirection.y = 0;
+        //     _movementStateConfig.MoveDirection.y = Data.YVelocity;  //  ПРЫЖОК
+        //     _movementStateConfig.MoveDirection.Normalize();
+        //
+        //     _playerInputHandler.CharacterController.Move(_movementStateConfig.MoveDirection * Data.Speed * Time.deltaTime);
+        // }
+        
         private void HandleGroundedMovement()
         {
-            if (IsDodging())   //   МЫ НЕ МОЖЕМ ПЕРЕДВИГАТЬСЯ ПРИ ПРЫЖКЕ
-                return;
-            
             Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
             Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
             
+            //   МЫ НЕ МОЖЕМ ПЕРЕДВИГАТЬСЯ ПРИ ПЕРЕКАТЕ
+            if (IsDodging())
+            {
+                Vector3 dodgeDirection = _movementStateConfig.MoveDirection * 20.0f; // толкаем на 2 метра в направлении движения
+                _playerInputHandler.CharacterController.Move(dodgeDirection * Time.deltaTime);
+                return;
+            }
+            
             _movementStateConfig.MoveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
             // _moveDirection.y = 0;
-            _movementStateConfig.MoveDirection.y = Data.YVelocity;
+            _movementStateConfig.MoveDirection.y = Data.YVelocity;  //  ПРЫЖОК
             _movementStateConfig.MoveDirection.Normalize();
-
+        
             _playerInputHandler.CharacterController.Move(_movementStateConfig.MoveDirection * Data.Speed * Time.deltaTime);
         }
         
+        //  ПОВОРОТ ИГРОКА ПО НАПРАВЛЕНИЮ КАМЕРЫ
         private void HandleRotation()
         {
+            if (IsDodging())
+                return;
+            
             Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
 
             Vector3 cameraObjectForward = cameraObjectTransform.forward;

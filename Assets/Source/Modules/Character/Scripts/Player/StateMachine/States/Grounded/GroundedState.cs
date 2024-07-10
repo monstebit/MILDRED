@@ -78,6 +78,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             if (IsIdling()) //  МЫ НЕ МОЖЕМ СДЕЛАТЬ КУВЫРОК ИЗ СОСТОЯНИЯ IDLE
                 return;
             
+            if (IsDodging())
+                return;
+            
             Debug.Log("ВЫПОЛНЯЮ ДЕЙСТВИЕ ПЕРЕКАТА");
             StateSwitcher.SwitchState<DodgingState>();
         }
