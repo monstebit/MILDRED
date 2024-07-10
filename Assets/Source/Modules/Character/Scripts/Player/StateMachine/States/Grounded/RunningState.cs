@@ -39,15 +39,30 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         public override void Update()
         {
             base.Update();
-    
-            if (IsIdling())
+
+            if (!IsRunning())
             {
-                StateSwitcher.SwitchState<IdlingState>();
+                if (IsWalking())
+                {
+                    StateSwitcher.SwitchState<WalkingState>();
+                }
+                else
+                {
+                    StateSwitcher.SwitchState<IdlingState>(); 
+                }
             }
-            else if (IsWalking())
+            else if (IsDodging())
             {
-                StateSwitcher.SwitchState<WalkingState>();
+                StateSwitcher.SwitchState<DodgingState>();
             }
+            // if (IsIdling())
+            // {
+            //     StateSwitcher.SwitchState<IdlingState>();
+            // }
+            // else if (IsWalking())
+            // {
+            //     StateSwitcher.SwitchState<WalkingState>();
+            // }
         }
         
         public override void LateUpdate()

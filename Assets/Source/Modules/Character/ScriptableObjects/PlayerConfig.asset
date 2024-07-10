@@ -12,6 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c7e54cede1ec1940b124ed5bcf29903, type: 3}
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
+  _movementStateConfig:
+    isDodging: 0
+    IsPerformingAction: 0
+    RollDistance: 20
+    MoveDirection: {x: -0.35836858, y: 0, z: 0.93358016}
+    TargetRotationDirection: {x: 0, y: 0, z: 0}
+    _sensitivity: 1.5
+    _minimumPivot: -30
+    _maximumPivot: 80
+    _rotationSpeed: 15
   _walkingStateConfig:
     _walkingSpeed: 3
   _runningStateConfig:
@@ -21,10 +31,6 @@ MonoBehaviour:
     _jumpingStateConfig:
       _maxHeight: 2
       _timeToReachMaxHeight: 0.6
-  _movementStateConfig:
-    MoveDirection: {x: 0, y: 0, z: 0}
-    TargetRotationDirection: {x: 0, y: 0, z: 0}
-    _sensitivity: 1.5
-    _minimumPivot: -30
-    _maximumPivot: 80
-    _rotationSpeed: 15
+  _jumpingStateConfig:
+    _maxHeight: 2
+    _timeToReachMaxHeight: 0.6

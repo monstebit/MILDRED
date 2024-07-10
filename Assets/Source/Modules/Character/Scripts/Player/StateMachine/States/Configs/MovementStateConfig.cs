@@ -6,6 +6,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Configs
     [Serializable]
     public class MovementStateConfig
     {
+        //
+        public bool isDodging = false;
+        public bool IsPerformingAction = false;
+        public float RollDistance = 1f;
+        //
         public Vector3 MoveDirection;
         public Vector3 TargetRotationDirection;
         

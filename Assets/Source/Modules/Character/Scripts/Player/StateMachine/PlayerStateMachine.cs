@@ -15,7 +15,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         public PlayerStateMachine(
             PlayerInputHandler playerInputHandler, 
             CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerCameraMovement)
+            PlayerCameraMovement playerCameraMovement,
+            PlayerView playerView)
         {
             StateMachineData data = new StateMachineData();
             
@@ -24,8 +25,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 new IdlingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement,data),
                 new WalkingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new RunningState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
+                new DodgingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new JumpingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new FallingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
+                
+                new DodgingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data)
             };
 
             _currentState = _states[0];
