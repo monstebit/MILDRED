@@ -1,22 +1,10 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
-using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
 {
     public class DodgingState : GroundedState
     {
-        private bool isExiting = false;
-        private float exitTimer = 0f;
-        private const float delay = 0.6f;
-
-        // Вызывается для начала процесса выхода
-        public void StartExitProcess()
-        {
-            isExiting = true;
-            exitTimer = 0f;
-        }
-        
         private MovementStateConfig _movementStateConfig;
     
         public DodgingState(
@@ -36,40 +24,29 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         {
             base.Enter();
 
-            PlayerView.StartDodging();
-            
-            // _movementStateConfig.IsPerformingAction = true; //  TEST
-            // _movementStateConfig.isDodging = true; //  TEST
-            // PlayerView.StartPerformingAction();
-            StartExitProcess();
             _movementStateConfig.isDodging = true;
+            PlayerView.ResetDodgeEndTrigger();
+
+            PlayerView.StartDodging();
         }
 
         public override void Exit()
         {
             base.Exit();
-        
-            PlayerView.StopDodging();
-            // PlayerView.StopPerformingAction();
+
             _movementStateConfig.isDodging = false;
+            
+            PlayerView.StopDodging();
         }
 
         public override void Update()
         {
             base.Update();
-
-            if (isExiting)  //  TEST
-            {
-                exitTimer += Time.deltaTime;
-                if (exitTimer >= delay)
-                {
-                    Exit();
-                    isExiting = false;
-                }
-            }
             
-            if (!IsDodging())
+            if (PlayerView.DodgeEnds)
             {
+                PlayerView.ResetDodgeEndTrigger();  // Сброс состояния события
+
                 if (IsRunning())
                 {
                     StateSwitcher.SwitchState<RunningState>();
@@ -84,6 +61,27 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
                 }
             }
         }
+        
+        // public override void Update()
+        // {
+        //     base.Update();
+        //     
+        //     if (!IsDodging())
+        //     {
+        //         if (IsRunning())
+        //         {
+        //             StateSwitcher.SwitchState<RunningState>();
+        //         }
+        //         else if (IsWalking())
+        //         {
+        //             StateSwitcher.SwitchState<WalkingState>(); 
+        //         }
+        //         else
+        //         {
+        //             StateSwitcher.SwitchState<IdlingState>();
+        //         }
+        //     }
+        // }
         
         public override void LateUpdate()
         {

@@ -15,13 +15,13 @@ MonoBehaviour:
   _movementStateConfig:
     isDodging: 0
     IsPerformingAction: 0
-    RollDistance: 20
-    MoveDirection: {x: -0.35836858, y: 0, z: 0.93358016}
+    RollDistance: 6
+    MoveDirection: {x: 0, y: 0, z: 0}
     TargetRotationDirection: {x: 0, y: 0, z: 0}
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
-    _rotationSpeed: 15
+    _rotationSpeed: 25
   _walkingStateConfig:
     _walkingSpeed: 3
   _runningStateConfig:

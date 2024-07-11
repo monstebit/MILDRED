@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player
 {
@@ -16,9 +17,9 @@ namespace Source.Modules.Character.Scripts.Player
         private const string IsFalling = "IsFalling";
         
         private const string IsDodging = "IsDodging";
-        private const string IsPerformingAction = "IsPerformingAction";
         
         private Animator _animator;
+        [SerializeField] public bool DodgeEnds;
         
         public void Initialize() => _animator = GetComponent<Animator>();
         
@@ -37,8 +38,17 @@ namespace Source.Modules.Character.Scripts.Player
         public void StartRunning() => _animator.SetBool(IsRunning, true);
         public void StopRunning() => _animator.SetBool(IsRunning, false);
         
-        public void StartDodging() => _animator.SetBool(IsDodging, true);
-        public void StopDodging() => _animator.SetBool(IsDodging, false);
+        // public void StartDodging() => _animator.SetBool(IsDodging, true);
+        // public void StopDodging() => _animator.SetBool(IsDodging, false);
+        public void StartDodging()
+        {
+            _animator.SetBool(IsDodging, true);
+        }
+
+        public void StopDodging()
+        {
+            _animator.SetBool(IsDodging, false);
+        }
         
         public void StartAirborne() => _animator.SetBool(IsAirborne, true);
         public void StopAirborne() => _animator.SetBool(IsAirborne, false);
@@ -48,8 +58,15 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartFalling() => _animator.SetBool(IsFalling, true);
         public void StopFalling() => _animator.SetBool(IsFalling, false);
+
+        public void DodgeEndTrigger()
+        {
+            DodgeEnds = true;
+        }
         
-        public void StartPerformingAction() => _animator.SetBool(IsPerformingAction, true);
-        public void StopPerformingAction() => _animator.SetBool(IsPerformingAction, false);
+        public void ResetDodgeEndTrigger()
+        {
+            DodgeEnds = false;
+        }
     }
 }

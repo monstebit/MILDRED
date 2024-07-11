@@ -10,12 +10,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         [SerializeField] private WalkingStateConfig _walkingStateConfig;
         [SerializeField] private RunningStateConfig _runningStateConfig;
         [SerializeField] private AirborneStateConfig _airborneStateConfig;
-        [SerializeField] private JumpingStateConfig _jumpingStateConfig;
 
         public MovementStateConfig MovementStateConfig => _movementStateConfig;
         public WalkingStateConfig WalkingStateConfig => _walkingStateConfig;
         public RunningStateConfig RunningStateConfig => _runningStateConfig;
         public AirborneStateConfig AirborneStateConfig => _airborneStateConfig;
-        public JumpingStateConfig JumpingStateConfig => _jumpingStateConfig;
     }
 }

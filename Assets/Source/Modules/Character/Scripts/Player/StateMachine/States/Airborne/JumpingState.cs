@@ -17,7 +17,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
             characterNetworkManager,
             playerCameraMovement,
             data)
-            => _jumpingStateConfig = playerInputHandler.PlayerConfig.JumpingStateConfig;
+            => _jumpingStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
 
         public override void Enter()
         {

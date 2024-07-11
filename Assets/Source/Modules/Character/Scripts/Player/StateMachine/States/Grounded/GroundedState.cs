@@ -80,6 +80,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             
             if (IsDodging())
                 return;
+
+            // PlayerView.IsDodgingEventTriggered = true;
             
             Debug.Log("ВЫПОЛНЯЮ ДЕЙСТВИЕ ПЕРЕКАТА");
             StateSwitcher.SwitchState<DodgingState>();

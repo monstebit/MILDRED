@@ -12,7 +12,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         protected bool IsIdling() => Data.MoveAmount == 0;
         protected bool IsWalking() => Data.MoveAmount > 0 && Data.MoveAmount <= 0.5f;
         protected bool IsRunning() => Data.MoveAmount > 0.5f;
-        protected bool IsDodging() => _movementStateConfig.isDodging == true;
+        protected bool IsDodging() => _movementStateConfig.isDodging;   //  TEST
         
         private readonly PlayerInputHandler _playerInputHandler;
         
@@ -40,9 +40,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
         public virtual void Enter()
         {
-            _movementStateConfig.IsPerformingAction = false;
-            _movementStateConfig.isDodging = false;
-            
             // Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
             AddInputActionsCallbacks();
             
@@ -66,9 +63,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
         public virtual void HandleInput()
         {
-            // if (IsDodging())    //  TEST
-            //     return;
-            
             Data.MovementInput = ReadMovementInput();
             
             Data.VerticalInput = Data.MovementInput.y;
@@ -192,7 +186,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             //   МЫ НЕ МОЖЕМ ПЕРЕДВИГАТЬСЯ ПРИ ПЕРЕКАТЕ
             if (IsDodging())
             {
-                Vector3 dodgeDirection = _movementStateConfig.MoveDirection * 20.0f; // толкаем на 2 метра в направлении движения
+                Vector3 dodgeDirection = _movementStateConfig.MoveDirection * _movementStateConfig.RollDistance; // толкаем на 2 метра в направлении движения
                 _playerInputHandler.CharacterController.Move(dodgeDirection * Time.deltaTime);
                 return;
             }

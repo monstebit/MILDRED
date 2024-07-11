@@ -9,7 +9,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Configs
         //
         public bool isDodging = false;
         public bool IsPerformingAction = false;
-        public float RollDistance = 1f;
+        public float RollDistance = 5f;
         //
         public Vector3 MoveDirection;
         public Vector3 TargetRotationDirection;
