@@ -6,6 +6,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     public class StateMachineData
     {
         public float YVelocity;
+        public float XVelocity;
         
         private float _verticalInput;
         private float _horizontalInput;

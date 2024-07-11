@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   _movementStateConfig:
-    isDodging: 0
-    IsPerformingAction: 0
-    RollDistance: 6
-    MoveDirection: {x: 0, y: 0, z: 0}
-    TargetRotationDirection: {x: 0, y: 0, z: 0}
+    DodgeDirection: {x: 0, y: 0, z: 0}
+    IsDodgingConfig: 1
+    DodgeDistance: 5
+    MoveDirection: {x: -0.6087614, y: 0, z: -0.7933533}
+    TargetRotationDirection: {x: -0.6087614, y: 0, z: -0.7933533}
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
-    _rotationSpeed: 25
+    _rotationSpeed: 15
   _walkingStateConfig:
     _walkingSpeed: 3
   _runningStateConfig:
@@ -31,6 +31,3 @@ MonoBehaviour:
     _jumpingStateConfig:
       _maxHeight: 2
       _timeToReachMaxHeight: 0.6
-  _jumpingStateConfig:
-    _maxHeight: 2
-    _timeToReachMaxHeight: 0.6

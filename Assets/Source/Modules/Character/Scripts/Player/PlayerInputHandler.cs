@@ -2,6 +2,7 @@ using Source.Modules.Character.Scripts.Player.StateMachine;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player
 {
@@ -11,7 +12,7 @@ namespace Source.Modules.Character.Scripts.Player
         
         [SerializeField] private PlayerConfig _playerConfig;
         [SerializeField] private PlayerView _playerView;
-        [SerializeField] private PlayerCameraMovement playerCameraMovement;
+        [SerializeField] private PlayerCameraMovement _playerCameraMovement;
         [SerializeField] private GroundChecker _groundChecker;
         
         private PlayerControls _playerControls;
@@ -32,10 +33,9 @@ namespace Source.Modules.Character.Scripts.Player
             _characterNetworkManager = GetComponent<CharacterNetworkManager>();
             _playerControls = new PlayerControls();
             _playerStateMachine = new PlayerStateMachine(
-                this, 
-                this._characterNetworkManager, 
-                this.playerCameraMovement, 
-                this._playerView);
+                this,
+                this._characterNetworkManager,
+                this._playerCameraMovement);
         }
 
         private void Update()

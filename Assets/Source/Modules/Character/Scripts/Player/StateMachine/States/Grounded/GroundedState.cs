@@ -1,7 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
@@ -22,7 +21,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             characterNetworkManager,
             playerPlayerCameraMovement,
             data)
-            // => _groundChecker = playerInputHandler.GroundChecker;
         {
             _groundChecker = playerInputHandler.GroundChecker;
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig; //  TEST
@@ -70,6 +68,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
 
         private void OnJumpButtonPressed(InputAction.CallbackContext obj)
         {
+            if (IsDodging())
+                return;
+            
+            // Debug.Log("JUMP BUTTON PRESSED!");
             StateSwitcher.SwitchState<JumpingState>();
         }
         
@@ -80,10 +82,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
             
             if (IsDodging())
                 return;
-
-            // PlayerView.IsDodgingEventTriggered = true;
             
-            Debug.Log("ВЫПОЛНЯЮ ДЕЙСТВИЕ ПЕРЕКАТА");
+            // Debug.Log("DODGE BUTTON PRESSED!");
             StateSwitcher.SwitchState<DodgingState>();
         }
     }

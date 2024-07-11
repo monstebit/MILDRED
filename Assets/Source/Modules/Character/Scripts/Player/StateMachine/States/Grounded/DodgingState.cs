@@ -23,18 +23,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         public override void Enter()
         {
             base.Enter();
-
-            _movementStateConfig.isDodging = true;
-            PlayerView.ResetDodgeEndTrigger();
-
+            
             PlayerView.StartDodging();
         }
 
         public override void Exit()
         {
             base.Exit();
-
-            _movementStateConfig.isDodging = false;
             
             PlayerView.StopDodging();
         }
@@ -42,46 +37,26 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         public override void Update()
         {
             base.Update();
-            
-            if (PlayerView.DodgeEnds)
-            {
-                PlayerView.ResetDodgeEndTrigger();  // Сброс состояния события
 
-                if (IsRunning())
-                {
-                    StateSwitcher.SwitchState<RunningState>();
-                }
-                else if (IsWalking())
-                {
-                    StateSwitcher.SwitchState<WalkingState>(); 
-                }
-                else
-                {
+            if (!IsDodging())
+            {
+                if (IsIdling())
                     StateSwitcher.SwitchState<IdlingState>();
-                }
+                else if (IsWalking())
+                    StateSwitcher.SwitchState<WalkingState>();
+                else if (IsRunning())
+                    StateSwitcher.SwitchState<RunningState>();
             }
+            // if (IsDodging())
+            //     return;
+            //
+            // if (IsIdling())
+            //     StateSwitcher.SwitchState<IdlingState>();
+            // else if (IsWalking())
+            //     StateSwitcher.SwitchState<WalkingState>();
+            // else if (IsRunning())
+            //     StateSwitcher.SwitchState<RunningState>();
         }
-        
-        // public override void Update()
-        // {
-        //     base.Update();
-        //     
-        //     if (!IsDodging())
-        //     {
-        //         if (IsRunning())
-        //         {
-        //             StateSwitcher.SwitchState<RunningState>();
-        //         }
-        //         else if (IsWalking())
-        //         {
-        //             StateSwitcher.SwitchState<WalkingState>(); 
-        //         }
-        //         else
-        //         {
-        //             StateSwitcher.SwitchState<IdlingState>();
-        //         }
-        //     }
-        // }
         
         public override void LateUpdate()
         {

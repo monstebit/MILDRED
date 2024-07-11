@@ -24,6 +24,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
             base.Enter();
             
             Data.YVelocity = _jumpingStateConfig.StartYVelocity;
+            Data.XVelocity = _jumpingStateConfig.StartXVelocity; // Устанавливаем начальную горизонтальную скорость
             
             PlayerView.StartJumping();
         }

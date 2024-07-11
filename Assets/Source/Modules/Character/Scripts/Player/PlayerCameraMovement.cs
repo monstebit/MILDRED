@@ -7,7 +7,7 @@ namespace Source.Modules.Character.Scripts.Player
         public Camera CameraObject;
         public Transform CameraPivotTransform;
         public Vector3 CameraVelocity;
-        public Vector3 CameraObjectPosition;
+        // public Vector3 CameraObjectPosition;
         public float PlayerCameraXRotation;
         public float PlayerCameraYRotation;
         public float CameraSmoothSpeed = 0.125f;

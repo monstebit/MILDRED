@@ -4,7 +4,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
     {
         void Enter();
         void Exit();
-        void HandleInput();
+        void HandleAllInputs();
         void Update();
         void LateUpdate();
     }

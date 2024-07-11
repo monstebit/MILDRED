@@ -15,8 +15,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         public PlayerStateMachine(
             PlayerInputHandler playerInputHandler, 
             CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerCameraMovement,
-            PlayerView playerView)
+            PlayerCameraMovement playerCameraMovement)
         {
             StateMachineData data = new StateMachineData();
             
@@ -28,8 +27,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 new DodgingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new JumpingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new FallingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
-                
-                new DodgingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data)
             };
 
             _currentState = _states[0];
@@ -44,7 +41,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             _currentState.Enter();  //  ВХОДИМ В НОВОЕ СОСТОЯНИЕ
         }
         
-        public void HandleInput() => _currentState.HandleInput();
+        public void HandleInput() => _currentState.HandleAllInputs();
         
         public void Update() => _currentState.Update();
 

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player
 {
@@ -19,7 +18,6 @@ namespace Source.Modules.Character.Scripts.Player
         private const string IsDodging = "IsDodging";
         
         private Animator _animator;
-        [SerializeField] public bool DodgeEnds;
         
         public void Initialize() => _animator = GetComponent<Animator>();
         
@@ -42,12 +40,23 @@ namespace Source.Modules.Character.Scripts.Player
         // public void StopDodging() => _animator.SetBool(IsDodging, false);
         public void StartDodging()
         {
+            // if (!_animator.GetBool(IsDodging))
+            // {
+            //     Debug.Log("ВОШЁЛ из состояния кувырка");
+            //     _animator.SetBool(IsDodging, true);
+            // }
+            Debug.Log("СТАРТ КУВЫРОК");
             _animator.SetBool(IsDodging, true);
         }
-
         public void StopDodging()
         {
-            _animator.SetBool(IsDodging, false);
+            if (_animator.GetBool(IsDodging))
+            {
+                Debug.Log("ВЫШЕЛ из состояния кувырка");
+                _animator.SetBool(IsDodging, false);
+            }
+            // Debug.Log("СТОП КУВЫРОК");
+            // _animator.SetBool(IsDodging, false);
         }
         
         public void StartAirborne() => _animator.SetBool(IsAirborne, true);
@@ -58,15 +67,8 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartFalling() => _animator.SetBool(IsFalling, true);
         public void StopFalling() => _animator.SetBool(IsFalling, false);
-
-        public void DodgeEndTrigger()
-        {
-            DodgeEnds = true;
-        }
         
-        public void ResetDodgeEndTrigger()
-        {
-            DodgeEnds = false;
-        }
+        // Методы для проверки текущего состояния
+        public bool IsPlayerDodging() => _animator.GetBool(IsDodging);
     }
 }
