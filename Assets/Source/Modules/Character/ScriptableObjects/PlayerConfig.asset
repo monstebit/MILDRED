@@ -14,10 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementStateConfig:
     DodgeDirection: {x: 0, y: 0, z: 0}
-    IsDodgingConfig: 1
-    DodgeDistance: 5
-    MoveDirection: {x: -0.6087614, y: 0, z: -0.7933533}
-    TargetRotationDirection: {x: -0.6087614, y: 0, z: -0.7933533}
+    DodgeDistance: 10
+    MoveDirection: {x: 0, y: 0, z: 0}
+    TargetRotationDirection: {x: 0, y: 0, z: 0}
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
@@ -31,3 +30,4 @@ MonoBehaviour:
     _jumpingStateConfig:
       _maxHeight: 2
       _timeToReachMaxHeight: 0.6
+      _jumpDistance: 3.73

@@ -46,17 +46,23 @@ namespace Source.Modules.Character.Scripts.Player
             //     _animator.SetBool(IsDodging, true);
             // }
             Debug.Log("СТАРТ КУВЫРОК");
+
             _animator.SetBool(IsDodging, true);
+            
+            _animator.CrossFade(IsDodging, 0.2f);
+            
+            _animator.applyRootMotion = true;
         }
         public void StopDodging()
         {
             if (_animator.GetBool(IsDodging))
             {
-                Debug.Log("ВЫШЕЛ из состояния кувырка");
+                Debug.Log("СТОП КУВЫРОК");
+
                 _animator.SetBool(IsDodging, false);
+            
+                _animator.applyRootMotion = false;
             }
-            // Debug.Log("СТОП КУВЫРОК");
-            // _animator.SetBool(IsDodging, false);
         }
         
         public void StartAirborne() => _animator.SetBool(IsAirborne, true);

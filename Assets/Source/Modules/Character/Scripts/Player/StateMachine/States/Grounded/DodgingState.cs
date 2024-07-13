@@ -38,24 +38,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         {
             base.Update();
 
-            if (!IsDodging())
-            {
-                if (IsIdling())
-                    StateSwitcher.SwitchState<IdlingState>();
-                else if (IsWalking())
-                    StateSwitcher.SwitchState<WalkingState>();
-                else if (IsRunning())
-                    StateSwitcher.SwitchState<RunningState>();
-            }
-            // if (IsDodging())
-            //     return;
-            //
-            // if (IsIdling())
-            //     StateSwitcher.SwitchState<IdlingState>();
-            // else if (IsWalking())
-            //     StateSwitcher.SwitchState<WalkingState>();
-            // else if (IsRunning())
-            //     StateSwitcher.SwitchState<RunningState>();
+            if (IsDodging()) 
+                return;
+            
+            if (IsIdling())
+                StateSwitcher.SwitchState<IdlingState>();
+            else if (IsWalking())
+                StateSwitcher.SwitchState<WalkingState>();
+            else if (IsRunning())
+                StateSwitcher.SwitchState<RunningState>();
         }
         
         public override void LateUpdate()

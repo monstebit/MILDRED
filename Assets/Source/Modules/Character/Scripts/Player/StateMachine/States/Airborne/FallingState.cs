@@ -36,7 +36,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
         public override void Update()
         {
             base.Update();
-
+            
             if (_groundChecker.isTouches)
             {
                 Data.YVelocity = 0;

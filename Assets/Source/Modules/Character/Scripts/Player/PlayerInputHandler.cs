@@ -2,7 +2,6 @@ using Source.Modules.Character.Scripts.Player.StateMachine;
 using Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player
 {
@@ -29,7 +28,8 @@ namespace Source.Modules.Character.Scripts.Player
         {
             PlayerView.Initialize();
             
-            _characterController = GetComponent<CharacterController>();
+            // _characterController = GetComponent<CharacterController>();
+            _characterController = PlayerView.GetComponent<CharacterController>();
             _characterNetworkManager = GetComponent<CharacterNetworkManager>();
             _playerControls = new PlayerControls();
             _playerStateMachine = new PlayerStateMachine(
