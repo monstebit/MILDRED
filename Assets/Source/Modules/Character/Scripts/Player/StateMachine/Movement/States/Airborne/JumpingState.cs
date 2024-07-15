@@ -1,7 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
     public class JumpingState : AirborneState
     {
@@ -23,8 +23,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
         {
             base.Enter();
             
-            Data.YVelocity = _jumpingStateConfig.StartYVelocity;
-            Data.XVelocity = _jumpingStateConfig.StartXVelocity; // Устанавливаем начальную горизонтальную скорость
+            // Data.YVelocity = _jumpingStateConfig.StartYVelocity;
+            // Data.XVelocity = _jumpingStateConfig.StartXVelocity; // Устанавливаем начальную горизонтальную скорость
             
             PlayerView.StartJumping();
         }
@@ -40,10 +40,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
         {
             base.Update();
             
-            if (Data.YVelocity < 0)
-            {
-                StateSwitcher.SwitchState<FallingState>();
-            }
+            // if (Data.YVelocity < 0)
+            // {
+            //     StateSwitcher.SwitchState<FallingState>();
+            // }
         }
     }
 }

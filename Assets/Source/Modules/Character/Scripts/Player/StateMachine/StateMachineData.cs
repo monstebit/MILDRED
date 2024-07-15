@@ -5,6 +5,23 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
     public class StateMachineData
     {
+        //
+        public bool ShouldWalk { get; set; }
+        public Vector2 CameraInput { get; set; }
+        public Vector2 MovementInput { get; set; }
+        public float BaseSpeed { get; set; } = 5f;
+        public float MovementSpeedModifier { get; set; } = 1f;
+
+        private Vector3 _currentTargetRotation;
+        public ref Vector3 CurrentTargetRotation
+        {
+            get
+            {
+                return ref _currentTargetRotation;
+            }
+        }
+        //
+        
         public float YVelocity;
         public float XVelocity;
         
@@ -22,7 +39,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             {
                 // if (value < -1 || value > 1)
                 //     throw new ArgumentOutOfRangeException(nameof(value), "Vertical input must be between -1 and 1");
-
+        
                 _verticalInput = value;
             }
         }
@@ -33,7 +50,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             {
                 // if (value < -1 || value > 1)
                 //     throw new ArgumentOutOfRangeException(nameof(value), "Horizontal input must be between -1 and 1");
-
+        
                 _horizontalInput = value;
             }
         }
@@ -45,7 +62,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             {
                 // if (value < -1 || value > 1)
                 //     throw new ArgumentOutOfRangeException(nameof(value), "Camera vertical input must be between -1 and 1");
-
+        
                 _cameraVerticalInput = value;
             }
         }
@@ -56,7 +73,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             {
                 // if (value < -1 || value > 1)
                 //     throw new ArgumentOutOfRangeException(nameof(value), "Camera horizontal input must be between -1 and 1");
-
+        
                 _cameraHorizontalInput = value;
             }
         }
@@ -68,7 +85,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value), "Move amount cannot be negative");
-
+        
                 _moveAmount = value;
             }
         }
@@ -79,14 +96,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value), "Speed cannot be negative");
-
+        
                 _speed = value;
             }
         }
-        
-        public float SavedLeftAndRightLookAngle { get; set; }
-        public float SavedUpAndDownLookAngle { get; set; }
-        public Vector2 MovementInput { get; set; }
-        public Vector2 CameraInput { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
     public class GroundChecker : MonoBehaviour
     {

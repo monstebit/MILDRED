@@ -1,4 +1,4 @@
-using Source.Modules.Character.Scripts.Player.StateMachine.States;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Interfaces
 {

@@ -1,18 +1,27 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 {
     public abstract class MovementState : IState
     {
+        //
+        // protected Vector2 _movementInput;
+        protected Vector3 _movementDirection;
+        protected Vector3 _targetRotationDirection;
+
+        // protected bool _shouldWalk; //  TODO: NETWORK(?)
+        //
+        
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
         
-        protected bool IsIdling() => Data.MoveAmount == 0;
-        protected bool IsWalking() => Data.MoveAmount > 0 && Data.MoveAmount <= 0.5f;
-        protected bool IsRunning() => Data.MoveAmount > 0.5f;
-        protected bool IsDodging() => PlayerView.IsPlayerDodging();
+        // protected bool IsIdling() => Data.MoveAmount == 0;
+        // protected bool IsWalking() => Data.MoveAmount > 0 && Data.MoveAmount <= 0.5f;
+        // protected bool IsRunning() => Data.MoveAmount > 0.5f;
+        // protected bool IsDodging() => PlayerView.IsPlayerDodging();
         
         private readonly PlayerInputHandler _playerInputHandler;
         
@@ -38,37 +47,70 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         protected PlayerControls PlayerControls => _playerInputHandler.PlayerControls;
         protected PlayerView PlayerView => _playerInputHandler.PlayerView;
 
+        #region IState METHODS
         public virtual void Enter()
         {
-            Debug.Log(GetType());   //  ВЫВОД ТИПА НАСЛЕДНИКА (В КАКОМ STATE МЫ СЕЙЧАС НАХОДИМСЯ)
+            Debug.Log($"State: {GetType().Name}");
+            
             AddInputActionsCallbacks();
             
-            _playerCameraMovement.PlayerCameraYRotation = Data.SavedLeftAndRightLookAngle;
-            _playerCameraMovement.PlayerCameraXRotation = Data.SavedUpAndDownLookAngle;
-            
-            //
             PlayerView.StartMovement();
         }
 
         public virtual void Exit()
         {
             RemoveInputActionsCallbacks();
-
-            Data.SavedLeftAndRightLookAngle = _playerCameraMovement.PlayerCameraYRotation;
-            Data.SavedUpAndDownLookAngle = _playerCameraMovement.PlayerCameraXRotation;
             
             PlayerView.StopMovement();
         }
+        
+        public virtual void Update()
+        {
+            if (!_playerInputHandler.IsOwner)
+                return;
+            
+            Move();
+            Rotate();
+        }
 
+        public virtual void LateUpdate()
+        {
+            if (!_playerInputHandler.IsOwner)
+                return;
+            
+            HandleAllCameraActions();
+        }
+        #endregion
+
+        protected virtual void AddInputActionsCallbacks()
+        {
+            PlayerControls.PlayerMovement.WalkToggle.started += OnWalkToggleStarted;
+        }
+
+        protected virtual void RemoveInputActionsCallbacks()
+        {
+            PlayerControls.PlayerMovement.WalkToggle.started -= OnWalkToggleStarted;
+        }
+
+        #region INPUT METHODS
+        protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
+        {
+            Data.ShouldWalk = !Data.ShouldWalk;
+            
+            Debug.Log($" НАЖАЛ {Data.ShouldWalk}");
+        }
+        #endregion
+        
+        #region MAIN METHODS
         public virtual void HandleAllInputs()
         {
             HandleMovementInput();
             HandleCameraInput();
         }
-
+        
         private void HandleMovementInput()
         {
-            Data.MovementInput = ReadMovementInput();
+            Data.MovementInput = PlayerControls.PlayerMovement.Movement.ReadValue<Vector2>();
             
             Data.VerticalInput = Data.MovementInput.y;
             Data.HorizontalInput = Data.MovementInput.x;
@@ -87,7 +129,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
 
         private void HandleCameraInput()
         {
-            Data.CameraInput = ReadCameraInput();
+            Data.CameraInput = PlayerControls.PlayerCamera.Movement.ReadValue<Vector2>();
             Data.CameraVerticalInput = Data.CameraInput.y;
             Data.CameraHorizontalInput = Data.CameraInput.x;
             
@@ -108,30 +150,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
                     _characterNetworkManager.NetworkRotation.Value, _characterNetworkManager.NetworkRotationSmoothTime);
             }
         }
-
-        public virtual void Update()
-        {
-            if (!_playerInputHandler.IsOwner)
-                return;
-            
-            HandleAllMovement();
-        }
-
-        public virtual void LateUpdate()
-        {
-            if (!_playerInputHandler.IsOwner)
-                return;
-            
-            HandleAllCameraActions();
-        }
-
-        protected virtual void AddInputActionsCallbacks() { }
-
-        protected virtual void RemoveInputActionsCallbacks() { }
         
-        private Vector2 ReadMovementInput() => PlayerControls.PlayerMovement.Movement.ReadValue<Vector2>();
-        private Vector2 ReadCameraInput() => PlayerControls.PlayerCamera.Movement.ReadValue<Vector2>();
-        
+        #region CAMERA METHODS
         private void HandleAllCameraActions()
         {
             HandleFollowTarget();
@@ -142,7 +162,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
         {
             _playerCameraMovement.transform.position = Vector3.SmoothDamp(
                 _playerCameraMovement.transform.position,
-                // _playerInputHandler.transform.position,
                 _playerInputHandler.PlayerView.transform.position,   //  КОРРЕКТНАЯ РАБОТА С ApplyRootMotion
                 ref _playerCameraMovement.CameraVelocity,
                 _playerCameraMovement.CameraSmoothSpeed * Time.deltaTime);
@@ -165,69 +184,79 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
             
             _playerCameraMovement.CameraPivotTransform.localRotation = playerCameraPivotRotation;
         }
-
-        private void HandleAllMovement()
-        {
-            HandleGroundedMovement();
-            HandleRotation();
-        }
+        #endregion
         
-        //  ВАРИАНТ БЕЗ ПЕРЕКАТА
-        // private void HandleGroundedMovement()
+        private void Move()
+        {
+            if (Data.MovementInput == Vector2.zero)
+                return;
+
+            _movementDirection = GetMovementInputDirection();
+            
+            float movementSpeed = GetMovementSpeed();
+            
+            _playerInputHandler.CharacterController.Move(_movementDirection * movementSpeed * Time.deltaTime);
+        }
+        // private void Move()
         // {
         //     Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
         //     Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
         //     
+        //     //   МЫ НЕ МОЖЕМ ПЕРЕДВИГАТЬСЯ ПРИ ПЕРЕКАТЕ
+        //     // if (IsDodging())
+        //     // {
+        //     //     Vector3 dodgeDirection = _movementStateConfig.MoveDirection * _movementStateConfig.DodgeDistance; // толкаем на 2 метра в направлении движения
+        //     //     _playerInputHandler.CharacterController.Move(dodgeDirection * Time.deltaTime);
+        //     //     
+        //     //     return;
+        //     // }
+        //     
+        //     //  ПЕРЕДВИЖЕНИЕ ПО ЗЕМЛЕ
         //     _movementStateConfig.MoveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
         //     // _moveDirection.y = 0;
-        //     _movementStateConfig.MoveDirection.y = Data.YVelocity;  //  ПРЫЖОК
+        //     _movementStateConfig.MoveDirection.y = Data.YVelocity;  //  ПРЫЖОК (ВЕРТИКАЛЬ)
         //     _movementStateConfig.MoveDirection.Normalize();
         //
         //     _playerInputHandler.CharacterController.Move(_movementStateConfig.MoveDirection * Data.Speed * Time.deltaTime);
         // }
         
-        private void HandleGroundedMovement()
+        #region REUSABLE METHODS
+        protected Vector3 GetMovementInputDirection()
         {
-            Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
             Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
-            
-            //   МЫ НЕ МОЖЕМ ПЕРЕДВИГАТЬСЯ ПРИ ПЕРЕКАТЕ
-            // if (IsDodging())
-            // {
-            //     Vector3 dodgeDirection = _movementStateConfig.MoveDirection * _movementStateConfig.DodgeDistance; // толкаем на 2 метра в направлении движения
-            //     _playerInputHandler.CharacterController.Move(dodgeDirection * Time.deltaTime);
-            //     
-            //     return;
-            // }
-            
-            //  ПЕРЕДВИЖЕНИЕ ПО ЗЕМЛЕ
-            _movementStateConfig.MoveDirection = forward * Data.VerticalInput + right * Data.HorizontalInput;
-            // _moveDirection.y = 0;
-            _movementStateConfig.MoveDirection.y = Data.YVelocity;  //  ПРЫЖОК (ВЕРТИКАЛЬ)
-            _movementStateConfig.MoveDirection.Normalize();
-        
-            _playerInputHandler.CharacterController.Move(_movementStateConfig.MoveDirection * Data.Speed * Time.deltaTime);
+            Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
+
+            Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
+
+            movementDirection.y = 0;
+            movementDirection.Normalize();
+
+            return movementDirection;
         }
         
-        //  ПОВОРОТ ИГРОКА ПО НАПРАВЛЕНИЮ КАМЕРЫ
-        private void HandleRotation()
+        protected float GetMovementSpeed()
         {
-            if (IsDodging())    //  !!!TEST
-                return;
+            return Data.BaseSpeed * Data.MovementSpeedModifier;
+        }
+        #endregion
+        
+        private void Rotate()
+        {
+            // if (IsDodging())    //  !!!TEST
+            //     return;
             
             Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
 
             Vector3 cameraObjectForward = cameraObjectTransform.forward;
             Vector3 cameraObjectRight = cameraObjectTransform.right;
 
-            _movementStateConfig.TargetRotationDirection = cameraObjectForward * Data.VerticalInput;
-            _movementStateConfig.TargetRotationDirection = _movementStateConfig.TargetRotationDirection + cameraObjectRight * Data.HorizontalInput;
-            _movementStateConfig.TargetRotationDirection.y = 0;
-            _movementStateConfig.TargetRotationDirection.Normalize();
+            _targetRotationDirection = cameraObjectForward * Data.VerticalInput + cameraObjectRight * Data.HorizontalInput;
+            _targetRotationDirection.y = 0;
+            _targetRotationDirection.Normalize();
 
-            if (_movementStateConfig.TargetRotationDirection != Vector3.zero)
+            if (_targetRotationDirection != Vector3.zero)
             {
-                Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig.TargetRotationDirection);
+                Quaternion newRotation = Quaternion.LookRotation(_targetRotationDirection);
                 
                 Quaternion targetRotation = Quaternion.Slerp(
                     PlayerView.transform.rotation,
@@ -237,5 +266,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States
                 PlayerView.transform.rotation = targetRotation;
             }
         }
+        #endregion
     }
 }

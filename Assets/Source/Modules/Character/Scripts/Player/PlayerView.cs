@@ -45,7 +45,7 @@ namespace Source.Modules.Character.Scripts.Player
             //     Debug.Log("ВОШЁЛ из состояния кувырка");
             //     _animator.SetBool(IsDodging, true);
             // }
-            Debug.Log("СТАРТ КУВЫРОК");
+            // Debug.Log("СТАРТ КУВЫРОК");
 
             _animator.SetBool(IsDodging, true);
             
@@ -57,7 +57,7 @@ namespace Source.Modules.Character.Scripts.Player
         {
             if (_animator.GetBool(IsDodging))
             {
-                Debug.Log("СТОП КУВЫРОК");
+                Debug.Log("= DODGE END = ");
 
                 _animator.SetBool(IsDodging, false);
             

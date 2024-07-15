@@ -1,7 +1,8 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
     public class FallingState : AirborneState
     {
@@ -39,20 +40,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
             
             if (_groundChecker.isTouches)
             {
-                Data.YVelocity = 0;
-                
-                if (IsIdling())
-                {
-                    StateSwitcher.SwitchState<IdlingState>();
-                }
-                else if (IsWalking())
-                {
-                    StateSwitcher.SwitchState<WalkingState>();
-                }
-                else if (IsRunning())
-                {
-                    StateSwitcher.SwitchState<RunningState>();
-                }
+                // Data.YVelocity = 0;
+                //
+                // if (IsIdling())
+                // {
+                //     StateSwitcher.SwitchState<IdlingState>();
+                // }
+                // else if (IsWalking())
+                // {
+                //     StateSwitcher.SwitchState<WalkingState>();
+                // }
+                // else if (IsRunning())
+                // {
+                //     StateSwitcher.SwitchState<RunningState>();
+                // }
             }
         }
     }

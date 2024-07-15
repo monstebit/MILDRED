@@ -1,8 +1,11 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
-    public class IdlingState : GroundedState
+    public class IdlingState : MovingState
     {
         public IdlingState(
             IStateSwitcher stateSwitcher, 
@@ -18,35 +21,24 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         {
         }
         
+        #region IState METHODS
         public override void Enter()
         {
             base.Enter();
-            
-            PlayerView.StartIdling();
-        }
 
-        public override void Exit()
-        {
-            base.Exit();
-            
-            PlayerView.StopIdling();
+            Data.MovementSpeedModifier = 0;
+            // Data.MovementSpeedModifier = Data.MovementSpeedModifier;
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (IsWalking())
-                StateSwitcher.SwitchState<WalkingState>();
-            else if (IsRunning())
-                StateSwitcher.SwitchState<RunningState>();
-            // else if (IsDodging())
-            //     StateSwitcher.SwitchState<DodgingState>();
-        }
+            if (Data.MovementInput == Vector2.zero)
+                return;
 
-        public override void LateUpdate()
-        {
-            base.LateUpdate();
+            OnMove();
         }
+        #endregion
     }
 }

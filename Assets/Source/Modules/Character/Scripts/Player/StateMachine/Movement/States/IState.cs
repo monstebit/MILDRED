@@ -1,4 +1,4 @@
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 {
     public interface IState
     {

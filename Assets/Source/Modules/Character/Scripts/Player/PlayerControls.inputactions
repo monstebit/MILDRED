@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Walk Toggle",
+                    "type": "Button",
+                    "id": "7a77dad1-fd1a-4629-886b-f3d305783461",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Jump",
                     "type": "Button",
                     "id": "f2c7be6c-b581-47a1-b598-20b3944a16e5",
@@ -92,7 +101,7 @@
                 {
                     "name": "WASD",
                     "id": "135371b2-e56a-4bfe-957c-3fadb62b71e7",
-                    "path": "2DVector(mode=2)",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -185,6 +194,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0ba48837-4bfd-4405-a6d2-de8a73328995",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Walk Toggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,5 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine;
-using Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -31,6 +31,7 @@ namespace Source.Modules.Character.Scripts.Player
             // _characterController = GetComponent<CharacterController>();
             _characterController = PlayerView.GetComponent<CharacterController>();
             _characterNetworkManager = GetComponent<CharacterNetworkManager>();
+            
             _playerControls = new PlayerControls();
             _playerStateMachine = new PlayerStateMachine(
                 this,

@@ -12,19 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c7e54cede1ec1940b124ed5bcf29903, type: 3}
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
+  _groundedStateConfig:
+    <BaseSpeed>k__BackingField: 5
   _movementStateConfig:
-    DodgeDirection: {x: 0, y: 0, z: 0}
-    DodgeDistance: 10
-    MoveDirection: {x: 0, y: 0, z: 0}
-    TargetRotationDirection: {x: 0, y: 0, z: 0}
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
     _rotationSpeed: 15
   _walkingStateConfig:
-    _walkingSpeed: 3
+    <SpeedModifier>k__BackingField: 0.576
   _runningStateConfig:
-    _runningSpeed: 5
+    <SpeedModifier>k__BackingField: 1.603
   _airborneStateConfig:
     _speed: 8
     _jumpingStateConfig:

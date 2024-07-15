@@ -1,8 +1,8 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
     public abstract class AirborneState : MovementState
     {
@@ -24,7 +24,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
         {
             base.Enter();
 
-            Data.Speed = _airborneStateConfig.Speed;
+            // Data.Speed = _airborneStateConfig.Speed;
             
             PlayerView.StartAirborne();
         }
@@ -40,7 +40,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Airborne
         {
             base.Update();
 
-            Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
+            // Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
         }
     }
 }

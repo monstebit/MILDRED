@@ -1,7 +1,8 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.States.Configs;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
     public class DodgingState : GroundedState
     {
@@ -38,15 +39,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Grounded
         {
             base.Update();
 
-            if (IsDodging()) 
-                return;
-            
-            if (IsIdling())
-                StateSwitcher.SwitchState<IdlingState>();
-            else if (IsWalking())
-                StateSwitcher.SwitchState<WalkingState>();
-            else if (IsRunning())
-                StateSwitcher.SwitchState<RunningState>();
+            // if (IsDodging()) 
+            //     return;
+            //
+            // if (IsIdling())
+            //     StateSwitcher.SwitchState<IdlingState>();
+            // else if (IsWalking())
+            //     StateSwitcher.SwitchState<WalkingState>();
+            // else if (IsRunning())
+            //     StateSwitcher.SwitchState<RunningState>();
         }
         
         public override void LateUpdate()

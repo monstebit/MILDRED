@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.States.Configs
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs
 {
     [Serializable]
     public class JumpingStateConfig
