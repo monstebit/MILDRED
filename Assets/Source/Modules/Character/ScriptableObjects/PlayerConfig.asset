@@ -20,9 +20,17 @@ MonoBehaviour:
     _maximumPivot: 80
     _rotationSpeed: 15
   _walkingStateConfig:
-    <SpeedModifier>k__BackingField: 0.576
+    <SpeedModifier>k__BackingField: 0.5
   _runningStateConfig:
-    <SpeedModifier>k__BackingField: 1.603
+    <SpeedModifier>k__BackingField: 1
+  _sprintingStateConfig:
+    <SpeedModifier>k__BackingField: 1.7
+    <SprintToRunTime>k__BackingField: 1.7
+  _dodgeStateConfig:
+    <SpeedModifier>k__BackingField: 2
+    <TimeToBeConsideredConsecutive>k__BackingField: 1
+    <ConsecutiveDashesLimitAmount>k__BackingField: 2
+    <DashLimitReachedCooldown>k__BackingField: 1.75
   _airborneStateConfig:
     _speed: 8
     _jumpingStateConfig:

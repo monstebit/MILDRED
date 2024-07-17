@@ -42,13 +42,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.AddInputActionsCallbacks();
 
             PlayerControls.PlayerMovement.Movement.canceled += OnMovementCanceled;
+            PlayerControls.PlayerMovement.Dodge.started += OnDodgeStarted;
         }
-
+        
         protected override void RemoveInputActionsCallbacks()
         {
             base.RemoveInputActionsCallbacks();
             
             PlayerControls.PlayerMovement.Movement.canceled -= OnMovementCanceled;
+            PlayerControls.PlayerMovement.Dodge.started -= OnDodgeStarted;
         }
         
         protected void OnMove()
@@ -69,6 +71,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             // Debug.Log("Вышел из состояния ходьбы");
             StateSwitcher.SwitchState<IdlingState>();
+        }
+        
+        protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
+        {
+            StateSwitcher.SwitchState<DodgingState>();
         }
         #endregion
 

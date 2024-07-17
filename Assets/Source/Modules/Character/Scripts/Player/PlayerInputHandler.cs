@@ -1,7 +1,9 @@
+using System.Collections;
 using Source.Modules.Character.Scripts.Player.StateMachine;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player
 {
@@ -53,5 +55,20 @@ namespace Source.Modules.Character.Scripts.Player
         private void OnEnable() => _playerControls.Enable();
         
         private void OnDisable() => _playerControls.Disable();
+        
+        //  TEST?
+        public void DisableActionFor(InputAction action, float seconds)
+        {
+            StartCoroutine(DisableAction(action, seconds));
+        }
+
+        private IEnumerator DisableAction(InputAction action, float seconds)
+        {
+            action.Disable();
+
+            yield return new WaitForSeconds(seconds);
+            
+            action.Enable();
+        }
     }
 }

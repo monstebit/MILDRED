@@ -48,5 +48,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         public void Update() => _currentState.Update();
 
         public void LateUpdate() => _currentState.LateUpdate();
+
+        public void OnAnimationEnterEvent()
+        {
+            _currentState?.OnAnimationEnterEvent();
+        }
+        
+        public void OnAnimationExitEvent()
+        {
+            _currentState?.OnAnimationExitEvent();
+        }
+        
+        public void OnAnimationTransitionEvent()
+        {
+            _currentState?.OnAnimationTransitionEvent();
+        }
     } 
 }

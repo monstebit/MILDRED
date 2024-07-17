@@ -99,6 +99,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             
             Debug.Log($" НАЖАЛ {Data.ShouldWalk}");
         }
+        
+        public virtual void OnAnimationEnterEvent()
+        {
+        }
+
+        public virtual void OnAnimationExitEvent()
+        {
+        }
+
+        public virtual void OnAnimationTransitionEvent()
+        {
+        }
         #endregion
         
         #region MAIN METHODS
