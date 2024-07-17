@@ -1,7 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
@@ -27,7 +26,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Enter();
 
             Data.MovementSpeedModifier = 0;
-            // Data.MovementSpeedModifier = Data.MovementSpeedModifier;
+            
+            PlayerView.StartIdling();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopIdling();
         }
 
         public override void Update()

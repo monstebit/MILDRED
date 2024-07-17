@@ -29,7 +29,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Enter();
 
             Data.MovementSpeedModifier = _walkingStateConfig.SpeedModifier;
+            
+            PlayerView.StartWalking();
         }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopWalking();
+        }
+
         #endregion
         
         protected override void OnWalkToggleStarted(InputAction.CallbackContext context)

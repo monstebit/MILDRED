@@ -8,7 +8,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     public class RunningState : MovingState
     {
         private float _startTime;
-        private bool keepSprinting;
+        private bool _keepSprinting;
         
         private RunningStateConfig _runningStateConfig;
         private SprintingStateConfig _sprintingStateConfig;
@@ -37,13 +37,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             Data.MovementSpeedModifier = _runningStateConfig.SpeedModifier;
 
             _startTime = Time.time;
+            
+            PlayerView.StartRunning();
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            keepSprinting = false;
+            _keepSprinting = false;
+            
+            PlayerView.StopRunning();
         }
 
         public override void Update()

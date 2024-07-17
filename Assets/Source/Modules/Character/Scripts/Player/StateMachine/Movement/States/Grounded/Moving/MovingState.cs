@@ -4,7 +4,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class MovingState : GroundedState
     {
-        // Start is called before the first frame update
         public MovingState(
             IStateSwitcher stateSwitcher, 
             PlayerInputHandler playerInputHandler, 
@@ -16,6 +15,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerPlayerCameraMovement, 
             data)
         {
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
         }
     }
 }

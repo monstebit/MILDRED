@@ -1,6 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
@@ -28,6 +28,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Enter()
         {
             base.Enter();
+            
+            PlayerView.StartGrounded();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopGrounded();
         }
 
         public override void Update()
@@ -43,6 +52,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             PlayerControls.PlayerMovement.Movement.canceled += OnMovementCanceled;
             PlayerControls.PlayerMovement.Dodge.started += OnDodgeStarted;
+            PlayerControls.PlayerMovement.Jump.started += OnJumpStarted;
         }
         
         protected override void RemoveInputActionsCallbacks()
@@ -51,6 +61,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerControls.PlayerMovement.Movement.canceled -= OnMovementCanceled;
             PlayerControls.PlayerMovement.Dodge.started -= OnDodgeStarted;
+            PlayerControls.PlayerMovement.Jump.started -= OnJumpStarted;
         }
         
         protected void OnMove()
@@ -77,67 +88,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             StateSwitcher.SwitchState<DodgingState>();
         }
+        
+        protected virtual void OnJumpStarted(InputAction.CallbackContext context)
+        {
+            StateSwitcher.SwitchState<JumpingState>();
+        }
         #endregion
-
-        // public override void Enter()
-        // {
-        //     base.Enter();
-        //     
-        //     PlayerView.StartGrounded();
-        // }
-        //
-        // public override void Exit()
-        // {
-        //     base.Exit();
-        //     
-        //     PlayerView.StopGrounded();
-        // }
-        //
-        // public override void Update()
-        // {
-        //     base.Update();
-        //
-        //     if (_groundChecker.isTouches == false)
-        //     {
-        //         StateSwitcher.SwitchState<FallingState>();
-        //     }
-        // }
-        //
-        // protected override void AddInputActionsCallbacks()
-        // {
-        //     base.AddInputActionsCallbacks();
-        //
-        //     PlayerControls.PlayerMovement.Jump.started += OnJumpButtonPressed;
-        //     PlayerControls.PlayerMovement.Dodge.started += OnDodgeButtonPressed;
-        // }
-        //
-        // protected override void RemoveInputActionsCallbacks()
-        // {
-        //     base.RemoveInputActionsCallbacks();
-        //     
-        //     PlayerControls.PlayerMovement.Jump.started -= OnJumpButtonPressed;
-        //     PlayerControls.PlayerMovement.Dodge.started -= OnDodgeButtonPressed;
-        // }
-        //
-        // private void OnJumpButtonPressed(InputAction.CallbackContext obj)
-        // {
-        //     if (IsDodging())
-        //         return;
-        //     
-        //     // Debug.Log("JUMP BUTTON PRESSED!");
-        //     StateSwitcher.SwitchState<JumpingState>();
-        // }
-        //
-        // private void OnDodgeButtonPressed(InputAction.CallbackContext obj)
-        // {
-        //     if (IsIdling()) //  МЫ НЕ МОЖЕМ СДЕЛАТЬ КУВЫРОК ИЗ СОСТОЯНИЯ IDLE
-        //         return;
-        //     
-        //     if (IsDodging())
-        //         return;
-        //     
-        //     // Debug.Log("DODGE BUTTON PRESSED!");
-        //     StateSwitcher.SwitchState<DodgingState>();
-        // }
     }
 }

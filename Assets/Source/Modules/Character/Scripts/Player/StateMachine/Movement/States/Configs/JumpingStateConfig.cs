@@ -11,10 +11,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         [SerializeField, Range(0, 10)] private float _jumpDistance = 5f;    //  TEST
         
         public float StartYVelocity => 2 * _maxHeight / _timeToReachMaxHeight;
-        public float StartXVelocity => _jumpDistance / _timeToReachMaxHeight;   //  TEST
         
         public float MaxHeight => _maxHeight;
         public float TimeToReachMaxHeight => _timeToReachMaxHeight;
-        public float JumpDistance => _jumpDistance; //  TEST
     }
 }

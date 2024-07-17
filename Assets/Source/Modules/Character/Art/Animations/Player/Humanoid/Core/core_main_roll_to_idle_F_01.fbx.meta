@@ -58,7 +58,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0.66981137
-        functionName: StopDodging
+        functionName: OnAnimationEnterEvent
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

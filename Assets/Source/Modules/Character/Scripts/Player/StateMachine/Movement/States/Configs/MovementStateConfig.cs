@@ -15,9 +15,5 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         public float MinimumPivot => _minimumPivot;
         public float MaximumPivot => _maximumPivot;
         public float RotationSpeed => _rotationSpeed;
-        
-        // public Vector3 DodgeDirection;
-        // public bool IsDodgingConfig;
-        // public float DodgeDistance = 5f;
     }
 }

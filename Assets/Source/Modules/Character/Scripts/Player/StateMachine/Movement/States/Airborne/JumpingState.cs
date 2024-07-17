@@ -19,13 +19,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             data)
             => _jumpingStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
 
+        #region IState METHODS
         public override void Enter()
         {
             base.Enter();
             
-            // Data.YVelocity = _jumpingStateConfig.StartYVelocity;
-            // Data.XVelocity = _jumpingStateConfig.StartXVelocity; // Устанавливаем начальную горизонтальную скорость
-            
+            Data.YVelocity = _jumpingStateConfig.StartYVelocity;
+
             PlayerView.StartJumping();
         }
 
@@ -40,10 +40,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
             
-            // if (Data.YVelocity < 0)
-            // {
-            //     StateSwitcher.SwitchState<FallingState>();
-            // }
+            if (Data.YVelocity < 0)
+            {
+                StateSwitcher.SwitchState<FallingState>();
+            }
         }
+        #endregion
+
     }
 }

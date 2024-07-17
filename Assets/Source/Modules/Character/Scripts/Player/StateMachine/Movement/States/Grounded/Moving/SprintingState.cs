@@ -33,6 +33,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             Data.MovementSpeedModifier = _sprintingStateConfig.SpeedModifier;
 
             _startTime = Time.time;
+            
+            PlayerView.StartSprinting();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopSprinting();
         }
 
         public override void Update()
@@ -88,6 +97,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         private void OnSprintPerformed(InputAction.CallbackContext context)
         {
             _keepSprinting = true;
+            
+            Data.ShouldSprint = true;
         }
         #endregion
     }

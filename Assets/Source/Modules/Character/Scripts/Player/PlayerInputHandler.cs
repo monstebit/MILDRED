@@ -30,7 +30,6 @@ namespace Source.Modules.Character.Scripts.Player
         {
             PlayerView.Initialize();
             
-            // _characterController = GetComponent<CharacterController>();
             _characterController = PlayerView.GetComponent<CharacterController>();
             _characterNetworkManager = GetComponent<CharacterNetworkManager>();
             
@@ -69,6 +68,21 @@ namespace Source.Modules.Character.Scripts.Player
             yield return new WaitForSeconds(seconds);
             
             action.Enable();
+        }
+
+        public void OnMovementStateAnimationEnterEvent()
+        {
+            _playerStateMachine.OnAnimationEnterEvent();
+        }
+        
+        public void OnMovementStateAnimationExitEvent()
+        {
+            _playerStateMachine.OnAnimationEnterEvent();
+        }
+        
+        public void OnMovementStateAnimationTransitionEvent()
+        {
+            _playerStateMachine.OnAnimationEnterEvent();
         }
     }
 }

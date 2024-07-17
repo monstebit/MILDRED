@@ -10,8 +10,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     {
         private DodgeStateConfig _dodgeStateConfig;
         private PlayerInputHandler _playerInputHandler;
+        
         private float _startTime;
         private int _consecutiveDashedUsed;
+        private bool _shouldKeepRotating;
 
         public DodgingState(
             IStateSwitcher stateSwitcher,
@@ -32,14 +34,33 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         #region IState METHODS
         public override void Enter()
         {
-            base.Enter();
-
             Data.MovementSpeedModifier = _dodgeStateConfig.SpeedModifier;
             
+            base.Enter();
+            
             AddForceTransitionFromStationaryState();
+
+            _shouldKeepRotating = Data.MovementInput != Vector2.zero;
+            
             UpdateConsecutiveDashes();
+            
             _startTime = Time.time;
-            // PlayerView.StartDodging();
+            
+            PlayerView.StartDodging();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            Dash();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopDodging();
         }
 
         public override void OnAnimationEnterEvent()
@@ -63,10 +84,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             {
                 return;
             }
-
+            
             Vector3 playerRotationDirection = PlayerView.transform.forward;
             playerRotationDirection.y = 0f;
-            //чето с ригидбади было
         }
         
         private void UpdateConsecutiveDashes()
@@ -93,9 +113,29 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             return Time.time < _startTime + _dodgeStateConfig.TimeToBeConsideredConsecutive;
         }
+
+        #region REUSABLE METHODS
+        protected override void AddInputActionsCallbacks()
+        {
+            base.AddInputActionsCallbacks();
+
+            PlayerControls.PlayerMovement.Movement.performed += OnMovementPerformed;
+        }
+
+        protected override void RemoveInputActionsCallbacks()
+        {
+            base.RemoveInputActionsCallbacks();
+            
+            PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
+        }
+        
+        private void OnMovementPerformed(InputAction.CallbackContext сontext)
+        {
+            _shouldKeepRotating = true;
+        }
+        #endregion
         
         #region INPUT METHODS
-
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
         }
@@ -104,5 +144,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
         }
         #endregion
+        
+        private void Dash()
+        {
+        }
     }
 }

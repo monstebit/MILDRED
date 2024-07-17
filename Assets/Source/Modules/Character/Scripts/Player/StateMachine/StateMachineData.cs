@@ -7,6 +7,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     {
         //
         public bool ShouldWalk { get; set; }
+        public bool ShouldSprint { get; set; }
+        
+        
         public Vector2 CameraInput { get; set; }
         public Vector2 MovementInput { get; set; }
         public float BaseSpeed { get; set; } = 5f;

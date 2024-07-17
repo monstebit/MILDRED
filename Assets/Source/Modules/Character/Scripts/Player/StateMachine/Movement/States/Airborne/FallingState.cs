@@ -1,6 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
@@ -40,20 +39,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             if (_groundChecker.isTouches)
             {
-                // Data.YVelocity = 0;
-                //
-                // if (IsIdling())
-                // {
-                //     StateSwitcher.SwitchState<IdlingState>();
-                // }
-                // else if (IsWalking())
-                // {
-                //     StateSwitcher.SwitchState<WalkingState>();
-                // }
-                // else if (IsRunning())
-                // {
-                //     StateSwitcher.SwitchState<RunningState>();
-                // }
+                StateSwitcher.SwitchState<IdlingState>();
             }
         }
     }
