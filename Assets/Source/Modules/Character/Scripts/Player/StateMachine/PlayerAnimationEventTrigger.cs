@@ -9,13 +9,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     /// </summary>
     public class PlayerAnimationEventTrigger : MonoBehaviour
     {
-        private PlayerInputHandler _playerViewInputHandler;
+        [SerializeField] private PlayerInputHandler _playerViewInputHandler;
         private Animator _animator;
-
-        private void Awake()
-        {
-            _playerViewInputHandler = transform.parent.GetComponent<PlayerInputHandler>();
-        }
 
         public void TriggerOnMovementStateAnimationEnterEvent()
         {
@@ -35,6 +30,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             }
 
             _playerViewInputHandler.OnMovementStateAnimationExitEvent();
+            
+            Debug.Log("= Trigger_Exit_Event =");
+
         }
 
         public void TriggerOnMovementStateAnimationTransitionEvent()
@@ -45,6 +43,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             }
 
             _playerViewInputHandler.OnMovementStateAnimationTransitionEvent();
+            
+            Debug.Log("= Trigger_Transition_Event =");
         }
 
         private bool IsInAnimationTransition(int layerIndex = 0)

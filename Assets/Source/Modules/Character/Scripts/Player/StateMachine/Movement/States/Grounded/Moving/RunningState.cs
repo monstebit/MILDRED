@@ -13,6 +13,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         private RunningStateConfig _runningStateConfig;
         private SprintingStateConfig _sprintingStateConfig;
         
+        private PlayerConfig _playerConfig;
+        
         public RunningState(
             IStateSwitcher stateSwitcher,
             PlayerInputHandler playerInputHandler,
@@ -27,6 +29,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             _runningStateConfig = playerInputHandler.PlayerConfig.RunningStateConfig;
             _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+            _playerConfig = playerInputHandler.PlayerConfig;
         }
 
         #region IState METHODS
@@ -54,7 +57,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
 
-            if (!Data.ShouldWalk)
+            // if (!Data.ShouldWalk)
+            if (!_playerConfig.MovementStateConfig.ShouldWalk)
             {
                 return;
             }
@@ -88,6 +92,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.OnWalkToggleStarted(context);
             
             StateSwitcher.SwitchState<WalkingState>();
+        }
+        
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        {
+            base.OnMovementCanceled(context);
         }
         #endregion
     }

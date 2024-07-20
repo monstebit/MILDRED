@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
-    public class IdlingState : MovingState
+    public class IdlingState : GroundedState
     {
         public IdlingState(
             IStateSwitcher stateSwitcher, 
@@ -23,9 +23,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         #region IState METHODS
         public override void Enter()
         {
-            base.Enter();
-
             Data.MovementSpeedModifier = 0;
+
+            base.Enter();
             
             PlayerView.StartIdling();
         }

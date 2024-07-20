@@ -55,7 +55,12 @@ namespace Source.Modules.Character.Scripts.Player
         
         private void OnDisable() => _playerControls.Disable();
         
-        //  TEST?
+        /// <summary>
+        /// Этот код полезен, когда нужно временно отключить какое-либо действие ввода, например,
+        /// чтобы предотвратить нежелательные повторные действия или для реализации задержек в игре.
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="seconds"></param>
         public void DisableActionFor(InputAction action, float seconds)
         {
             StartCoroutine(DisableAction(action, seconds));
@@ -77,12 +82,12 @@ namespace Source.Modules.Character.Scripts.Player
         
         public void OnMovementStateAnimationExitEvent()
         {
-            _playerStateMachine.OnAnimationEnterEvent();
+            _playerStateMachine.OnAnimationExitEvent();
         }
         
         public void OnMovementStateAnimationTransitionEvent()
         {
-            _playerStateMachine.OnAnimationEnterEvent();
+            _playerStateMachine.OnAnimationTransitionEvent();
         }
     }
 }

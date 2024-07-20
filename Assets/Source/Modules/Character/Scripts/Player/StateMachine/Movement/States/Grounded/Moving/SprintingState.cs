@@ -9,8 +9,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     {
         private SprintingStateConfig _sprintingStateConfig;
 
-        private bool _keepSprinting;
         private float _startTime;
+        private bool _keepSprinting;
+        private bool _shouldResetSprintState;
         
         public SprintingState(
             IStateSwitcher stateSwitcher, 
@@ -28,13 +29,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         #region IState METHODS
         public override void Enter()
         {
+            Data.MovementSpeedModifier = _sprintingStateConfig.SpeedModifier;
+            
             base.Enter();
 
-            Data.MovementSpeedModifier = _sprintingStateConfig.SpeedModifier;
-
+            PlayerView.StartSprinting();
+            
             _startTime = Time.time;
             
-            PlayerView.StartSprinting();
+            Data.ShouldSprint = true;
+            
+            if (!Data.ShouldSprint)
+            {
+                _keepSprinting = false;
+            }
         }
 
         public override void Exit()
@@ -42,6 +50,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Exit();
             
             PlayerView.StopSprinting();
+            
+            if (_shouldResetSprintState)
+            {
+                _keepSprinting = false;
+            
+                Data.ShouldSprint = false;
+            }
         }
 
         public override void Update()
@@ -57,7 +72,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             {
                 return;
             }
-
+            
             StopSprinting();
         }
         #endregion
@@ -68,11 +83,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             if (Data.MovementInput == Vector2.zero)
             {
                 StateSwitcher.SwitchState<IdlingState>();
-                
-                return;
             }
-            
-            StateSwitcher.SwitchState<RunningState>();
+            else if (Data.MoveAmount < 0.5f)
+            {
+                // Если скорость движения низкая, переключаемся в состояние ходьбы
+                StateSwitcher.SwitchState<WalkingState>();
+            }
+            else if (Data.MoveAmount > 0.5 && Data.MoveAmount <= 1)
+            {
+                // Если скорость движения выше порогового значения, переключаемся в состояние бега
+                StateSwitcher.SwitchState<RunningState>();
+            }
         }
         #endregion
         
@@ -83,6 +104,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.AddInputActionsCallbacks();
 
             PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
+            PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
         }
 
         protected override void RemoveInputActionsCallbacks()
@@ -90,6 +112,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.RemoveInputActionsCallbacks();
             
             PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
+            PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
         }
         #endregion
 
@@ -98,8 +121,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             _keepSprinting = true;
             
-            Data.ShouldSprint = true;
+            // Data.ShouldSprint = true;
+            
+            StateSwitcher.SwitchState<SprintingState>();
+        }
+        
+        private void OnSprintCanceled(InputAction.CallbackContext context)
+        {
         }
         #endregion
+        
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        {
+            StateSwitcher.SwitchState<RunningState>();
+            
+            base.OnMovementCanceled(context);
+        }
     }
 }

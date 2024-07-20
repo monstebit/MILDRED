@@ -38,21 +38,26 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             base.Enter();
             
-            AddForceTransitionFromStationaryState();
+            PlayerView.StartDodging();
 
+            #region ДЛЯ ЧЕГО ЭТО?
+            AddForceTransitionFromStationaryState();
             _shouldKeepRotating = Data.MovementInput != Vector2.zero;
-            
             UpdateConsecutiveDashes();
+            #endregion
             
             _startTime = Time.time;
-            
-            PlayerView.StartDodging();
         }
 
         public override void Update()
         {
             base.Update();
 
+            if (Data.MovementInput == Vector2.zero)
+            {
+                return;
+            }
+            
             Dash();
         }
 
@@ -72,24 +77,38 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 StateSwitcher.SwitchState<IdlingState>();
             }
 
-            StateSwitcher.SwitchState<SprintingState>();
+            // StateSwitcher.SwitchState<SprintingState>(); //  ЭТО ИЗ ГЕНШИНА, НАМ НЕ НАДО ПЕРЕХОДИТЬ В СПРИНТ ПОСЛЕ КУВЫРКА
+            // StateSwitcher.SwitchState<RunningState>();
+        }
+
+        public override void OnAnimationExitEvent()
+        {
+            base.OnAnimationExitEvent();
+            
+            StateSwitcher.SwitchState<IdlingState>();
+        }
+
+        public override void OnAnimationTransitionEvent()
+        {
+            base.OnAnimationTransitionEvent();
+            
+            
+            if (Data.MovementInput == Vector2.zero)
+            {
+                StateSwitcher.SwitchState<IdlingState>();
+                
+                return;
+            }
         }
 
         #endregion
 
         #region MAIN METHODS
-        private void AddForceTransitionFromStationaryState()
+        private void AddForceTransitionFromStationaryState()    //  СОСТОЯНИЕ ПРИ ПЕРЕХОДЕ ИЗ АНИМАЦИИ В АНИМАЦИЮ
         {
-            if (Data.MovementInput != Vector2.zero)
-            {
-                return;
-            }
-            
-            Vector3 playerRotationDirection = PlayerView.transform.forward;
-            playerRotationDirection.y = 0f;
         }
         
-        private void UpdateConsecutiveDashes()
+        private void UpdateConsecutiveDashes()  //  ЛОГИКА ОТКЛЮЧЕНИЯ ВОЗМОЖНОСТИ НАЖИМАТЬ НА ПЕРЕКАТ
         {
             if (!IsConsecutive())
             {
@@ -107,12 +126,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                     _dodgeStateConfig.DashLimitReachedCooldown);
             }
         }
-        #endregion
-
+        
         private bool IsConsecutive()
         {
             return Time.time < _startTime + _dodgeStateConfig.TimeToBeConsideredConsecutive;
         }
+        #endregion
 
         #region REUSABLE METHODS
         protected override void AddInputActionsCallbacks()
@@ -129,8 +148,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
         }
         
-        private void OnMovementPerformed(InputAction.CallbackContext сontext)
+        protected override void OnMovementPerformed(InputAction.CallbackContext context)
         {
+            base.OnMovementPerformed(context);
+            
             _shouldKeepRotating = true;
         }
         #endregion
@@ -138,6 +159,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         #region INPUT METHODS
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
+            // StateSwitcher.SwitchState<RunningState>();  //  RUNNING(?)
         }
 
         protected override void OnDodgeStarted(InputAction.CallbackContext context)
@@ -147,6 +169,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         private void Dash()
         {
+            //  ЛОГИКА КУВЫРКА
         }
     }
 }

@@ -20,11 +20,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Enter()
         {
             base.Enter();
+            
+            PlayerView.StartMoving();
         }
 
         public override void Exit()
         {
             base.Exit();
+            
+            PlayerView.StopMoving();
         }
     }
 }

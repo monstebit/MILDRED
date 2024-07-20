@@ -46,6 +46,5 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             }
         }
         #endregion
-
     }
 }

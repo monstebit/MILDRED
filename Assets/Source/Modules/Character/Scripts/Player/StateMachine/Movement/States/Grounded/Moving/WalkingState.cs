@@ -48,5 +48,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             StateSwitcher.SwitchState<RunningState>();
         }
+        
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        {
+            base.OnMovementCanceled(context);
+            // StateSwitcher.SwitchState<IdlingState>();
+        }
     }
 }
