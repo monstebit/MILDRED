@@ -12,28 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c7e54cede1ec1940b124ed5bcf29903, type: 3}
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
-  _groundedStateConfig:
-    <BaseSpeed>k__BackingField: 5
   _movementStateConfig:
+    ShouldWalk: 1
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
-    _rotationSpeed: 15
+    _rotationSpeed: 50
   _walkingStateConfig:
     <SpeedModifier>k__BackingField: 0.5
   _runningStateConfig:
     <SpeedModifier>k__BackingField: 1
   _sprintingStateConfig:
+    ShouldSprint: 0
     <SpeedModifier>k__BackingField: 1.7
-    <SprintToRunTime>k__BackingField: 1.7
+    <RunToWalkTime>k__BackingField: 0.5
   _dodgeStateConfig:
-    <SpeedModifier>k__BackingField: 2
+    <SpeedModifier>k__BackingField: 1
     <TimeToBeConsideredConsecutive>k__BackingField: 1
     <ConsecutiveDashesLimitAmount>k__BackingField: 2
     <DashLimitReachedCooldown>k__BackingField: 1.75
   _airborneStateConfig:
     _speed: 8
-    _jumpingStateConfig:
-      _maxHeight: 2
-      _timeToReachMaxHeight: 0.6
-      _jumpDistance: 3.73

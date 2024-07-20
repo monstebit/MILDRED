@@ -5,8 +5,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
     public class StateMachineData
     {
-        public bool ShouldWalk { get; set; }
-        public bool ShouldSprint { get; set; }
+        // public bool ShouldWalk { get; set; }
+        // public bool ShouldSprint { get; set; }
         public Vector2 CameraInput { get; set; }
         public Vector2 MovementInput { get; set; }
         public float BaseSpeed { get; set; } = 5f;
@@ -20,7 +20,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 return ref _currentTargetRotation;
             }
         }
-        public float YVelocity;
+        // public float YVelocity;
         public float XVelocity;
         private float _verticalInput;
         private float _horizontalInput;
@@ -28,6 +28,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         private float _cameraHorizontalInput;
         private float _moveAmount;
         private float _speed;
+        private Vector3 dampedTargetRotationCurrentVelocity;
+
+        
+        public ref Vector3 DampedTargetRotationCurrentVelocity
+        {
+            get
+            {
+                return ref dampedTargetRotationCurrentVelocity;
+            }
+        }
         
         public float VerticalInput
         {

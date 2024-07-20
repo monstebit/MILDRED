@@ -8,10 +8,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     public class SprintingState : MovingState
     {
         private SprintingStateConfig _sprintingStateConfig;
-
-        private float _startTime;
-        private bool _keepSprinting;
-        private bool _shouldResetSprintState;
+        private WalkingStateConfig _walkingStateConfig;
+        private MovementStateConfig _movementStateConfig;
         
         public SprintingState(
             IStateSwitcher stateSwitcher, 
@@ -24,6 +22,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             data)
         {
             _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+            _walkingStateConfig = playerInputHandler.PlayerConfig.WalkingStateConfig;
+            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
         }
 
         #region IState METHODS
@@ -35,14 +35,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             PlayerView.StartSprinting();
             
-            _startTime = Time.time;
+            // _sprintingStateConfig._startTime = Time.time;
             
-            Data.ShouldSprint = true;
-            
-            if (!Data.ShouldSprint)
-            {
-                _keepSprinting = false;
-            }
+            // _sprintingStateConfig.ShouldSprint = true;
+            //
+            // if (!_sprintingStateConfig.ShouldSprint)
+            // {
+            //     // _sprintingStateConfig._keepSprinting = false;
+            // }
         }
 
         public override void Exit()
@@ -51,27 +51,32 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StopSprinting();
             
-            if (_shouldResetSprintState)
-            {
-                _keepSprinting = false;
-            
-                Data.ShouldSprint = false;
-            }
+            // if (_sprintingStateConfig._shouldResetSprintState)
+            // {
+            //     // _sprintingStateConfig._keepSprinting = false;
+            //
+            //     // _sprintingStateConfig.ShouldSprint = false;
+            // }
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (_keepSprinting)
-            {
-                return;
-            }
+            // if (_sprintingStateConfig._keepSprinting)
+            // {
+            //     return;
+            // }
 
-            if (Time.time < _startTime + _sprintingStateConfig.SprintToRunTime)
+            if (_sprintingStateConfig.ShouldSprint)
             {
                 return;
             }
+            
+            // if (Time.time < _sprintingStateConfig._startTime + _sprintingStateConfig.SprintToRunTime)
+            // {
+            //     return;
+            // }
             
             StopSprinting();
         }
@@ -83,59 +88,57 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             if (Data.MovementInput == Vector2.zero)
             {
                 StateSwitcher.SwitchState<IdlingState>();
+                
             }
-            else if (Data.MoveAmount < 0.5f)
+            else if (_movementStateConfig.ShouldWalk)
             {
-                // Если скорость движения низкая, переключаемся в состояние ходьбы
                 StateSwitcher.SwitchState<WalkingState>();
             }
-            else if (Data.MoveAmount > 0.5 && Data.MoveAmount <= 1)
+            else
             {
-                // Если скорость движения выше порогового значения, переключаемся в состояние бега
                 StateSwitcher.SwitchState<RunningState>();
             }
+            // else if (Data.MoveAmount < 0.5f)
+            // {
+            //     // Если скорость движения низкая, переключаемся в состояние ходьбы
+            //     StateSwitcher.SwitchState<WalkingState>();
+            // }
+            // else if (Data.MoveAmount > 0.5 && Data.MoveAmount <= 1)
+            // {
+            //     // Если скорость движения выше порогового значения, переключаемся в состояние бега
+            //     StateSwitcher.SwitchState<RunningState>();
+            // }
+            
+            // StateSwitcher.SwitchState<WalkingState>();
         }
         #endregion
         
         #region REUSABLE METHODS
-
         protected override void AddInputActionsCallbacks()
         {
             base.AddInputActionsCallbacks();
-
-            PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
-            PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
         }
 
         protected override void RemoveInputActionsCallbacks()
         {
             base.RemoveInputActionsCallbacks();
-            
-            PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
-            PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
-        }
-        #endregion
-
-        #region INPUT METHODS
-        private void OnSprintPerformed(InputAction.CallbackContext context)
-        {
-            _keepSprinting = true;
-            
-            // Data.ShouldSprint = true;
-            
-            StateSwitcher.SwitchState<SprintingState>();
-        }
-        
-        private void OnSprintCanceled(InputAction.CallbackContext context)
-        {
         }
         #endregion
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            StateSwitcher.SwitchState<RunningState>();
-            
             base.OnMovementCanceled(context);
+        }
+        
+        //  SPRINT
+        protected override void OnSprintPerformed(InputAction.CallbackContext context)
+        {
+            base.OnSprintPerformed(context);
+        }
+        
+        protected override void OnSprintCanceled(InputAction.CallbackContext context)
+        {
+            base.OnSprintCanceled(context);
         }
     }
 }

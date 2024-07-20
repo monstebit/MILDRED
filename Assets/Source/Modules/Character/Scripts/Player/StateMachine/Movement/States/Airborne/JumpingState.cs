@@ -1,5 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
+using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
@@ -17,14 +18,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             characterNetworkManager,
             playerCameraMovement,
             data)
-            => _jumpingStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
+        {
+            _jumpingStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
+        }
 
         #region IState METHODS
         public override void Enter()
         {
             base.Enter();
             
-            Data.YVelocity = _jumpingStateConfig.StartYVelocity;
+            // Data.YVelocity = _jumpingStateConfig.StartYVelocity;
 
             PlayerView.StartJumping();
         }
@@ -40,10 +43,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
             
-            if (Data.YVelocity < 0)
-            {
-                StateSwitcher.SwitchState<FallingState>();
-            }
+            // if (Data.YVelocity < 0)
+            // {
+            //     StateSwitcher.SwitchState<FallingState>();
+            // }
         }
         #endregion
     }

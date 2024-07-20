@@ -41,9 +41,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerView.StartDodging();
 
             #region ДЛЯ ЧЕГО ЭТО?
-            AddForceTransitionFromStationaryState();
-            _shouldKeepRotating = Data.MovementInput != Vector2.zero;
-            UpdateConsecutiveDashes();
+            // AddForceTransitionFromStationaryState();
+            // _shouldKeepRotating = Data.MovementInput != Vector2.zero;
+            // UpdateConsecutiveDashes();
             #endregion
             
             _startTime = Time.time;
@@ -91,7 +91,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void OnAnimationTransitionEvent()
         {
             base.OnAnimationTransitionEvent();
-            
             
             if (Data.MovementInput == Vector2.zero)
             {

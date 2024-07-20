@@ -30,18 +30,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
 
-            UpdateShouldSprintState();
+            // UpdateShouldSprintState();
             
             PlayerView.StartGrounded();
         }
         
         /// <summary>
         /// Здесь проверяется, если MovementInput равен Vector2.zero
-        /// (персонаж не движется), то ShouldSprint сбрасывается в false, прекращая спринт.
+        /// (персонаж не движется), то ShouldSprint сбрасывается в false,
+        /// прекращая спринт.
         /// </summary>
         private void UpdateShouldSprintState()
         {
-            if (Data.ShouldSprint)
+            if (_playerConfig.SprintingStateConfig.ShouldSprint)
             {
                 return;
             }
@@ -51,7 +52,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            Data.ShouldSprint = false;
+            _playerConfig.SprintingStateConfig.ShouldSprint = false;
+            Debug.Log("= СБРОС СПРИНТА =");
         }
 
         public override void Exit()
@@ -64,6 +66,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
+            
+            
         }
         #endregion
         
@@ -76,7 +80,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerControls.PlayerMovement.Jump.started += OnJumpStarted;
             
-            PlayerControls.PlayerMovement.Sprint.started += OnSprintStarted;
+            PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
             PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
         }
         
@@ -88,20 +92,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerControls.PlayerMovement.Jump.started -= OnJumpStarted;
             
-            PlayerControls.PlayerMovement.Sprint.started -= OnSprintStarted;
+            PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
             PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
         }
         
-        protected virtual void OnMove()
+        protected void OnMove()
         {
-            if (Data.ShouldSprint)
+            if (_playerConfig.SprintingStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
-                
                 return;
             }
             
-            // if (Data.ShouldWalk)
             if (_playerConfig.MovementStateConfig.ShouldWalk)
             {
                 StateSwitcher.SwitchState<WalkingState>();
@@ -124,14 +126,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             StateSwitcher.SwitchState<JumpingState>();
         }
         
-        protected virtual void OnSprintStarted(InputAction.CallbackContext context)
+        //  SPRINT
+        protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
         {
-            StateSwitcher.SwitchState<SprintingState>();
+            _playerConfig.SprintingStateConfig.ShouldSprint = true;
         }
         
         protected virtual void OnSprintCanceled(InputAction.CallbackContext context)
         {
-            StateSwitcher.SwitchState<RunningState>();
+            _playerConfig.SprintingStateConfig.ShouldSprint = false;
         }
         #endregion
     }

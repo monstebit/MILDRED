@@ -8,7 +8,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     public class RunningState : MovingState
     {
         private float _startTime;
-        private bool _keepSprinting;
         
         private RunningStateConfig _runningStateConfig;
         private SprintingStateConfig _sprintingStateConfig;
@@ -47,8 +46,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Exit()
         {
             base.Exit();
-
-            _keepSprinting = false;
             
             PlayerView.StopRunning();
         }
@@ -56,13 +53,28 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
+            
+            //  SPRINTING
+            if (_playerConfig.SprintingStateConfig.ShouldSprint)
+            {
+                StateSwitcher.SwitchState<SprintingState>();
+                return;
+            }
 
-            // if (!Data.ShouldWalk)
+            //Этот текст объясняет, что существует определенная логика перехода между состояниями
+            //в зависимости от текущих флагов и предыдущих состояний игрока.
+            //В данном случае, если игрок был в состоянии ускорения и затем перестал ускоряться,
+            //он перейдет в состояние бега, даже если флаг shouldWalk установлен в true.
+            //В противном случае, если бы игрок не был в состоянии ускорения, он бы перешел в состояние ходьбы.
             if (!_playerConfig.MovementStateConfig.ShouldWalk)
             {
                 return;
             }
 
+            //Этот код позволяет убедиться, что игрок находится в состоянии ускорения
+            //в течение определенного времени, прежде чем перейти в другое состояние
+            //(например, бег или ходьбу). Это помогает управлять плавными переходами между
+            //состояниями игрока и обеспечивает более естественное поведение персонажа в игре.
             if (Time.time < _startTime + _sprintingStateConfig.RunToWalkTime)
             {
                 return;
@@ -82,6 +94,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
+            //
+            // if (_sprintingStateConfig.ShouldSprint)
+            //     StateSwitcher.SwitchState<SprintingState>();
+            
             StateSwitcher.SwitchState<WalkingState>();
         }
         #endregion
@@ -97,6 +113,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
             base.OnMovementCanceled(context);
+        }
+        
+        protected override void OnSprintPerformed(InputAction.CallbackContext context)
+        {
+            base.OnSprintPerformed(context);
+        }
+        
+        protected override void OnSprintCanceled(InputAction.CallbackContext context)
+        {
+            base.OnSprintCanceled(context);
         }
         #endregion
     }

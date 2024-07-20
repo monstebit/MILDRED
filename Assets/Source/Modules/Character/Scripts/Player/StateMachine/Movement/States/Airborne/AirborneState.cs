@@ -24,7 +24,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Enter();
 
-            Data.Speed = _airborneStateConfig.Speed;
+            // Data.Speed = _airborneStateConfig.Speed;
             
             PlayerView.StartAirborne();
         }
@@ -40,7 +40,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
 
-            Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
+            // Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
         }
     }
 }
