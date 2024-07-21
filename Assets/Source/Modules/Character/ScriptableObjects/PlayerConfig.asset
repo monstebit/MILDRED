@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementStateConfig:
     ShouldWalk: 0
-    shouldAirborne: 1
+    shouldAirborne: 0
     shouldDodge: 0
     _sensitivity: 1.5
     _minimumPivot: -30
