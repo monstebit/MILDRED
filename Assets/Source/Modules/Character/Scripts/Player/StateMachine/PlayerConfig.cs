@@ -1,5 +1,4 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine

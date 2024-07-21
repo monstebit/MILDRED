@@ -38,13 +38,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
-            
-            //  SPRINTING
+
+            #region SPRINT STATE
             if (_sprintingStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
-                return;
             }
+            #endregion
         }
 
         public override void Exit()
@@ -60,22 +60,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.OnWalkToggleStarted(context);
             
             StateSwitcher.SwitchState<RunningState>();
-        }
-        
-        protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        {
-            base.OnMovementCanceled(context);
-        }
-        
-        //  SPRINT
-        protected override void OnSprintPerformed(InputAction.CallbackContext context)
-        {
-            base.OnSprintPerformed(context);
-        }
-        
-        protected override void OnSprintCanceled(InputAction.CallbackContext context)
-        {
-            base.OnSprintCanceled(context);
         }
     }
 }

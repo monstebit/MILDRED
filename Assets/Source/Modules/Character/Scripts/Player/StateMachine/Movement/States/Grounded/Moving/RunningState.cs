@@ -7,12 +7,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class RunningState : MovingState
     {
-        private float _startTime;
-        
+        private PlayerConfig _playerConfig;
         private RunningStateConfig _runningStateConfig;
         private SprintingStateConfig _sprintingStateConfig;
         
-        private PlayerConfig _playerConfig;
+        private float _startTime;
         
         public RunningState(
             IStateSwitcher stateSwitcher,
@@ -26,21 +25,25 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerPlayerCameraMovement,
             data)
         {
+            _playerConfig = playerInputHandler.PlayerConfig;
             _runningStateConfig = playerInputHandler.PlayerConfig.RunningStateConfig;
             _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
-            _playerConfig = playerInputHandler.PlayerConfig;
         }
 
         #region IState METHODS
         public override void Enter()
         {
+            Data.MovementSpeedModifier = _runningStateConfig.SpeedModifier;
+            
             base.Enter();
 
-            Data.MovementSpeedModifier = _runningStateConfig.SpeedModifier;
-
-            _startTime = Time.time;
-            
             PlayerView.StartRunning();
+
+            #region ЗАДАТЬ СИЛУ ПРЫЖКА В СОСТОЯНИИ БЕГА?
+            // stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.MediumForce;
+            #endregion
+            
+            _startTime = Time.time;
         }
 
         public override void Exit()
@@ -53,13 +56,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
-            
-            //  SPRINTING
+
+            #region SPRINT STATE
             if (_playerConfig.SprintingStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
                 return;
             }
+            #endregion
+
 
             //Этот текст объясняет, что существует определенная логика перехода между состояниями
             //в зависимости от текущих флагов и предыдущих состояний игрока.
@@ -94,10 +99,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            //
-            // if (_sprintingStateConfig.ShouldSprint)
-            //     StateSwitcher.SwitchState<SprintingState>();
-            
             StateSwitcher.SwitchState<WalkingState>();
         }
         #endregion
@@ -108,21 +109,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.OnWalkToggleStarted(context);
             
             StateSwitcher.SwitchState<WalkingState>();
-        }
-        
-        protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        {
-            base.OnMovementCanceled(context);
-        }
-        
-        protected override void OnSprintPerformed(InputAction.CallbackContext context)
-        {
-            base.OnSprintPerformed(context);
-        }
-        
-        protected override void OnSprintCanceled(InputAction.CallbackContext context)
-        {
-            base.OnSprintCanceled(context);
         }
         #endregion
     }

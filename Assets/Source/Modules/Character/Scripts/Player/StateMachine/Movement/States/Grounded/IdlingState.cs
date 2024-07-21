@@ -1,15 +1,13 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
     public class IdlingState : GroundedState
     {
         private PlayerInputHandler _playerInputHandler;
-        
-        private float gravityValue = -9.81f;
+        private MovementStateConfig _movementStateConfig;
         
         public IdlingState(
             IStateSwitcher stateSwitcher, 
@@ -24,6 +22,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             data)
         {
             _playerInputHandler = playerInputHandler;
+            _movementStateConfig = _playerInputHandler.PlayerConfig.MovementStateConfig;
         }
         
         #region IState METHODS

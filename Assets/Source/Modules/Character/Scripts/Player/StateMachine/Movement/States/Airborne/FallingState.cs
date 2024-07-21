@@ -1,6 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
+using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
@@ -36,7 +37,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Exit();
             
             PlayerView.StopFalling();
-
         }
 
         public override void Update()
@@ -45,17 +45,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             if (_groundChecker.isTouches)
             {
-                Data.YVelocity = 0;
-                
                 _movementStateConfig.shouldAirborne = false;
+                
+                Data.YVelocity = 0;
                 
                 StateSwitcher.SwitchState<IdlingState>();
             }
         }
-        
+
+        #region ЭТОТ МЕТОД РАБОТАЕТ НЕЗАВИСИМО ОТ base.ResetSprintState В ТЕЛЕ МЕТОДА!
         protected override void ResetSprintState()
         {
-            base.ResetSprintState();
         }
+        #endregion
     }
 }

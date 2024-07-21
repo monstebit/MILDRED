@@ -10,6 +10,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     public class PlayerAnimationEventTrigger : MonoBehaviour
     {
         [SerializeField] private PlayerInputHandler _playerInputHandler;
+        
         private Animator _animator;
 
         public void TriggerOnMovementStateAnimationEnterEvent()
@@ -31,10 +32,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
             _playerInputHandler.OnMovementStateAnimationExitEvent();
             
-            Debug.Log("= Trigger_Exit_Event =");
-
-            _playerInputHandler.PlayerConfig.MovementStateConfig.shouldDodge = false;
-
+            Debug.Log("[ Trigger_Exit_Event ]");
         }
 
         public void TriggerOnMovementStateAnimationTransitionEvent()
@@ -46,7 +44,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
             _playerInputHandler.OnMovementStateAnimationTransitionEvent();
             
-            Debug.Log("= Trigger_Transition_Event =");
+            Debug.Log("[ Trigger_Transition_Event ]");
         }
 
         private bool IsInAnimationTransition(int layerIndex = 0)

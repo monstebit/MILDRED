@@ -28,8 +28,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Enter()
         {
             base.Enter();
-
-            Data.Speed = _airborneStateConfig.Speed;
             
             PlayerView.StartAirborne();
 
@@ -49,10 +47,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
         }
-        
+
+        #region SPRINT STATE
         protected virtual void ResetSprintState()
         {
             _sprintingStateConfig.ShouldSprint = false;
         }
+        #endregion
     }
 }

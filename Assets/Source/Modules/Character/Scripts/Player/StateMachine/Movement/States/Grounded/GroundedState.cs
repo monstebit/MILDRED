@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
@@ -10,8 +9,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public abstract class GroundedState : MovementState
     {
-        private PlayerConfig _playerConfig;
         private PlayerInputHandler _playerInputHandler;
+        private PlayerConfig _playerConfig;
         
         public GroundedState(
             IStateSwitcher stateSwitcher,
@@ -34,9 +33,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
 
-            UpdateShouldSprintState();
-            
             PlayerView.StartGrounded();
+            
+            UpdateShouldSprintState();
         }
         
         /// <summary>
@@ -84,9 +83,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.AddInputActionsCallbacks();
 
             PlayerControls.PlayerMovement.Dodge.started += OnDodgeStarted;
-            
             PlayerControls.PlayerMovement.Jump.started += OnJumpStarted;
-            
             PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
             PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
         }
@@ -96,9 +93,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.RemoveInputActionsCallbacks();
             
             PlayerControls.PlayerMovement.Dodge.started -= OnDodgeStarted;
-            
             PlayerControls.PlayerMovement.Jump.started -= OnJumpStarted;
-            
             PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
             PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
         }
@@ -126,19 +121,25 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         #region INPUT METHODS
         protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
         {
+            if (Data.MovementInput == Vector2.zero)
+                return;
+            
+            if (_playerConfig.MovementStateConfig.shouldDodge)
+                return;
+            
             StateSwitcher.SwitchState<DodgingState>();
-
-            _playerConfig.MovementStateConfig.shouldDodge = true;
         }
         
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
         {
+            if (_playerConfig.MovementStateConfig.shouldDodge)
+                return;
+            
             StateSwitcher.SwitchState<JumpingState>();
             
             _playerConfig.MovementStateConfig.shouldAirborne = true;
         }
         
-        //  SPRINT
         protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
         {
             _playerConfig.SprintingStateConfig.ShouldSprint = true;

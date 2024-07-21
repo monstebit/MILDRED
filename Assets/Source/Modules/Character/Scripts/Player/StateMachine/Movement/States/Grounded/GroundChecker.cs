@@ -14,9 +14,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             isTouches = Physics.CheckSphere(transform.position, _distanceToCheck, _ground);
         }
 
+        #region ОТРИСОВКА СФЕРЫ
         protected void OnDrawGizmosSelected()
         {
             Gizmos.DrawSphere(transform.position, _distanceToCheck);
         }
+        #endregion
+
     }
 }
