@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs
 {
@@ -7,6 +8,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
     public class MovementStateConfig
     {
         [SerializeField] public bool ShouldWalk;
+        [SerializeField] public bool shouldAirborne;
+        [SerializeField] public bool shouldDodge;
 
         
         [SerializeField, Range(0.1f, 10f)] private float _sensitivity = 1.5f;

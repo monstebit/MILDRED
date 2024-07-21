@@ -10,8 +10,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         [SerializeField] private JumpingStateConfig _jumpingStateConfig;
         
         public JumpingStateConfig JumpingStateConfig => _jumpingStateConfig;
-        // public float Speed => _speed;
-        // public float BaseGravity => 2f * _jumpingStateConfig.MaxHeight /
-        //                             (_jumpingStateConfig.TimeToReachMaxHeight * _jumpingStateConfig.TimeToReachMaxHeight);
+        public float Speed => _speed;
+        public float BaseGravity => 2f * _jumpingStateConfig.MaxHeight /
+                                    (_jumpingStateConfig.TimeToReachMaxHeight * _jumpingStateConfig.TimeToReachMaxHeight);
     }
 }

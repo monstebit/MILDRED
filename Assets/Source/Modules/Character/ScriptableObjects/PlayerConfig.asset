@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   _movementStateConfig:
-    ShouldWalk: 1
+    ShouldWalk: 0
+    InAir: 0
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
@@ -33,3 +34,6 @@ MonoBehaviour:
     <DashLimitReachedCooldown>k__BackingField: 1.75
   _airborneStateConfig:
     _speed: 8
+    _jumpingStateConfig:
+      _maxHeight: 2
+      _timeToReachMaxHeight: 1

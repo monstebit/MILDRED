@@ -9,7 +9,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     /// </summary>
     public class PlayerAnimationEventTrigger : MonoBehaviour
     {
-        [SerializeField] private PlayerInputHandler _playerViewInputHandler;
+        [SerializeField] private PlayerInputHandler _playerInputHandler;
         private Animator _animator;
 
         public void TriggerOnMovementStateAnimationEnterEvent()
@@ -19,7 +19,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 return;
             }
 
-            _playerViewInputHandler.OnMovementStateAnimationEnterEvent();
+            _playerInputHandler.OnMovementStateAnimationEnterEvent();
         }
 
         public void TriggerOnMovementStateAnimationExitEvent()
@@ -29,9 +29,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 return;
             }
 
-            _playerViewInputHandler.OnMovementStateAnimationExitEvent();
+            _playerInputHandler.OnMovementStateAnimationExitEvent();
             
             Debug.Log("= Trigger_Exit_Event =");
+
+            _playerInputHandler.PlayerConfig.MovementStateConfig.shouldDodge = false;
 
         }
 
@@ -42,14 +44,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 return;
             }
 
-            _playerViewInputHandler.OnMovementStateAnimationTransitionEvent();
+            _playerInputHandler.OnMovementStateAnimationTransitionEvent();
             
             Debug.Log("= Trigger_Transition_Event =");
         }
 
         private bool IsInAnimationTransition(int layerIndex = 0)
         {
-            return _playerViewInputHandler.PlayerView._animator.IsInTransition(layerIndex);
+            return _playerInputHandler.PlayerView._animator.IsInTransition(layerIndex);
         }
     }
 }

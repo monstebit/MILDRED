@@ -1,14 +1,17 @@
+using System.Diagnostics;
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Debug = UnityEngine.Debug;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
     public abstract class GroundedState : MovementState
     {
         private PlayerConfig _playerConfig;
+        private PlayerInputHandler _playerInputHandler;
         
         public GroundedState(
             IStateSwitcher stateSwitcher,
@@ -23,6 +26,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             data)
         {
             _playerConfig = playerInputHandler.PlayerConfig;
+            _playerInputHandler = playerInputHandler;
         }
         
         #region IState METHODS
@@ -30,7 +34,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
 
-            // UpdateShouldSprintState();
+            UpdateShouldSprintState();
             
             PlayerView.StartGrounded();
         }
@@ -53,7 +57,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             }
             
             _playerConfig.SprintingStateConfig.ShouldSprint = false;
-            Debug.Log("= СБРОС СПРИНТА =");
+            Debug.Log("[ Сброс Спринта ]");
         }
 
         public override void Exit()
@@ -67,7 +71,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
             
-            
+            if (_playerInputHandler.GroundChecker.isTouches == false)
+            {
+                StateSwitcher.SwitchState<FallingState>();
+            }
         }
         #endregion
         
@@ -101,6 +108,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             if (_playerConfig.SprintingStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
+                
                 return;
             }
             
@@ -119,11 +127,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
         {
             StateSwitcher.SwitchState<DodgingState>();
+
+            _playerConfig.MovementStateConfig.shouldDodge = true;
         }
         
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
         {
             StateSwitcher.SwitchState<JumpingState>();
+            
+            _playerConfig.MovementStateConfig.shouldAirborne = true;
         }
         
         //  SPRINT

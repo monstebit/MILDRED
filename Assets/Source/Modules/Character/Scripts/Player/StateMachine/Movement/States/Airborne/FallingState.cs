@@ -1,4 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
@@ -6,6 +7,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     public class FallingState : AirborneState
     {
         private readonly GroundChecker _groundChecker;
+        private MovementStateConfig _movementStateConfig;
 
         public FallingState(
             IStateSwitcher stateSwitcher,
@@ -17,7 +19,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             characterNetworkManager,
             playerCameraMovement,
             data)
-            => _groundChecker = playerInputHandler.GroundChecker;
+        {
+            _groundChecker = playerInputHandler.GroundChecker;
+            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+        }
 
         public override void Enter()
         {
@@ -31,6 +36,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Exit();
             
             PlayerView.StopFalling();
+
         }
 
         public override void Update()
@@ -39,8 +45,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             if (_groundChecker.isTouches)
             {
+                Data.YVelocity = 0;
+                
+                _movementStateConfig.shouldAirborne = false;
+                
                 StateSwitcher.SwitchState<IdlingState>();
             }
+        }
+        
+        protected override void ResetSprintState()
+        {
+            base.ResetSprintState();
         }
     }
 }

@@ -7,7 +7,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     public abstract class AirborneState : MovementState
     {
         private readonly AirborneStateConfig _airborneStateConfig;
-        
+        private readonly PlayerInputHandler _playerInputHandler;
+        private readonly SprintingStateConfig _sprintingStateConfig;
+
         public AirborneState(
             IStateSwitcher stateSwitcher,
             PlayerInputHandler playerInputHandler,
@@ -18,15 +20,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             characterNetworkManager,
             playerCameraMovement,
             data)
-            => _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
-
+        {
+            _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
+            _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+        }
+        
         public override void Enter()
         {
             base.Enter();
 
-            // Data.Speed = _airborneStateConfig.Speed;
+            Data.Speed = _airborneStateConfig.Speed;
             
             PlayerView.StartAirborne();
+
+            ResetSprintState();
         }
 
         public override void Exit()
@@ -39,8 +46,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Update()
         {
             base.Update();
-
-            // Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
+            
+            Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
+        }
+        
+        protected virtual void ResetSprintState()
+        {
+            _sprintingStateConfig.ShouldSprint = false;
         }
     }
 }

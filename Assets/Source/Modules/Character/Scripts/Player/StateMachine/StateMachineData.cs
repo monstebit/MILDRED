@@ -20,7 +20,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 return ref _currentTargetRotation;
             }
         }
-        // public float YVelocity;
+        public float YVelocity;
         public float XVelocity;
         private float _verticalInput;
         private float _horizontalInput;

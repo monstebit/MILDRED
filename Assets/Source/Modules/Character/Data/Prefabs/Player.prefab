@@ -1912,7 +1912,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.8
-  m_Radius: 0.25
+  m_Radius: 0.2
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -1943,7 +1943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 065f45211cb716345986eecfd6a05c5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerViewInputHandler: {fileID: 1861307780936638204}
+  _playerInputHandler: {fileID: 1861307780936638204}
 --- !u!1 &6923230505698837370
 GameObject:
   m_ObjectHideFlags: 0
