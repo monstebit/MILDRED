@@ -17,7 +17,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         #region ОТРИСОВКА СФЕРЫ
         protected void OnDrawGizmosSelected()
         {
-            Gizmos.DrawSphere(transform.position, _distanceToCheck);
+            // Gizmos.DrawSphere(transform.position, _distanceToCheck);
         }
         #endregion
 

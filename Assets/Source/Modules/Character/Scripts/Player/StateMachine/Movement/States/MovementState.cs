@@ -17,6 +17,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private PlayerCameraMovement _playerCameraMovement;
         private MovementStateConfig _movementStateConfig;
         private AirborneStateConfig _airborneStateConfig;
+        private DodgeStateConfig _dodgeStateConfig;
         
         protected Vector3 _movementDirection;
         protected Vector3 _targetRotationDirection;
@@ -34,6 +35,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             _playerCameraMovement = playerCameraMovement;
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
             _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
+            _dodgeStateConfig = playerInputHandler.PlayerConfig.DodgeStateConfig;
             Data = data;
         }
         
@@ -177,10 +179,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private void Move()
         {
             #region JUMP & DODGE STATES
-            if (_movementStateConfig.shouldAirborne)
-            {
-                return;
-            }
+            // if (_movementStateConfig.shouldAirborne)
+            // {
+            //     return;
+            // }
 
             if (_movementStateConfig.shouldDodge)
             {
@@ -198,7 +200,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             
             float movementSpeed = GetMovementSpeed();
             
-            _playerInputHandler.CharacterController.Move(_movementDirection * movementSpeed * Time.deltaTime);
+            _playerInputHandler.CharacterController.Move(
+                _movementDirection * movementSpeed * Time.deltaTime);
             #endregion
         }
 
@@ -220,24 +223,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             _playerInputHandler.CharacterController.Move(
                 jumpDirection * _airborneStateConfig.JumpingStateConfig.MaxHeight * Time.deltaTime);
         }
-
-        public void Dodge()
+        
+        public void PerformDodge()
         {
-            if (Data.MovementInput == Vector2.zero)
-                return;
-            
-            Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
-            Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
-            
-            Vector3 dodgeDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
-
-            // dodgeDirection.y = 0;
-            #region GRAVITY
-            dodgeDirection.y = Data.YVelocity;
-            #endregion
-
-            // _playerInputHandler.CharacterController.Move(dodgeDirection * 0.5f);
-            // PlayerView.transform.position += dodgeDirection.normalized * 5.0f;
+            if (Time.time < _dodgeStateConfig._startTime + _dodgeStateConfig._dodgeDuration &&
+                Vector3.Distance(
+                    _dodgeStateConfig._startDodgePosition, _playerInputHandler.CharacterController.transform.position) < _dodgeStateConfig._dodgeDistance)
+            {
+                _playerInputHandler.CharacterController.Move(
+                    PlayerView.transform.forward * _dodgeStateConfig._dodgeSpeed * Time.deltaTime);
+            }
+        }
+        
+        public void StartDodge()
+        {
+            _dodgeStateConfig._startDodgePosition = _playerInputHandler.CharacterController.transform.position;
         }
         
         private void Rotate()

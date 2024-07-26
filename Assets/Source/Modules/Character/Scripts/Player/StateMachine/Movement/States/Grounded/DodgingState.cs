@@ -1,5 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,7 +11,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         private DodgeStateConfig _dodgeStateConfig;
         private MovementStateConfig _movementStateConfig;
         
-        private float _startTime;
         private int _consecutiveDashedUsed;
 
         public DodgingState(
@@ -36,13 +36,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             base.Enter();
             
-            Dodge();
-            
             PlayerView.StartDodging();
 
-            #region ОТСЧЁТ ВРЕМЕНИ
-            _startTime = Time.time;
-            #endregion
+            _dodgeStateConfig._startTime = Time.time;
+            
+            StartDodge();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            
+            if (_movementStateConfig.shouldDodge)
+            {
+                PerformDodge();
+            }
         }
 
         public override void Exit()
@@ -51,18 +59,29 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StopDodging();
         }
+        #endregion
 
         public override void OnAnimationExitEvent()
         {
             base.OnAnimationExitEvent();
 
             _movementStateConfig.shouldDodge = false;
-            
-            StateSwitcher.SwitchState<IdlingState>();
-        }
-        #endregion
 
-        #region REUSABLE METHODS
+            if (Data.MovementInput == Vector2.zero)
+            {
+                StateSwitcher.SwitchState<IdlingState>();
+                return;
+            }
+
+            if (_movementStateConfig.ShouldWalk)
+            {
+                StateSwitcher.SwitchState<WalkingState>();
+                return;
+            }
+            
+            StateSwitcher.SwitchState<RunningState>();
+        }
+
         protected override void AddInputActionsCallbacks()
         {
             base.AddInputActionsCallbacks();
@@ -76,17 +95,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
         }
-        #endregion
         
-        #region INPUT METHODS
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
-        }
-        #endregion
-
-        protected override void OnDodgeStarted(InputAction.CallbackContext context)
-        {
-            base.OnDodgeStarted(context);
         }
     }
 }

@@ -36,6 +36,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerView.StartGrounded();
             
             UpdateShouldSprintState();
+            UpdateShouldDodgeState();
         }
         
         /// <summary>
@@ -56,7 +57,23 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             }
             
             _playerConfig.SprintingStateConfig.ShouldSprint = false;
-            Debug.Log("[ Сброс Спринта ]");
+            Debug.Log("[ Сброс СПРИНТА ]");
+        }
+        
+        private void UpdateShouldDodgeState()
+        {
+            if (_playerConfig.MovementStateConfig.shouldDodge)
+            {
+                return;
+            }
+            
+            if (Data.MovementInput != Vector2.zero)
+            {
+                return;
+            }
+            
+            _playerConfig.MovementStateConfig.shouldDodge = false;
+            Debug.Log("[ Сброс ДОДЖА ]");
         }
 
         public override void Exit()
@@ -126,6 +143,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             if (_playerConfig.MovementStateConfig.shouldDodge)
                 return;
+            
+            _playerConfig.MovementStateConfig.shouldDodge = true;
             
             StateSwitcher.SwitchState<DodgingState>();
         }

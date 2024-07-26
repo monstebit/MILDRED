@@ -32,7 +32,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
             _playerInputHandler.OnMovementStateAnimationExitEvent();
             
-            Debug.Log("[ Trigger_Exit_Event ]");
+            Debug.Log("[ TRIGGER EXIT EVENT ]");
         }
 
         public void TriggerOnMovementStateAnimationTransitionEvent()
@@ -44,7 +44,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
             _playerInputHandler.OnMovementStateAnimationTransitionEvent();
             
-            Debug.Log("[ Trigger_Transition_Event ]");
+            // Debug.Log("[ Trigger_Transition_Event ]");
         }
 
         private bool IsInAnimationTransition(int layerIndex = 0)

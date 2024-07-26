@@ -7,8 +7,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
     public class DodgeStateConfig
     {
         [field: SerializeField] [field: Range(1f, 3f)] public float SpeedModifier { get; private set; } = 2f;
-        [field: SerializeField] [field: Range(0f, 2f)] public float TimeToBeConsideredConsecutive { get; private set; } = 1f;
-        [field: SerializeField] [field: Range(1, 10)] public int ConsecutiveDashesLimitAmount { get; private set; } = 2;
-        [field: SerializeField] [field: Range(0f, 5f)] public float DashLimitReachedCooldown { get; private set; } = 1.75f;
+        
+        public float _dodgeDuration;
+        public float _dodgeSpeed;
+        public float _startTime;
+        public float _dodgeDistance ;
+        public Vector3  _startDodgePosition ;
+        private float dashTimeRemaining;
     }
 }

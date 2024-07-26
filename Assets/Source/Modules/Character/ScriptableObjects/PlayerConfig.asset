@@ -29,10 +29,16 @@ MonoBehaviour:
     <SpeedModifier>k__BackingField: 1.7
     <RunToWalkTime>k__BackingField: 0.5
   _dodgeStateConfig:
-    <SpeedModifier>k__BackingField: 1
+    <SpeedModifier>k__BackingField: 1.491
     <TimeToBeConsideredConsecutive>k__BackingField: 1
-    <ConsecutiveDashesLimitAmount>k__BackingField: 2
+    <ConsecutiveDashesLimitAmount>k__BackingField: 6
     <DashLimitReachedCooldown>k__BackingField: 1.75
+    _dodgeDuration: 1
+    _dodgeSpeed: 10
+    _dodgeDirection: {x: 5, y: 1, z: 10}
+    _startTime: 80.0689
+    _dodgeDistance: 7
+    _startDodgePosition: {x: 2.5139422, y: 0.04620284, z: -6.916438}
   _airborneStateConfig:
     _speed: 8
     _jumpingStateConfig:
