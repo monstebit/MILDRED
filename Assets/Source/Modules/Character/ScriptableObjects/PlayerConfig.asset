@@ -15,7 +15,8 @@ MonoBehaviour:
   _movementStateConfig:
     ShouldWalk: 0
     shouldAirborne: 0
-    shouldDodge: 0
+    shouldDodge: 1
+    endAnimationDodge: 0
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
@@ -30,15 +31,11 @@ MonoBehaviour:
     <RunToWalkTime>k__BackingField: 0.5
   _dodgeStateConfig:
     <SpeedModifier>k__BackingField: 1.491
-    <TimeToBeConsideredConsecutive>k__BackingField: 1
-    <ConsecutiveDashesLimitAmount>k__BackingField: 6
-    <DashLimitReachedCooldown>k__BackingField: 1.75
     _dodgeDuration: 1
     _dodgeSpeed: 10
-    _dodgeDirection: {x: 5, y: 1, z: 10}
-    _startTime: 80.0689
+    _startTime: 9.701407
     _dodgeDistance: 7
-    _startDodgePosition: {x: 2.5139422, y: 0.04620284, z: -6.916438}
+    _startDodgePosition: {x: 3.4542425, y: 0.00009995699, z: -0.5812053}
   _airborneStateConfig:
     _speed: 8
     _jumpingStateConfig:

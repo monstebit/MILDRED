@@ -44,7 +44,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
 
-            if (_sprintingStateConfig.ShouldSprint)
+            if (_movementStateConfig.ShouldSprint)
             {
                 return;
             }

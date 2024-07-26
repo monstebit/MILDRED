@@ -87,16 +87,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private void HandleMovementInput()
         {
             #region DODGE STATE
-            if (_movementStateConfig.shouldDodge)
+            if (_movementStateConfig.IsPerformingAction)
                 return;
             #endregion
             
             Data.MovementInput = PlayerControls.PlayerMovement.Movement.ReadValue<Vector2>();
+            _movementStateConfig.MovementInput = Data.MovementInput;    //  TEST MONITORING
             
             Data.VerticalInput = Data.MovementInput.y;
+            _movementStateConfig.VerticalInput = Data.VerticalInput;    //  TEST MONITORING
             Data.HorizontalInput = Data.MovementInput.x;
+            _movementStateConfig.HorizontalInput = Data.HorizontalInput;    //  TEST MONITORING
     
-            Data.MoveAmount = Mathf.Clamp01(Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
+            Data.MoveAmount = Mathf.Clamp01(
+                Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
+            _movementStateConfig.MoveAmount = Data.MoveAmount;  //  TEST MONITORING
     
             if (Data.MoveAmount <= 0.5 && Data.MoveAmount > 0)
             {
@@ -178,17 +183,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         #region MAIN METHODS
         private void Move()
         {
-            #region JUMP & DODGE STATES
-            // if (_movementStateConfig.shouldAirborne)
-            // {
-            //     return;
-            // }
-
-            if (_movementStateConfig.shouldDodge)
+            if (_movementStateConfig.IsPerformingAction)
             {
                 return;
             }
-            #endregion
 
             #region GROUNDED MOVEMENT
             if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
@@ -207,11 +205,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         private void Jump()
         {
-            if (!_movementStateConfig.shouldAirborne)
-                return;
+            // if (!_movementStateConfig.shouldAirborne)
+            //     return;
             
-            if (_movementStateConfig.shouldDodge)
-                return;
+            // if (_movementStateConfig.IsPerformingAction)
+            //     return;
             
             Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
             Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
@@ -243,7 +241,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private void Rotate()
         {
             #region DODGE STATE
-            if (_movementStateConfig.shouldDodge)
+            if (_movementStateConfig.IsPerformingAction)
                 return;
             #endregion
             

@@ -45,8 +45,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             if (_groundChecker.isTouches)
             {
-                _movementStateConfig.shouldAirborne = false;
-                
                 Data.YVelocity = 0;
                 
                 StateSwitcher.SwitchState<IdlingState>();

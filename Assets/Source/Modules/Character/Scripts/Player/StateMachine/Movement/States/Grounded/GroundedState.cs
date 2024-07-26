@@ -36,7 +36,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerView.StartGrounded();
             
             UpdateShouldSprintState();
-            UpdateShouldDodgeState();
+            // UpdateShouldDodgeState();
         }
         
         /// <summary>
@@ -46,7 +46,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         /// </summary>
         private void UpdateShouldSprintState()
         {
-            if (_playerConfig.SprintingStateConfig.ShouldSprint)
+            if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 return;
             }
@@ -56,23 +56,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            _playerConfig.SprintingStateConfig.ShouldSprint = false;
+            _playerConfig.MovementStateConfig.ShouldSprint = false;
             Debug.Log("[ Сброс СПРИНТА ]");
         }
         
         private void UpdateShouldDodgeState()
         {
-            if (_playerConfig.MovementStateConfig.shouldDodge)
-            {
-                return;
-            }
-            
-            if (Data.MovementInput != Vector2.zero)
-            {
-                return;
-            }
-            
-            _playerConfig.MovementStateConfig.shouldDodge = false;
+            _playerConfig.MovementStateConfig.IsPerformingAction = false;
             Debug.Log("[ Сброс ДОДЖА ]");
         }
 
@@ -117,7 +107,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         protected void OnMove()
         {
-            if (_playerConfig.SprintingStateConfig.ShouldSprint)
+            if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
                 
@@ -141,32 +131,32 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             if (Data.MovementInput == Vector2.zero)
                 return;
             
-            if (_playerConfig.MovementStateConfig.shouldDodge)
+            if (_playerConfig.MovementStateConfig.IsPerformingAction)
                 return;
             
-            _playerConfig.MovementStateConfig.shouldDodge = true;
+            _playerConfig.MovementStateConfig.IsPerformingAction = true;
             
             StateSwitcher.SwitchState<DodgingState>();
         }
         
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
         {
-            if (_playerConfig.MovementStateConfig.shouldDodge)
+            if (_playerConfig.MovementStateConfig.IsPerformingAction)
                 return;
             
             StateSwitcher.SwitchState<JumpingState>();
             
-            _playerConfig.MovementStateConfig.shouldAirborne = true;
+            // _playerConfig.MovementStateConfig.IsPerformingAction = true;
         }
         
         protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
         {
-            _playerConfig.SprintingStateConfig.ShouldSprint = true;
+            _playerConfig.MovementStateConfig.ShouldSprint = true;
         }
         
         protected virtual void OnSprintCanceled(InputAction.CallbackContext context)
         {
-            _playerConfig.SprintingStateConfig.ShouldSprint = false;
+            _playerConfig.MovementStateConfig.ShouldSprint = false;
         }
         #endregion
     }

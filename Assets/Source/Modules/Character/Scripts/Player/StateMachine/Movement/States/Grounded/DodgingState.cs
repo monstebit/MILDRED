@@ -40,6 +40,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             _dodgeStateConfig._startTime = Time.time;
             
+            _movementStateConfig.endAnimationDodge = false;
+            
             StartDodge();
         }
 
@@ -47,9 +49,26 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
             
-            if (_movementStateConfig.shouldDodge)
+            if (_movementStateConfig.IsPerformingAction)
             {
                 PerformDodge();
+            }
+
+            if (_movementStateConfig.endAnimationDodge)
+            {
+                if (Data.MovementInput == Vector2.zero)
+                {
+                    StateSwitcher.SwitchState<IdlingState>();
+                    return;
+                }
+                
+                if (_movementStateConfig.ShouldWalk)
+                {
+                    StateSwitcher.SwitchState<WalkingState>();
+                    return;
+                }
+                
+                StateSwitcher.SwitchState<RunningState>();
             }
         }
 
@@ -61,25 +80,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         }
         #endregion
 
-        public override void OnAnimationExitEvent()
+        public override void OnAnimationExitEvent() //  ТРИГГЕР ЗАВЕРШЕНИЯ АНИМАЦИИ
         {
             base.OnAnimationExitEvent();
 
-            _movementStateConfig.shouldDodge = false;
-
-            if (Data.MovementInput == Vector2.zero)
-            {
-                StateSwitcher.SwitchState<IdlingState>();
-                return;
-            }
-
-            if (_movementStateConfig.ShouldWalk)
-            {
-                StateSwitcher.SwitchState<WalkingState>();
-                return;
-            }
-            
-            StateSwitcher.SwitchState<RunningState>();
+            _movementStateConfig.IsPerformingAction = false;
+            _movementStateConfig.endAnimationDodge = true;
         }
 
         protected override void AddInputActionsCallbacks()

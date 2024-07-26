@@ -53,12 +53,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         #region RESET STATES
         protected virtual void ResetSprintState()
         {
-            _sprintingStateConfig.ShouldSprint = false;
+            _movementStateConfig.ShouldSprint = false;
         }
         
         protected virtual void ResetDodgeState()
         {
-            _movementStateConfig.shouldDodge = false;
+            _movementStateConfig.IsPerformingAction = false;
         }
         #endregion
     }

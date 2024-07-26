@@ -58,7 +58,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Update();
 
             #region SPRINT STATE
-            if (_playerConfig.SprintingStateConfig.ShouldSprint)
+            if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
                 return;

@@ -8,6 +8,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     {
         private WalkingStateConfig _walkingStateConfig;
         private SprintingStateConfig _sprintingStateConfig;
+        private MovementStateConfig _movementStateConfig;
 
         public WalkingState(
             IStateSwitcher stateSwitcher,
@@ -23,6 +24,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             _walkingStateConfig = playerInputHandler.PlayerConfig.WalkingStateConfig;
             _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
         }
 
         #region IState METHODS
@@ -40,7 +42,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Update();
 
             #region SPRINT STATE
-            if (_sprintingStateConfig.ShouldSprint)
+            if (_movementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
             }
