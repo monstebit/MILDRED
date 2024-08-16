@@ -1,6 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -46,6 +47,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         public virtual void Enter()
         {
             Debug.Log($"State: {GetType().Name}");
+            // Debug.Log($"{_movementStateConfig.ShouldSprint}");
             
             AddInputActionsCallbacks();
         }
@@ -87,8 +89,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private void HandleMovementInput()
         {
             #region DODGE STATE
-            if (_movementStateConfig.IsPerformingAction)
-                return;
+            // if (_movementStateConfig.IsPerformingAction)
+            //     return;
             #endregion
             
             Data.MovementInput = PlayerControls.PlayerMovement.Movement.ReadValue<Vector2>();
@@ -141,19 +143,31 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         {
             PlayerControls.PlayerMovement.Movement.performed += OnMovementPerformed;
             PlayerControls.PlayerMovement.Movement.canceled += OnMovementCanceled;
-            PlayerControls.PlayerMovement.WalkToggle.started += OnWalkToggleStarted;
+            // PlayerControls.PlayerMovement.WalkToggle.started += OnWalkToggleStarted;
+            PlayerControls.PlayerMovement.WalkToggle.performed += OnWalkToggleStarted;
+            PlayerControls.PlayerMovement.WalkToggle.canceled += OnWalkToggleCanceled;
         }
 
         protected virtual void RemoveInputActionsCallbacks()
         {
             PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
             PlayerControls.PlayerMovement.Movement.canceled -= OnMovementCanceled;
-            PlayerControls.PlayerMovement.WalkToggle.started -= OnWalkToggleStarted;
+            // PlayerControls.PlayerMovement.WalkToggle.started -= OnWalkToggleStarted;
+            PlayerControls.PlayerMovement.WalkToggle.performed -= OnWalkToggleStarted;
+            PlayerControls.PlayerMovement.WalkToggle.canceled -= OnWalkToggleCanceled;
         }
         
         protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
         {
-            _movementStateConfig.ShouldWalk = !_movementStateConfig.ShouldWalk;
+            // _movementStateConfig.ShouldWalk = !_movementStateConfig.ShouldWalk;
+            _movementStateConfig.ShouldWalk = true;
+            Debug.Log("пПРОЖАЛ ВОЛК");
+        }
+        
+        protected virtual void OnWalkToggleCanceled(InputAction.CallbackContext context)
+        {
+            _movementStateConfig.ShouldWalk = false;
+            Debug.Log("ОТЖАЛ ВОЛК");
         }
         
         protected virtual void OnMovementPerformed(InputAction.CallbackContext context)
@@ -180,15 +194,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         }
         #endregion
         
-        #region MAIN METHODS
         private void Move()
         {
+            #region DODGE STATE
             if (_movementStateConfig.IsPerformingAction)
             {
                 return;
             }
+            #endregion
 
-            #region GROUNDED MOVEMENT
             if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
             {
                 return;
@@ -200,17 +214,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             
             _playerInputHandler.CharacterController.Move(
                 _movementDirection * movementSpeed * Time.deltaTime);
-            #endregion
         }
 
         private void Jump()
         {
-            // if (!_movementStateConfig.shouldAirborne)
-            //     return;
-            
-            // if (_movementStateConfig.IsPerformingAction)
-            //     return;
-            
             Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
             Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
             
@@ -221,22 +228,86 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             _playerInputHandler.CharacterController.Move(
                 jumpDirection * _airborneStateConfig.JumpingStateConfig.MaxHeight * Time.deltaTime);
         }
+
+
+
         
-        public void PerformDodge()
-        {
-            if (Time.time < _dodgeStateConfig._startTime + _dodgeStateConfig._dodgeDuration &&
-                Vector3.Distance(
-                    _dodgeStateConfig._startDodgePosition, _playerInputHandler.CharacterController.transform.position) < _dodgeStateConfig._dodgeDistance)
-            {
-                _playerInputHandler.CharacterController.Move(
-                    PlayerView.transform.forward * _dodgeStateConfig._dodgeSpeed * Time.deltaTime);
-            }
-        }
         
+
+        #region DODGE
         public void StartDodge()
         {
+            // Сохраняем текущее направление кувырка
+            Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
+
+            Vector3 cameraObjectForward = cameraObjectTransform.forward;
+            Vector3 cameraObjectRight = cameraObjectTransform.right;
+
+            _movementStateConfig._lastDodgeDirection = cameraObjectForward * Data.VerticalInput + cameraObjectRight * Data.HorizontalInput;
+            _movementStateConfig._lastDodgeDirection.y = 0; // Убираем вертикальный компонент
+            _movementStateConfig._lastDodgeDirection.Normalize();
+
+            if (_movementStateConfig._lastDodgeDirection != Vector3.zero)
+            {
+                // Устанавливаем начальное вращение персонажа в направлении кувырка
+                Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig._lastDodgeDirection);
+                PlayerView.transform.rotation = newRotation;
+            }
+
+            _dodgeStateConfig._startTime = Time.time;
             _dodgeStateConfig._startDodgePosition = _playerInputHandler.CharacterController.transform.position;
+            _movementStateConfig.IsPerformingAction = true;
         }
+
+        public void PerformDodge()
+        {
+            if (IsDodgeInProgress() && HasNotExceededDodgeDistance())
+            {
+                MoveCharacterForward();
+            }
+            else
+            {
+                EndDodge();
+            }
+        }
+
+        private void EndDodge()
+        {
+            _movementStateConfig.IsPerformingAction = false;
+            // Здесь можно вызвать методы или сделать что-то еще при окончании доджа.
+        }
+
+        private bool IsDodgeInProgress()
+        {
+            return Time.time < _dodgeStateConfig._startTime + _dodgeStateConfig._dodgeDuration;
+        }
+
+        private bool HasNotExceededDodgeDistance()
+        {
+            return Vector3.Distance(
+                _dodgeStateConfig._startDodgePosition, 
+                _playerInputHandler.CharacterController.transform.position) < _dodgeStateConfig._dodgeDistance;
+        }
+        
+        private void MoveCharacterForward()
+        {
+            // Используем сохраненное направление для движения персонажа
+            if (_movementStateConfig._lastDodgeDirection != Vector3.zero)
+            {
+                _playerInputHandler.CharacterController.Move(
+                    _movementStateConfig._lastDodgeDirection * _dodgeStateConfig._dodgeSpeed * Time.deltaTime);
+            }
+            else
+            {
+                // Если нет сохраненного направления, завершаем кувырок
+                EndDodge();
+            }
+        }
+        #endregion
+        
+        
+        
+        
         
         private void Rotate()
         {
@@ -299,7 +370,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             
             _playerCameraMovement.CameraPivotTransform.localRotation = playerCameraPivotRotation;
         }
-        #endregion
 
         #region REUSABLE METHODS
         private Vector3 GetMovementInputDirection()
@@ -311,7 +381,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
             // Устанавливаем y в 0, чтобы учитывать только горизонтальное движение\
             // movementDirection.y = 0;
-            // Устанавливаем y в 0, чтобы учитывать только горизонтальное движение\
             movementDirection.y = Data.YVelocity;
             // Нормализуем направление для получения единичного вектора
             movementDirection.Normalize();

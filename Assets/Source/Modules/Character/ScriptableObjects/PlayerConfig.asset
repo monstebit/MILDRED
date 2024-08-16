@@ -14,9 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementStateConfig:
     ShouldWalk: 0
-    shouldAirborne: 0
-    shouldDodge: 1
-    endAnimationDodge: 0
+    ShouldSprint: 0
+    IsPerformingAction: 0
+    MoveAmount: 0
+    MovementInput: {x: 0, y: 0}
+    VerticalInput: 0
+    HorizontalInput: 0
+    _lastDodgeDirection: {x: -0.9135452, y: 0, z: 0.4067372}
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
@@ -26,18 +30,17 @@ MonoBehaviour:
   _runningStateConfig:
     <SpeedModifier>k__BackingField: 1
   _sprintingStateConfig:
-    ShouldSprint: 0
-    <SpeedModifier>k__BackingField: 1.7
+    <SpeedModifier>k__BackingField: 1.25
     <RunToWalkTime>k__BackingField: 0.5
   _dodgeStateConfig:
     <SpeedModifier>k__BackingField: 1.491
-    _dodgeDuration: 1
+    _dodgeDuration: 0.75
     _dodgeSpeed: 10
-    _startTime: 9.701407
-    _dodgeDistance: 7
-    _startDodgePosition: {x: 3.4542425, y: 0.00009995699, z: -0.5812053}
+    _startTime: 57.292038
+    _dodgeDistance: 5
+    _startDodgePosition: {x: 0.5161197, y: 1.2906156, z: -11.889507}
   _airborneStateConfig:
-    _speed: 8
+    _speed: 1
     _jumpingStateConfig:
-      _maxHeight: 2
+      _maxHeight: 1
       _timeToReachMaxHeight: 0.5

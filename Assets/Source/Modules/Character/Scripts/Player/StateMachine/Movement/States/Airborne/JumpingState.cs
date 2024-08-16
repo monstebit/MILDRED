@@ -57,14 +57,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         }
         #endregion
 
-        #region ЭТОТ МЕТОД РАБОТАЕТ НЕЗАВИСИМО ОТ base.ResetSprintState В ТЕЛЕ МЕТОДА!
         protected override void ResetSprintState()
         {
+            base.ResetSprintState();
         }
-        
-        protected override void ResetDodgeState()
-        {
-        }
-        #endregion
     }
 }

@@ -1,16 +1,20 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 using Debug = UnityEngine.Debug;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
     public abstract class GroundedState : MovementState
     {
+        private float _dodgingTimer; 
         private PlayerInputHandler _playerInputHandler;
         private PlayerConfig _playerConfig;
+        private MovementStateConfig _movementStateConfig;
         
         public GroundedState(
             IStateSwitcher stateSwitcher,
@@ -26,6 +30,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             _playerConfig = playerInputHandler.PlayerConfig;
             _playerInputHandler = playerInputHandler;
+            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
         }
         
         #region IState METHODS
@@ -36,7 +41,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerView.StartGrounded();
             
             UpdateShouldSprintState();
-            // UpdateShouldDodgeState();
         }
         
         /// <summary>
@@ -57,13 +61,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             }
             
             _playerConfig.MovementStateConfig.ShouldSprint = false;
-            Debug.Log("[ Сброс СПРИНТА ]");
-        }
-        
-        private void UpdateShouldDodgeState()
-        {
-            _playerConfig.MovementStateConfig.IsPerformingAction = false;
-            Debug.Log("[ Сброс ДОДЖА ]");
         }
 
         public override void Exit()
@@ -77,33 +74,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
             
+            DodgingTimer();
+            
             if (_playerInputHandler.GroundChecker.isTouches == false)
             {
                 StateSwitcher.SwitchState<FallingState>();
             }
         }
         #endregion
-        
-        #region REUSABLE METHODS
-        protected override void AddInputActionsCallbacks()
-        {
-            base.AddInputActionsCallbacks();
-
-            PlayerControls.PlayerMovement.Dodge.started += OnDodgeStarted;
-            PlayerControls.PlayerMovement.Jump.started += OnJumpStarted;
-            PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
-            PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
-        }
-        
-        protected override void RemoveInputActionsCallbacks()
-        {
-            base.RemoveInputActionsCallbacks();
-            
-            PlayerControls.PlayerMovement.Dodge.started -= OnDodgeStarted;
-            PlayerControls.PlayerMovement.Jump.started -= OnJumpStarted;
-            PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
-            PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
-        }
         
         protected void OnMove()
         {
@@ -123,9 +101,49 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             StateSwitcher.SwitchState<RunningState>();
         }
+        
+        #region REUSABLE METHODS
+        protected override void AddInputActionsCallbacks()
+        {
+            base.AddInputActionsCallbacks();
+
+            PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
+            PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
+            PlayerControls.PlayerMovement.Dodge.performed += OnDodgeStarted;
+            PlayerControls.PlayerMovement.Jump.performed += OnJumpStarted;
+            
+        }
+        
+        protected override void RemoveInputActionsCallbacks()
+        {
+            base.RemoveInputActionsCallbacks();
+            
+            PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
+            PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
+            PlayerControls.PlayerMovement.Dodge.performed -= OnDodgeStarted;
+            PlayerControls.PlayerMovement.Jump.performed -= OnJumpStarted;
+        }
         #endregion
         
-        #region INPUT METHODS
+  
+        protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
+        {
+            _playerConfig.MovementStateConfig.ShouldSprint = true;
+        }
+        
+        protected virtual void OnSprintCanceled(InputAction.CallbackContext context)
+        {
+            _playerConfig.MovementStateConfig.ShouldSprint = false;
+        }
+        
+        private void DodgingTimer()
+        {
+            if (_dodgingTimer >= 0)
+            {
+                _dodgingTimer -= Time.deltaTime;
+            }
+        }
+        
         protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
         {
             if (Data.MovementInput == Vector2.zero)
@@ -134,7 +152,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             if (_playerConfig.MovementStateConfig.IsPerformingAction)
                 return;
             
-            _playerConfig.MovementStateConfig.IsPerformingAction = true;
+            if (_dodgingTimer <= 0)
+            {
+                _dodgingTimer = 0.4f;
+                return;
+            }
             
             StateSwitcher.SwitchState<DodgingState>();
         }
@@ -145,19 +167,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             
             StateSwitcher.SwitchState<JumpingState>();
-            
-            // _playerConfig.MovementStateConfig.IsPerformingAction = true;
         }
-        
-        protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
-        {
-            _playerConfig.MovementStateConfig.ShouldSprint = true;
-        }
-        
-        protected virtual void OnSprintCanceled(InputAction.CallbackContext context)
-        {
-            _playerConfig.MovementStateConfig.ShouldSprint = false;
-        }
-        #endregion
     }
 }

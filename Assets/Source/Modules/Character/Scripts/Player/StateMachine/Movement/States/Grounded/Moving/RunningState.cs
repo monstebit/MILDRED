@@ -61,6 +61,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
+                
                 return;
             }
             #endregion
@@ -99,7 +100,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            StateSwitcher.SwitchState<WalkingState>();
+            // StateSwitcher.SwitchState<WalkingState>();
         }
         #endregion
         

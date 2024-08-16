@@ -45,7 +45,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
-
+            
             if (Data.MovementInput == Vector2.zero)
             {
                 return;

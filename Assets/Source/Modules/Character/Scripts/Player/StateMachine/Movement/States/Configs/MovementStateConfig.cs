@@ -10,17 +10,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         [Header("TEST FLAGS")]
         [SerializeField] public bool ShouldWalk;
         [SerializeField] public bool ShouldSprint;
-        
         [SerializeField] public bool IsPerformingAction;
-        // [SerializeField] public bool shouldDodge;
-        // [SerializeField] public bool shouldAirborne;
-        [SerializeField] public bool endAnimationDodge;
         
         [Header("INPUTS")]
         [SerializeField] public float MoveAmount;
         [SerializeField] public Vector2 MovementInput;
         [SerializeField] public float VerticalInput;
         [SerializeField] public float HorizontalInput;
+        [SerializeField] public Vector3 _lastDodgeDirection;
+
         #endregion
         
         [Header("ROTATION")]

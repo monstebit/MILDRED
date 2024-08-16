@@ -24,6 +24,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
             _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
         }
         
         public override void Enter()
@@ -33,7 +34,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             PlayerView.StartAirborne();
 
             ResetSprintState();
-            ResetDodgeState();
         }
 
         public override void Exit()
@@ -50,16 +50,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
         }
 
-        #region RESET STATES
         protected virtual void ResetSprintState()
         {
             _movementStateConfig.ShouldSprint = false;
         }
-        
-        protected virtual void ResetDodgeState()
-        {
-            _movementStateConfig.IsPerformingAction = false;
-        }
-        #endregion
     }
 }

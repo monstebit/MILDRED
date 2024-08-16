@@ -32,7 +32,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
             _playerInputHandler.OnMovementStateAnimationExitEvent();
             
-            Debug.Log("[ TRIGGER EXIT EVENT ]");
+            // Debug.Log("[ TRIGGER EXIT EVENT ]");
         }
 
         public void TriggerOnMovementStateAnimationTransitionEvent()

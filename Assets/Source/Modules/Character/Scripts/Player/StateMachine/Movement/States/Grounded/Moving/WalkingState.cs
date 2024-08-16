@@ -1,5 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving
@@ -41,12 +42,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
 
-            #region SPRINT STATE
             if (_movementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
             }
-            #endregion
+
+            if (_movementStateConfig.ShouldWalk)
+            {
+                return;
+            }
+            
+            StopWalking();
         }
 
         public override void Exit()
@@ -57,11 +63,30 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         }
         #endregion
         
-        protected override void OnWalkToggleStarted(InputAction.CallbackContext context)
+        // protected override void OnWalkToggleStarted(InputAction.CallbackContext context)
+        // {
+        //     base.OnWalkToggleStarted(context);
+        //     
+        //     StateSwitcher.SwitchState<RunningState>();
+        // }
+        
+        // protected override void OnWalkToggleCanceled(InputAction.CallbackContext context)
+        // {
+        //     base.OnWalkToggleStarted(context);
+        //     
+        //     StateSwitcher.SwitchState<RunningState>();
+        // }
+        
+        private void StopWalking()
         {
-            base.OnWalkToggleStarted(context);
-            
-            StateSwitcher.SwitchState<RunningState>();
+            if (Data.MovementInput == Vector2.zero)
+            {
+                StateSwitcher.SwitchState<IdlingState>();
+            }
+            else
+            {
+                StateSwitcher.SwitchState<RunningState>();
+            }
         }
     }
 }

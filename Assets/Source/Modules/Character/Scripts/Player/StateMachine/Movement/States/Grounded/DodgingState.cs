@@ -1,6 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +9,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     {
         private DodgeStateConfig _dodgeStateConfig;
         private MovementStateConfig _movementStateConfig;
+        private PlayerConfig _playerConfig;
         
         private int _consecutiveDashedUsed;
 
@@ -38,9 +38,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StartDodging();
 
-            _dodgeStateConfig._startTime = Time.time;
+            _movementStateConfig.IsPerformingAction = true;
             
-            _movementStateConfig.endAnimationDodge = false;
+            _dodgeStateConfig._startTime = Time.time;
             
             StartDodge();
         }
@@ -49,26 +49,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
             
-            if (_movementStateConfig.IsPerformingAction)
-            {
-                PerformDodge();
-            }
-
-            if (_movementStateConfig.endAnimationDodge)
+            PerformDodge();
+                
+            if (_movementStateConfig.IsPerformingAction == false)
             {
                 if (Data.MovementInput == Vector2.zero)
                 {
                     StateSwitcher.SwitchState<IdlingState>();
+                    
                     return;
                 }
-                
-                if (_movementStateConfig.ShouldWalk)
-                {
-                    StateSwitcher.SwitchState<WalkingState>();
-                    return;
-                }
-                
-                StateSwitcher.SwitchState<RunningState>();
+
+                OnMove();
             }
         }
 
@@ -77,15 +69,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Exit();
             
             PlayerView.StopDodging();
+            
+            _movementStateConfig.IsPerformingAction = false;
         }
         #endregion
 
         public override void OnAnimationExitEvent() //  ТРИГГЕР ЗАВЕРШЕНИЯ АНИМАЦИИ
         {
             base.OnAnimationExitEvent();
-
-            _movementStateConfig.IsPerformingAction = false;
-            _movementStateConfig.endAnimationDodge = true;
         }
 
         protected override void AddInputActionsCallbacks()

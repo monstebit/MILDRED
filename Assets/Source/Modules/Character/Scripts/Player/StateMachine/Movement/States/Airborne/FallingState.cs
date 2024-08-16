@@ -1,6 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
@@ -8,7 +9,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     public class FallingState : AirborneState
     {
         private readonly GroundChecker _groundChecker;
-        private MovementStateConfig _movementStateConfig;
+        private readonly MovementStateConfig _movementStateConfig;
 
         public FallingState(
             IStateSwitcher stateSwitcher,
@@ -46,19 +47,35 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             if (_groundChecker.isTouches)
             {
                 Data.YVelocity = 0;
+
+                if (Data.MovementInput == Vector2.zero)
+                {
+                    StateSwitcher.SwitchState<IdlingState>();
+                    
+                    return;
+                }
                 
-                StateSwitcher.SwitchState<IdlingState>();
+                if (_movementStateConfig.ShouldSprint)
+                {
+                    StateSwitcher.SwitchState<SprintingState>();
+                
+                    return;
+                }
+            
+                if (_movementStateConfig.ShouldWalk)
+                {
+                    StateSwitcher.SwitchState<WalkingState>();
+                
+                    return;
+                }
+            
+                StateSwitcher.SwitchState<RunningState>();
             }
         }
 
-        #region ЭТОТ МЕТОД РАБОТАЕТ НЕЗАВИСИМО ОТ base.ResetSprintState В ТЕЛЕ МЕТОДА!
         protected override void ResetSprintState()
         {
+            base.ResetSprintState();
         }
-        
-        protected override void ResetDodgeState()
-        {
-        }
-        #endregion
     }
 }
