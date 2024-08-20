@@ -6,6 +6,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
     [Serializable]
     public class MovementStateConfig
     {
+        [Header("DATA VELOCITY")]
+        [SerializeField] public Vector3 YVelocity;
+        
         #region TEST FLAGS
         [Header("TEST FLAGS")]
         [SerializeField] public bool ShouldWalk;

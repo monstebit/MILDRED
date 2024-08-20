@@ -6,7 +6,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
     [Serializable]
     public class JumpingStateConfig
     {
-        [SerializeField, Range(0, 10)] private float _maxHeight = 2f;
+        [SerializeField, Range(0, 10)] private float _maxHeight = 5f;
         [SerializeField, Range(0, 10)] private float _timeToReachMaxHeight = 0.6f;
         
         public float StartYVelocity => 2 * _maxHeight / _timeToReachMaxHeight;

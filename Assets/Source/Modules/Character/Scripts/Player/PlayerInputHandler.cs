@@ -10,12 +10,12 @@ namespace Source.Modules.Character.Scripts.Player
     public class PlayerInputHandler : NetworkBehaviour
     {
         private CharacterNetworkManager _characterNetworkManager;
-        
+
         [SerializeField] private PlayerConfig _playerConfig;
         [SerializeField] private PlayerView _playerView;
         [SerializeField] private PlayerCameraMovement _playerCameraMovement;
         [SerializeField] private GroundChecker _groundChecker;
-        
+
         private PlayerControls _playerControls;
         private PlayerStateMachine _playerStateMachine;
         private CharacterController _characterController;
@@ -25,14 +25,14 @@ namespace Source.Modules.Character.Scripts.Player
         public PlayerConfig PlayerConfig => _playerConfig;
         public PlayerView PlayerView => _playerView;
         public GroundChecker GroundChecker => _groundChecker;
-        
+
         private void Awake()
         {
             PlayerView.Initialize();
-            
+
             _characterController = PlayerView.GetComponent<CharacterController>();
             _characterNetworkManager = GetComponent<CharacterNetworkManager>();
-            
+
             _playerControls = new PlayerControls();
             _playerStateMachine = new PlayerStateMachine(
                 this,
@@ -45,16 +45,16 @@ namespace Source.Modules.Character.Scripts.Player
             _playerStateMachine.HandleInput();
             _playerStateMachine.Update();
         }
-        
+
         private void LateUpdate()
         {
             _playerStateMachine.LateUpdate();
         }
-        
+
         private void OnEnable() => _playerControls.Enable();
-        
+
         private void OnDisable() => _playerControls.Disable();
-        
+
         /// <summary>
         /// Этот код полезен, когда нужно временно отключить какое-либо действие ввода, например,
         /// чтобы предотвратить нежелательные повторные действия или для реализации задержек в игре.
@@ -71,7 +71,7 @@ namespace Source.Modules.Character.Scripts.Player
             action.Disable();
 
             yield return new WaitForSeconds(seconds);
-            
+
             action.Enable();
         }
 
@@ -79,15 +79,25 @@ namespace Source.Modules.Character.Scripts.Player
         {
             _playerStateMachine.OnAnimationEnterEvent();
         }
-        
+
         public void OnMovementStateAnimationExitEvent()
         {
             _playerStateMachine.OnAnimationExitEvent();
         }
-        
+
         public void OnMovementStateAnimationTransitionEvent()
         {
             _playerStateMachine.OnAnimationTransitionEvent();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        public IEnumerator WaitBeforeAction(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
         }
     }
 }

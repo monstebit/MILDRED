@@ -11,6 +11,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         private PlayerInputHandler _playerInputHandler;
         private PlayerCameraMovement _playerCameraMovement;
         private SprintingStateConfig _sprintingStateConfig;
+        private MovementStateConfig _movementStateConfig;
         
         private Vector3 jumpDirection;
 
@@ -29,14 +30,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _playerInputHandler = playerInputHandler;
             _playerCameraMovement = playerCameraMovement;
             _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
         }
 
         #region IState METHODS
         public override void Enter()
         {
             base.Enter();
-            
-            Data.YVelocity = _jumpingStateConfig.StartYVelocity;
+
+            ApplyJumpForce();
+            // Data.YVelocity.y = _jumpingStateConfig.StartYVelocity;
+            // _movementStateConfig.YVelocity.y = _jumpingStateConfig.StartYVelocity;
+            // Data.YVelocity = _jumpingStateConfig.StartYVelocity;
             
             PlayerView.StartJumping();
         }
@@ -52,11 +57,23 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
             
-            if (Data.YVelocity < 0)
+            // if (Data.YVelocity < 0)
+            if (_movementStateConfig.YVelocity.y < 0)
+            {
                 StateSwitcher.SwitchState<FallingState>();
+            }
         }
         #endregion
 
+        
+        
+        private void ApplyJumpForce()
+        {
+            float jumpForce = 5f;
+            float gravity = -9.81f;
+            _movementStateConfig.YVelocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+        }
+        
         protected override void ResetSprintState()
         {
             base.ResetSprintState();

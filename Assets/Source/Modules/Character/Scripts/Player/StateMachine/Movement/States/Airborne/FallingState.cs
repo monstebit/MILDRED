@@ -43,10 +43,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Update()
         {
             base.Update();
+
             
             if (_groundChecker.isTouches)
             {
-                Data.YVelocity = 0;
+                // Здесь лучше обнулить скорость по оси Y, когда игрок касается земли
+                // Data.YVelocity = 0;
+                _movementStateConfig.YVelocity.y = -2f;
 
                 if (Data.MovementInput == Vector2.zero)
                 {
@@ -72,7 +75,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
                 StateSwitcher.SwitchState<RunningState>();
             }
         }
-
+        
         protected override void ResetSprintState()
         {
             base.ResetSprintState();

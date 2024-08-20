@@ -1,7 +1,7 @@
+using System.Collections;
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,7 +20,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private AirborneStateConfig _airborneStateConfig;
         private DodgeStateConfig _dodgeStateConfig;
         
-        protected Vector3 _movementDirection;
+        public Vector3 _movementDirection;
         protected Vector3 _targetRotationDirection;
         
         public MovementState(
@@ -46,7 +46,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         #region IState METHODS
         public virtual void Enter()
         {
-            Debug.Log($"State: {GetType().Name}");
+            // Debug.Log($"State: {GetType().Name}");
             // Debug.Log($"{_movementStateConfig.ShouldSprint}");
             
             AddInputActionsCallbacks();
@@ -66,7 +66,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             Rotate();
 
             #region JUMP STATE
-            Jump();
+            // Jump();
+            HandleVerticalMovement();
             #endregion
         }
 
@@ -76,6 +77,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             
             HandleAllCameraActions();
+            
         }
         #endregion
         
@@ -216,21 +218,38 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 _movementDirection * movementSpeed * Time.deltaTime);
         }
 
-        private void Jump()
+        // public void Jump()
+        // {
+        //     Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
+        //     Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
+        //     
+        //     Vector3 jumpDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
+        //
+        //     jumpDirection.y = Data.YVelocity;
+        //     
+        //     _playerInputHandler.CharacterController.Move(
+        //         jumpDirection * _airborneStateConfig.JumpingStateConfig.MaxHeight * Time.deltaTime);
+        // }
+        
+        public void HandleVerticalMovement()
         {
-            Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
-            Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
-            
-            Vector3 jumpDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
+            // float gravity = -9.81f; // Сила гравитации
+    
+            // Проверка, касается ли персонаж земли, и корректировка скорости по оси Y для стабильного соприкосновения
+            // if (_playerInputHandler.GroundChecker.isTouches && _movementStateConfig.YVelocity.y < 0)
+            if (_playerInputHandler.GroundChecker.isTouches)
+            {
+                // _movementStateConfig.YVelocity.y = -2f;
+            }
+    
+            // Применение гравитации
+            // _movementStateConfig.YVelocity.y += gravity * Time.deltaTime;
 
-            jumpDirection.y = Data.YVelocity;
-            
-            _playerInputHandler.CharacterController.Move(
-                jumpDirection * _airborneStateConfig.JumpingStateConfig.MaxHeight * Time.deltaTime);
+            // Перемещение игрока с учетом гравитации
+            _playerInputHandler.CharacterController.Move(_movementStateConfig.YVelocity * Time.deltaTime);
         }
 
-
-
+        
         
         
 
@@ -372,7 +391,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         }
 
         #region REUSABLE METHODS
-        private Vector3 GetMovementInputDirection()
+        public Vector3 GetMovementInputDirection()
         {
             // Получаем правое и переднее направление из положения камеры
             Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
@@ -381,14 +400,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
             // Устанавливаем y в 0, чтобы учитывать только горизонтальное движение\
             // movementDirection.y = 0;
-            movementDirection.y = Data.YVelocity;
+            
+            //  TODO
+            // movementDirection.y = Data.YVelocity;
+            // movementDirection.y = _movementStateConfig.YVelocity.y;
+            movementDirection.y = 0;
+            
+            
             // Нормализуем направление для получения единичного вектора
             movementDirection.Normalize();
             
             return movementDirection;
         }
         
-        private float GetMovementSpeed()
+        public float GetMovementSpeed()
         {
             return Data.BaseSpeed * Data.MovementSpeedModifier;
         }

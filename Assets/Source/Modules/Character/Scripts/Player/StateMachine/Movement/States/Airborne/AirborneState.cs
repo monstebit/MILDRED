@@ -46,10 +46,31 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Update()
         {
             base.Update();
+
+            // HandleVerticalMovement();
             
-            Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
+            // Data.YVelocity.y -= _airborneStateConfig.BaseGravity * Time.deltaTime;
+            // Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
+            ApplyGravity();
+            
+            // if (_movementStateConfig.YVelocity.y < 0)
+            // {
+            //     StateSwitcher.SwitchState<FallingState>();
+            // }
         }
 
+        private void ApplyGravity()
+        {
+            float gravity = -9.81f;
+            _movementStateConfig.YVelocity.y += gravity * Time.deltaTime;
+        }
+        
+        public void HandleVerticalMovement()
+        {
+            _playerInputHandler.CharacterController.Move(
+                _movementDirection * 5 * Time.deltaTime);
+        }
+        
         protected virtual void ResetSprintState()
         {
             _movementStateConfig.ShouldSprint = false;
