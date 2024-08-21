@@ -10,6 +10,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     {
         private readonly GroundChecker _groundChecker;
         private readonly MovementStateConfig _movementStateConfig;
+        
+        private readonly PlayerCameraMovement _playerCameraMovement;
+        private readonly PlayerInputHandler _playerInputHandler;
 
         public FallingState(
             IStateSwitcher stateSwitcher,
@@ -24,6 +27,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             _groundChecker = playerInputHandler.GroundChecker;
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+
+            _playerInputHandler = playerInputHandler;
+            _playerCameraMovement = playerCameraMovement;
         }
 
         public override void Enter()
@@ -44,11 +50,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
 
+            // AirbornMove();
             
             if (_groundChecker.isTouches)
             {
-                // Здесь лучше обнулить скорость по оси Y, когда игрок касается земли
-                // Data.YVelocity = 0;
                 _movementStateConfig.YVelocity.y = -2f;
 
                 if (Data.MovementInput == Vector2.zero)
@@ -75,6 +80,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
                 StateSwitcher.SwitchState<RunningState>();
             }
         }
+        
+        // public void AirbornMove()
+        // {
+        //     // _movementDirection = GetMovementInputDirection();
+        //     Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
+        //     Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
+        //     Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
+        //     movementDirection.y = _movementStateConfig.YVelocity.y;
+        //     // movementDirection.Normalize();
+        //     // float movementSpeed = GetMovementSpeed();
+        //     _playerInputHandler.CharacterController.Move(
+        //         _movementDirection * Data.BaseSpeed * Time.deltaTime);
+        // }
         
         protected override void ResetSprintState()
         {

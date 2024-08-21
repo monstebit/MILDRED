@@ -39,9 +39,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Enter();
 
             ApplyJumpForce();
-            // Data.YVelocity.y = _jumpingStateConfig.StartYVelocity;
-            // _movementStateConfig.YVelocity.y = _jumpingStateConfig.StartYVelocity;
-            // Data.YVelocity = _jumpingStateConfig.StartYVelocity;
             
             PlayerView.StartJumping();
         }
@@ -57,6 +54,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
             
+            // AirbornMove();
+            
             // if (Data.YVelocity < 0)
             if (_movementStateConfig.YVelocity.y < 0)
             {
@@ -64,15 +63,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             }
         }
         #endregion
-
-        
         
         private void ApplyJumpForce()
         {
-            float jumpForce = 5f;
+            float jumpForce = 2f;
             float gravity = -9.81f;
             _movementStateConfig.YVelocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
         }
+        
+        // public void AirbornMove()
+        // {
+        //     _movementDirection = GetMovementInputDirection();
+        //     
+        //     _playerInputHandler.CharacterController.Move(
+        //         _movementDirection * Data.BaseSpeed * Time.deltaTime);
+        // }
         
         protected override void ResetSprintState()
         {

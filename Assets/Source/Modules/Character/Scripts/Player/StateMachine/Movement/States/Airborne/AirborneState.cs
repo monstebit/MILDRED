@@ -7,9 +7,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     public abstract class AirborneState : MovementState
     {
         private readonly AirborneStateConfig _airborneStateConfig;
-        private readonly PlayerInputHandler _playerInputHandler;
         private readonly SprintingStateConfig _sprintingStateConfig;
         private readonly MovementStateConfig _movementStateConfig;
+        
+        private PlayerCameraMovement _playerCameraMovement;
+        private PlayerInputHandler _playerInputHandler;
 
         public AirborneState(
             IStateSwitcher stateSwitcher,
@@ -25,6 +27,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
             _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+            
+            _playerInputHandler = playerInputHandler;
+            _playerCameraMovement = playerCameraMovement;
         }
         
         public override void Enter()
@@ -46,17 +51,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Update()
         {
             base.Update();
-
-            // HandleVerticalMovement();
             
-            // Data.YVelocity.y -= _airborneStateConfig.BaseGravity * Time.deltaTime;
-            // Data.YVelocity -= _airborneStateConfig.BaseGravity * Time.deltaTime;
             ApplyGravity();
-            
-            // if (_movementStateConfig.YVelocity.y < 0)
-            // {
-            //     StateSwitcher.SwitchState<FallingState>();
-            // }
+
+            AirbornMove();
         }
 
         private void ApplyGravity()
@@ -65,15 +63,33 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _movementStateConfig.YVelocity.y += gravity * Time.deltaTime;
         }
         
-        public void HandleVerticalMovement()
-        {
-            _playerInputHandler.CharacterController.Move(
-                _movementDirection * 5 * Time.deltaTime);
-        }
-        
         protected virtual void ResetSprintState()
         {
             _movementStateConfig.ShouldSprint = false;
         }
+        
+        
+        
+        public void AirbornMove()
+        {
+            _movementDirection = GetMovementInputDirection();
+            
+            _playerInputHandler.CharacterController.Move(
+                _movementDirection * Data.BaseSpeed * Time.deltaTime);
+        }
+        // public virtual void AirbornMove()
+        // {
+        //     // _movementDirection = GetMovementInputDirection();
+        //     Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
+        //     Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
+        //     Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
+        //     movementDirection.y = _movementStateConfig.YVelocity.y;
+        //     
+        //     movementDirection.Normalize();
+        //     // float movementSpeed = GetMovementSpeed();
+        //     
+        //     _playerInputHandler.CharacterController.Move(
+        //         _movementDirection * Data.BaseSpeed * Time.deltaTime);
+        // }
     }
 }

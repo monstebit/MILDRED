@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   _movementStateConfig:
+    YVelocity: {x: 0, y: -2, z: 0}
     ShouldWalk: 0
     ShouldSprint: 0
     IsPerformingAction: 0
@@ -20,7 +21,7 @@ MonoBehaviour:
     MovementInput: {x: 0, y: 0}
     VerticalInput: 0
     HorizontalInput: 0
-    _lastDodgeDirection: {x: -0.9135452, y: 0, z: 0.4067372}
+    _lastDodgeDirection: {x: 0.79335326, y: 0, z: -0.6087615}
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
@@ -30,15 +31,15 @@ MonoBehaviour:
   _runningStateConfig:
     <SpeedModifier>k__BackingField: 1
   _sprintingStateConfig:
-    <SpeedModifier>k__BackingField: 1.25
+    <SpeedModifier>k__BackingField: 1.5
     <RunToWalkTime>k__BackingField: 0.5
   _dodgeStateConfig:
     <SpeedModifier>k__BackingField: 1.491
     _dodgeDuration: 0.75
     _dodgeSpeed: 10
-    _startTime: 57.292038
+    _startTime: 6.7665243
     _dodgeDistance: 5
-    _startDodgePosition: {x: 0.5161197, y: 1.2906156, z: -11.889507}
+    _startDodgePosition: {x: 2.5109828, y: 0.00019985437, z: -2.267762}
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:

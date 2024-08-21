@@ -198,14 +198,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         private void Move()
         {
-            #region DODGE STATE
             if (_movementStateConfig.IsPerformingAction)
             {
                 return;
             }
-            #endregion
 
             if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
+            {
+                return;
+            }
+
+            if (_playerInputHandler.GroundChecker.isTouches == false)
             {
                 return;
             }
@@ -233,19 +236,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         public void HandleVerticalMovement()
         {
-            // float gravity = -9.81f; // Сила гравитации
-    
-            // Проверка, касается ли персонаж земли, и корректировка скорости по оси Y для стабильного соприкосновения
-            // if (_playerInputHandler.GroundChecker.isTouches && _movementStateConfig.YVelocity.y < 0)
-            if (_playerInputHandler.GroundChecker.isTouches)
-            {
-                // _movementStateConfig.YVelocity.y = -2f;
-            }
-    
-            // Применение гравитации
-            // _movementStateConfig.YVelocity.y += gravity * Time.deltaTime;
-
-            // Перемещение игрока с учетом гравитации
             _playerInputHandler.CharacterController.Move(_movementStateConfig.YVelocity * Time.deltaTime);
         }
 
