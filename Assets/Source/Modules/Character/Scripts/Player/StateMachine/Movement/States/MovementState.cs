@@ -9,6 +9,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 {
     public abstract class MovementState : IState
     {
+        private float stepProgress;
+        
         private readonly PlayerInputHandler _playerInputHandler;
         
         protected readonly IStateSwitcher StateSwitcher;
@@ -19,6 +21,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private MovementStateConfig _movementStateConfig;
         private AirborneStateConfig _airborneStateConfig;
         private DodgeStateConfig _dodgeStateConfig;
+        private BackSteppingStateConfig _backSteppingStateConfig;
         
         public Vector3 _movementDirection;
         protected Vector3 _targetRotationDirection;
@@ -37,6 +40,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
             _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
             _dodgeStateConfig = playerInputHandler.PlayerConfig.DodgeStateConfig;
+            _backSteppingStateConfig = playerInputHandler.PlayerConfig.BackSteppingStateConfig;
             Data = data;
         }
         
@@ -46,8 +50,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         #region IState METHODS
         public virtual void Enter()
         {
-            // Debug.Log($"State: {GetType().Name}");
-            // Debug.Log($"{_movementStateConfig.ShouldSprint}");
+            Debug.Log($"State: {GetType().Name}");
             
             AddInputActionsCallbacks();
         }
@@ -66,7 +69,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             Rotate();
 
             #region JUMP STATE
-            // Jump();
             HandleVerticalMovement();
             #endregion
         }
@@ -161,15 +163,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
         {
-            // _movementStateConfig.ShouldWalk = !_movementStateConfig.ShouldWalk;
             _movementStateConfig.ShouldWalk = true;
-            Debug.Log("пПРОЖАЛ ВОЛК");
         }
         
         protected virtual void OnWalkToggleCanceled(InputAction.CallbackContext context)
         {
             _movementStateConfig.ShouldWalk = false;
-            Debug.Log("ОТЖАЛ ВОЛК");
         }
         
         protected virtual void OnMovementPerformed(InputAction.CallbackContext context)
@@ -220,26 +219,78 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             _playerInputHandler.CharacterController.Move(
                 _movementDirection * movementSpeed * Time.deltaTime);
         }
-
-        // public void Jump()
-        // {
-        //     Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
-        //     Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
-        //     
-        //     Vector3 jumpDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
-        //
-        //     jumpDirection.y = Data.YVelocity;
-        //     
-        //     _playerInputHandler.CharacterController.Move(
-        //         jumpDirection * _airborneStateConfig.JumpingStateConfig.MaxHeight * Time.deltaTime);
-        // }
         
         public void HandleVerticalMovement()
         {
             _playerInputHandler.CharacterController.Move(_movementStateConfig.YVelocity * Time.deltaTime);
         }
 
+
+        #region BackStep
+
+        public void PerformBackStep()
+        {
+            if (IsBackStepInProgress() && HasNotExceededBackStepDistance())
+            {
+                MoveCharacterBackward();
+            }
+            else
+            {
+                EndBackStep();
+            }
+        }
+
+        public void MoveCharacterBackward()
+        {
+            if (_backSteppingStateConfig._lastDodgeDirection != Vector3.zero)
+            {
+                _playerInputHandler.CharacterController.Move(
+                    -_backSteppingStateConfig._lastDodgeDirection * _backSteppingStateConfig.StepBackSpeed * Time.deltaTime);
+            }
+            else
+            {
+                EndBackStep();
+            }
+        }
         
+        private bool HasNotExceededBackStepDistance()
+        {
+            return Vector3.Distance(
+                _backSteppingStateConfig._startStepBackPosition, 
+                _playerInputHandler.CharacterController.transform.position) < _backSteppingStateConfig.StepBackDistance;
+        }
+        
+        public void StartBackStep()
+        {
+            _backSteppingStateConfig._lastDodgeDirection = PlayerView.transform.forward;
+            _backSteppingStateConfig._lastDodgeDirection.y = 0;
+            _backSteppingStateConfig._lastDodgeDirection.Normalize();
+
+            if (_backSteppingStateConfig._lastDodgeDirection != Vector3.zero)
+            {
+                Quaternion newRotation = Quaternion.LookRotation(_backSteppingStateConfig._lastDodgeDirection);
+                PlayerView.transform.rotation = newRotation;
+            }
+            
+            _backSteppingStateConfig._startTime = Time.time;
+            _backSteppingStateConfig._startStepBackPosition = _playerInputHandler.CharacterController.transform.position;
+            
+            _movementStateConfig.IsPerformingAction = true;
+        }
+        
+        private bool IsBackStepInProgress()
+        {
+            return Time.time < _backSteppingStateConfig._startTime + _backSteppingStateConfig.StepBackDuration;
+        }
+        
+        private void EndBackStep()
+        {
+            _movementStateConfig.IsPerformingAction = false;
+        }
+        
+        #endregion
+
+
         
         
 
@@ -283,7 +334,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private void EndDodge()
         {
             _movementStateConfig.IsPerformingAction = false;
-            // Здесь можно вызвать методы или сделать что-то еще при окончании доджа.
         }
 
         private bool IsDodgeInProgress()
