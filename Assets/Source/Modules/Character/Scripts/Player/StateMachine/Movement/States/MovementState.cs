@@ -221,18 +221,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             }
             
-            // Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
-            // Vector3 cameraObjectForward = cameraObjectTransform.forward;
-            // Vector3 cameraObjectRight = cameraObjectTransform.right;
-
-            // _movementStateConfig._targetRotationDirection = cameraObjectForward * Data.VerticalInput + cameraObjectRight * Data.HorizontalInput;
-            // _movementStateConfig._targetRotationDirection.y = 0;
-            // _movementStateConfig._targetRotationDirection.Normalize();
-
-            // if (_movementStateConfig._targetRotationDirection != Vector3.zero)
             if (_movementStateConfig._movementDirection != Vector3.zero)
             {
-                // Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig._targetRotationDirection);
                 Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig._movementDirection);
                 
                 Quaternion targetRotation = Quaternion.Slerp(
