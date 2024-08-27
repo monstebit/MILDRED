@@ -10,9 +10,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     {
         private readonly GroundChecker _groundChecker;
         private readonly MovementStateConfig _movementStateConfig;
-        
-        private readonly PlayerCameraMovement _playerCameraMovement;
-        private readonly PlayerInputHandler _playerInputHandler;
 
         public FallingState(
             IStateSwitcher stateSwitcher,
@@ -27,9 +24,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             _groundChecker = playerInputHandler.GroundChecker;
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
-
-            _playerInputHandler = playerInputHandler;
-            _playerCameraMovement = playerCameraMovement;
         }
 
         public override void Enter()
@@ -52,7 +46,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             if (_groundChecker.isTouches)
             {
-                _movementStateConfig.YVelocity.y = -2f;
+                // _movementStateConfig.YVelocity.y = -2f;
+                _movementStateConfig.YVelocity.y = _movementStateConfig.GroundedGravityForce;
 
                 if (Data.MovementInput == Vector2.zero)
                 {

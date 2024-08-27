@@ -20,6 +20,8 @@ namespace Source.Modules.Character.Scripts.Player
         private const string IsDodging = "IsDodging";
         private const string IsBackStep = "IsBackStepping";
         
+        private const string IsPerformingAction = "IsPerformingAction";
+        
         public Animator _animator;
         
         public void Initialize() => _animator = GetComponent<Animator>();
@@ -56,5 +58,8 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartFalling() => _animator.SetBool(IsFalling, true);
         public void StopFalling() => _animator.SetBool(IsFalling, false);
+        
+        public void StartPerformingAction() => _animator.SetBool(IsPerformingAction, true);
+        public void StopPerformingAction() => _animator.SetBool(IsPerformingAction, false);
     }
 }

@@ -1,5 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -160,12 +161,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            // if (_movementStateConfig.IsPerformingAction)
-            // {
-            //     return;
-            // }
-            //
-            // StateSwitcher.SwitchState<IdlingState>();
+            if (_movementStateConfig.IsPerformingAction)
+            {
+                return;
+            }
+            
+            StateSwitcher.SwitchState<IdlingState>();
         }
         #endregion
 
@@ -220,18 +221,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             }
             
-            Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
+            // Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
+            // Vector3 cameraObjectForward = cameraObjectTransform.forward;
+            // Vector3 cameraObjectRight = cameraObjectTransform.right;
 
-            Vector3 cameraObjectForward = cameraObjectTransform.forward;
-            Vector3 cameraObjectRight = cameraObjectTransform.right;
+            // _movementStateConfig._targetRotationDirection = cameraObjectForward * Data.VerticalInput + cameraObjectRight * Data.HorizontalInput;
+            // _movementStateConfig._targetRotationDirection.y = 0;
+            // _movementStateConfig._targetRotationDirection.Normalize();
 
-            _movementStateConfig._targetRotationDirection = cameraObjectForward * Data.VerticalInput + cameraObjectRight * Data.HorizontalInput;
-            _movementStateConfig._targetRotationDirection.y = 0;
-            _movementStateConfig._targetRotationDirection.Normalize();
-
-            if (_movementStateConfig._targetRotationDirection != Vector3.zero)
+            // if (_movementStateConfig._targetRotationDirection != Vector3.zero)
+            if (_movementStateConfig._movementDirection != Vector3.zero)
             {
-                Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig._targetRotationDirection);
+                // Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig._targetRotationDirection);
+                Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig._movementDirection);
                 
                 Quaternion targetRotation = Quaternion.Slerp(
                     PlayerView.transform.rotation,

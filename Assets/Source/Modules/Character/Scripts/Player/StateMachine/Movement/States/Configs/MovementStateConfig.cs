@@ -8,14 +8,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
     {
         [Header("INPUTS")]
         [SerializeField] public Vector2 MovementInput;
-        [SerializeField] public float MoveAmount;
         [SerializeField] public float VerticalInput;
         [SerializeField] public float HorizontalInput;
+        [SerializeField] public float MoveAmount;
         
         [Header("DIRECTIONS")]
-        [SerializeField] public Vector3 _targetRotationDirection;
+        // [SerializeField] public Vector3 _targetRotationDirection;
         [SerializeField] public Vector3 _movementDirection;
+        
+        [Header("HANDLE JUMP")]
         [SerializeField] public Vector3 YVelocity;
+        [SerializeField] public float GroundedGravityForce = -2f;
         
         [Header("MOVEMENT FLAGS")]
         [SerializeField] public bool ShouldWalk;

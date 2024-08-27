@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
-    public class BackSteppingState : GroundedState
+    public class BackSteppingState : PerformingActionState
     {
         private MovementStateConfig _movementStateConfig;
         private BackSteppingStateConfig _backSteppingStateConfig;

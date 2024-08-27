@@ -156,15 +156,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
         {
             if (Data.MovementInput == Vector2.zero)
+            {
                 return;
-            
+            }
+
             if (_playerConfig.MovementStateConfig.IsPerformingAction)
+            {
                 return;
+            }
             
             if (_dodgeStateConfig._dodgingTimer <= 0)
             {
                 // _dodgeStateConfig._dodgingTimer = 0.4f;
                 _dodgeStateConfig._dodgingTimer = 0.2f;
+                
                 return;
             }
             
@@ -174,7 +179,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
         {
             if (_playerConfig.MovementStateConfig.IsPerformingAction)
+            {
                 return;
+            }
             
             StateSwitcher.SwitchState<JumpingState>();
         }

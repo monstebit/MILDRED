@@ -6,12 +6,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 {
     public abstract class AirborneState : MovementState
     {
-        private readonly AirborneStateConfig _airborneStateConfig;
-        private readonly SprintingStateConfig _sprintingStateConfig;
+        private readonly PlayerInputHandler _playerInputHandler;
         private readonly MovementStateConfig _movementStateConfig;
-        
-        private PlayerCameraMovement _playerCameraMovement;
-        private PlayerInputHandler _playerInputHandler;
+        private readonly AirborneStateConfig _airborneStateConfig;
+        private float _gravity = -9.81f;
 
         public AirborneState(
             IStateSwitcher stateSwitcher,
@@ -24,12 +22,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             playerCameraMovement,
             data)
         {
-            _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
-            _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
-            
             _playerInputHandler = playerInputHandler;
-            _playerCameraMovement = playerCameraMovement;
         }
         
         public override void Enter()
@@ -60,8 +55,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 
         private void ApplyGravity()
         {
-            float gravity = -9.81f;
-            _movementStateConfig.YVelocity.y += gravity * Time.deltaTime;
+            _movementStateConfig.YVelocity.y += _gravity * Time.deltaTime;
         }
         
         protected virtual void ResetSprintState()

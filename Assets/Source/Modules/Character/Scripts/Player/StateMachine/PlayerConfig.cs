@@ -7,19 +7,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     public class PlayerConfig : ScriptableObject
     {
         [SerializeField] private MovementStateConfig _movementStateConfig;
+        [SerializeField] private RunningStateConfig _runningStateConfig;
+        [SerializeField] private WalkingStateConfig _walkingStateConfig;
+        [SerializeField] private SprintingStateConfig _sprintingStateConfig;
         [SerializeField] private DodgeStateConfig _dodgeStateConfig;
         [SerializeField] private BackSteppingStateConfig _backSteppingStateConfig;
-        [SerializeField] private WalkingStateConfig _walkingStateConfig;
-        [SerializeField] private RunningStateConfig _runningStateConfig;
-        [SerializeField] private SprintingStateConfig _sprintingStateConfig;
         [SerializeField] private AirborneStateConfig _airborneStateConfig;
 
         public MovementStateConfig MovementStateConfig => _movementStateConfig;
+        public RunningStateConfig RunningStateConfig => _runningStateConfig;
+        public WalkingStateConfig WalkingStateConfig => _walkingStateConfig;
+        public SprintingStateConfig SprintingStateConfig => _sprintingStateConfig;
         public DodgeStateConfig DodgeStateConfig => _dodgeStateConfig;
         public BackSteppingStateConfig BackSteppingStateConfig => _backSteppingStateConfig;
-        public WalkingStateConfig WalkingStateConfig => _walkingStateConfig;
-        public RunningStateConfig RunningStateConfig => _runningStateConfig;
-        public SprintingStateConfig SprintingStateConfig => _sprintingStateConfig;
         public AirborneStateConfig AirborneStateConfig => _airborneStateConfig;
     }
 }

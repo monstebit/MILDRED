@@ -1,11 +1,10 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
-    public class DodgingState : GroundedState
+    public class DodgingState : PerformingActionState
     {
         private DodgeStateConfig _dodgeStateConfig;
         private MovementStateConfig _movementStateConfig;
@@ -41,6 +40,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Enter();
             
             PlayerView.StartDodging();
+            
+            if (_dodgeStateConfig._dodgingTimer <= 0)
+            {
+                // _dodgeStateConfig._dodgingTimer = 0.4f;
+                _dodgeStateConfig._dodgingTimer = 0.2f;
+                return;
+            }
 
             _movementStateConfig.IsPerformingAction = true;
             
@@ -59,7 +65,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             {
                 if (Data.MovementInput == Vector2.zero)
                 {
-                    // StateSwitcher.SwitchState<IdlingState>();
+                    StateSwitcher.SwitchState<IdlingState>();
                     
                     return;
                 }
@@ -143,6 +149,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             {
                 // Если нет сохраненного направления, завершаем кувырок
                 EndDodge();
+            }
+        }
+        
+        private void DodgingTimer()
+        {
+            if (_dodgeStateConfig._dodgingTimer >= 0)
+            {
+                _dodgeStateConfig._dodgingTimer -= Time.deltaTime;
             }
         }
         #endregion

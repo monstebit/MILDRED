@@ -6,11 +6,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 {
     public class JumpingState : AirborneState
     {
-        private readonly JumpingStateConfig _jumpingStateConfig;
-        
-        private PlayerInputHandler _playerInputHandler;
-        private PlayerCameraMovement _playerCameraMovement;
-        private SprintingStateConfig _sprintingStateConfig;
         private MovementStateConfig _movementStateConfig;
         
         private Vector3 jumpDirection;
@@ -26,10 +21,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             playerCameraMovement,
             data)
         {
-            _jumpingStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
-            _playerInputHandler = playerInputHandler;
-            _playerCameraMovement = playerCameraMovement;
-            _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
         }
 
