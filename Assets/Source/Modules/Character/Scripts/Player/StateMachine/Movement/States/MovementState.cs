@@ -1,7 +1,5 @@
-using System.Collections;
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,8 +7,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 {
     public abstract class MovementState : IState
     {
-        private float stepProgress;
-        
         private readonly PlayerInputHandler _playerInputHandler;
         
         protected readonly IStateSwitcher StateSwitcher;
@@ -19,12 +15,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private CharacterNetworkManager _characterNetworkManager;
         private PlayerCameraMovement _playerCameraMovement;
         private MovementStateConfig _movementStateConfig;
-        private AirborneStateConfig _airborneStateConfig;
-        private DodgeStateConfig _dodgeStateConfig;
-        private BackSteppingStateConfig _backSteppingStateConfig;
-        
-        public Vector3 _movementDirection;
-        protected Vector3 _targetRotationDirection;
         
         public MovementState(
             IStateSwitcher stateSwitcher, 
@@ -38,9 +28,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             _characterNetworkManager = characterNetworkManager;
             _playerCameraMovement = playerCameraMovement;
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
-            _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
-            _dodgeStateConfig = playerInputHandler.PlayerConfig.DodgeStateConfig;
-            _backSteppingStateConfig = playerInputHandler.PlayerConfig.BackSteppingStateConfig;
             Data = data;
         }
         
@@ -63,14 +50,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         public virtual void Update()
         {
             if (!_playerInputHandler.IsOwner)
+            {
                 return;
+            }
             
             Move();
             Rotate();
 
-            #region JUMP STATE
             HandleVerticalMovement();
-            #endregion
         }
 
         public virtual void LateUpdate()
@@ -92,16 +79,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         private void HandleMovementInput()
         {
-            #region DODGE STATE
-            // if (_movementStateConfig.IsPerformingAction)
-            //     return;
-            #endregion
-            
             Data.MovementInput = PlayerControls.PlayerMovement.Movement.ReadValue<Vector2>();
             _movementStateConfig.MovementInput = Data.MovementInput;    //  TEST MONITORING
             
             Data.VerticalInput = Data.MovementInput.y;
             _movementStateConfig.VerticalInput = Data.VerticalInput;    //  TEST MONITORING
+            
             Data.HorizontalInput = Data.MovementInput.x;
             _movementStateConfig.HorizontalInput = Data.HorizontalInput;    //  TEST MONITORING
     
@@ -177,7 +160,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            StateSwitcher.SwitchState<IdlingState>();
+            // if (_movementStateConfig.IsPerformingAction)
+            // {
+            //     return;
+            // }
+            //
+            // StateSwitcher.SwitchState<IdlingState>();
         }
         #endregion
 
@@ -212,181 +200,38 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             }
             
-            _movementDirection = GetMovementInputDirection();
+            _movementStateConfig._movementDirection = GetMovementInputDirection();
             
             float movementSpeed = GetMovementSpeed();
             
             _playerInputHandler.CharacterController.Move(
-                _movementDirection * movementSpeed * Time.deltaTime);
+                _movementStateConfig._movementDirection * movementSpeed * Time.deltaTime);
         }
         
         public void HandleVerticalMovement()
         {
             _playerInputHandler.CharacterController.Move(_movementStateConfig.YVelocity * Time.deltaTime);
         }
-
-
-        #region BackStep
-
-        public void PerformBackStep()
-        {
-            if (IsBackStepInProgress() && HasNotExceededBackStepDistance())
-            {
-                MoveCharacterBackward();
-            }
-            else
-            {
-                EndBackStep();
-            }
-        }
-
-        public void MoveCharacterBackward()
-        {
-            if (_backSteppingStateConfig._lastDodgeDirection != Vector3.zero)
-            {
-                _playerInputHandler.CharacterController.Move(
-                    -_backSteppingStateConfig._lastDodgeDirection * _backSteppingStateConfig.StepBackSpeed * Time.deltaTime);
-            }
-            else
-            {
-                EndBackStep();
-            }
-        }
-        
-        private bool HasNotExceededBackStepDistance()
-        {
-            return Vector3.Distance(
-                _backSteppingStateConfig._startStepBackPosition, 
-                _playerInputHandler.CharacterController.transform.position) < _backSteppingStateConfig.StepBackDistance;
-        }
-        
-        public void StartBackStep()
-        {
-            _backSteppingStateConfig._lastDodgeDirection = PlayerView.transform.forward;
-            _backSteppingStateConfig._lastDodgeDirection.y = 0;
-            _backSteppingStateConfig._lastDodgeDirection.Normalize();
-
-            if (_backSteppingStateConfig._lastDodgeDirection != Vector3.zero)
-            {
-                Quaternion newRotation = Quaternion.LookRotation(_backSteppingStateConfig._lastDodgeDirection);
-                PlayerView.transform.rotation = newRotation;
-            }
-            
-            _backSteppingStateConfig._startTime = Time.time;
-            _backSteppingStateConfig._startStepBackPosition = _playerInputHandler.CharacterController.transform.position;
-            
-            _movementStateConfig.IsPerformingAction = true;
-        }
-        
-        private bool IsBackStepInProgress()
-        {
-            return Time.time < _backSteppingStateConfig._startTime + _backSteppingStateConfig.StepBackDuration;
-        }
-        
-        private void EndBackStep()
-        {
-            _movementStateConfig.IsPerformingAction = false;
-        }
-        
-        #endregion
-
-
-        
-        
-
-        #region DODGE
-        public void StartDodge()
-        {
-            // Сохраняем текущее направление кувырка
-            Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
-
-            Vector3 cameraObjectForward = cameraObjectTransform.forward;
-            Vector3 cameraObjectRight = cameraObjectTransform.right;
-
-            _movementStateConfig._lastDodgeDirection = cameraObjectForward * Data.VerticalInput + cameraObjectRight * Data.HorizontalInput;
-            _movementStateConfig._lastDodgeDirection.y = 0; // Убираем вертикальный компонент
-            _movementStateConfig._lastDodgeDirection.Normalize();
-
-            if (_movementStateConfig._lastDodgeDirection != Vector3.zero)
-            {
-                // Устанавливаем начальное вращение персонажа в направлении кувырка
-                Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig._lastDodgeDirection);
-                PlayerView.transform.rotation = newRotation;
-            }
-
-            _dodgeStateConfig._startTime = Time.time;
-            _dodgeStateConfig._startDodgePosition = _playerInputHandler.CharacterController.transform.position;
-            _movementStateConfig.IsPerformingAction = true;
-        }
-
-        public void PerformDodge()
-        {
-            if (IsDodgeInProgress() && HasNotExceededDodgeDistance())
-            {
-                MoveCharacterForward();
-            }
-            else
-            {
-                EndDodge();
-            }
-        }
-
-        private void EndDodge()
-        {
-            _movementStateConfig.IsPerformingAction = false;
-        }
-
-        private bool IsDodgeInProgress()
-        {
-            return Time.time < _dodgeStateConfig._startTime + _dodgeStateConfig._dodgeDuration;
-        }
-
-        private bool HasNotExceededDodgeDistance()
-        {
-            return Vector3.Distance(
-                _dodgeStateConfig._startDodgePosition, 
-                _playerInputHandler.CharacterController.transform.position) < _dodgeStateConfig._dodgeDistance;
-        }
-        
-        private void MoveCharacterForward()
-        {
-            // Используем сохраненное направление для движения персонажа
-            if (_movementStateConfig._lastDodgeDirection != Vector3.zero)
-            {
-                _playerInputHandler.CharacterController.Move(
-                    _movementStateConfig._lastDodgeDirection * _dodgeStateConfig._dodgeSpeed * Time.deltaTime);
-            }
-            else
-            {
-                // Если нет сохраненного направления, завершаем кувырок
-                EndDodge();
-            }
-        }
-        #endregion
-        
-        
-        
-        
         
         private void Rotate()
         {
-            #region DODGE STATE
             if (_movementStateConfig.IsPerformingAction)
+            {
                 return;
-            #endregion
+            }
             
             Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
 
             Vector3 cameraObjectForward = cameraObjectTransform.forward;
             Vector3 cameraObjectRight = cameraObjectTransform.right;
 
-            _targetRotationDirection = cameraObjectForward * Data.VerticalInput + cameraObjectRight * Data.HorizontalInput;
-            _targetRotationDirection.y = 0;
-            _targetRotationDirection.Normalize();
+            _movementStateConfig._targetRotationDirection = cameraObjectForward * Data.VerticalInput + cameraObjectRight * Data.HorizontalInput;
+            _movementStateConfig._targetRotationDirection.y = 0;
+            _movementStateConfig._targetRotationDirection.Normalize();
 
-            if (_targetRotationDirection != Vector3.zero)
+            if (_movementStateConfig._targetRotationDirection != Vector3.zero)
             {
-                Quaternion newRotation = Quaternion.LookRotation(_targetRotationDirection);
+                Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig._targetRotationDirection);
                 
                 Quaternion targetRotation = Quaternion.Slerp(
                     PlayerView.transform.rotation,
@@ -436,18 +281,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             // Получаем правое и переднее направление из положения камеры
             Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
             Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
+            
             // Вычисляем направление движения на основе ввода пользователя
             Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
-            // Устанавливаем y в 0, чтобы учитывать только горизонтальное движение\
-            // movementDirection.y = 0;
             
-            //  TODO
-            // movementDirection.y = Data.YVelocity;
-            // movementDirection.y = _movementStateConfig.YVelocity.y;
             movementDirection.y = 0;
             
-            
-            // Нормализуем направление для получения единичного вектора
             movementDirection.Normalize();
             
             return movementDirection;

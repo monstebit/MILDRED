@@ -54,9 +54,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
             
-            // AirbornMove();
-            
-            // if (Data.YVelocity < 0)
             if (_movementStateConfig.YVelocity.y < 0)
             {
                 StateSwitcher.SwitchState<FallingState>();
@@ -70,14 +67,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             float gravity = -9.81f;
             _movementStateConfig.YVelocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
         }
-        
-        // public void AirbornMove()
-        // {
-        //     _movementDirection = GetMovementInputDirection();
-        //     
-        //     _playerInputHandler.CharacterController.Move(
-        //         _movementDirection * Data.BaseSpeed * Time.deltaTime);
-        // }
         
         protected override void ResetSprintState()
         {

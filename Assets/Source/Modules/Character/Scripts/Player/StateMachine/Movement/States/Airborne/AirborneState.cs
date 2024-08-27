@@ -39,6 +39,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             PlayerView.StartAirborne();
 
             ResetSprintState();
+            ResetPerformingAction();
         }
 
         public override void Exit()
@@ -68,28 +69,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _movementStateConfig.ShouldSprint = false;
         }
         
-        
+        protected virtual void ResetPerformingAction()
+        {
+            _movementStateConfig.IsPerformingAction = false;
+        }
         
         public void AirbornMove()
         {
-            _movementDirection = GetMovementInputDirection();
+            _movementStateConfig._movementDirection = GetMovementInputDirection();
             
             _playerInputHandler.CharacterController.Move(
-                _movementDirection * Data.BaseSpeed * Time.deltaTime);
+                _movementStateConfig._movementDirection * Data.BaseSpeed * Time.deltaTime);
         }
-        // public virtual void AirbornMove()
-        // {
-        //     // _movementDirection = GetMovementInputDirection();
-        //     Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
-        //     Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
-        //     Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
-        //     movementDirection.y = _movementStateConfig.YVelocity.y;
-        //     
-        //     movementDirection.Normalize();
-        //     // float movementSpeed = GetMovementSpeed();
-        //     
-        //     _playerInputHandler.CharacterController.Move(
-        //         _movementDirection * Data.BaseSpeed * Time.deltaTime);
-        // }
     }
 }

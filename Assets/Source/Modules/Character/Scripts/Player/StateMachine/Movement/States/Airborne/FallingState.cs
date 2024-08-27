@@ -49,8 +49,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Update()
         {
             base.Update();
-
-            // AirbornMove();
             
             if (_groundChecker.isTouches)
             {
@@ -81,22 +79,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             }
         }
         
-        // public void AirbornMove()
-        // {
-        //     // _movementDirection = GetMovementInputDirection();
-        //     Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
-        //     Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
-        //     Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
-        //     movementDirection.y = _movementStateConfig.YVelocity.y;
-        //     // movementDirection.Normalize();
-        //     // float movementSpeed = GetMovementSpeed();
-        //     _playerInputHandler.CharacterController.Move(
-        //         _movementDirection * Data.BaseSpeed * Time.deltaTime);
-        // }
-        
         protected override void ResetSprintState()
         {
             base.ResetSprintState();
+        }
+        
+        protected override void ResetPerformingAction()
+        {
+            base.ResetPerformingAction();
         }
     }
 }

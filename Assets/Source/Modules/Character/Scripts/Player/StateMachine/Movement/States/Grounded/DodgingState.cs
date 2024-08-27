@@ -10,6 +10,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         private DodgeStateConfig _dodgeStateConfig;
         private MovementStateConfig _movementStateConfig;
         private PlayerConfig _playerConfig;
+        private PlayerInputHandler _playerInputHandler;
+        private PlayerCameraMovement _playerCameraMovement;
         
         private int _consecutiveDashedUsed;
 
@@ -27,6 +29,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             {
                 _dodgeStateConfig = playerInputHandler.PlayerConfig.DodgeStateConfig;
                 _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+                _playerInputHandler = playerInputHandler;
+                _playerCameraMovement = playerPlayerCameraMovement;
             }
          
         #region IState METHODS
@@ -55,7 +59,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             {
                 if (Data.MovementInput == Vector2.zero)
                 {
-                    StateSwitcher.SwitchState<IdlingState>();
+                    // StateSwitcher.SwitchState<IdlingState>();
                     
                     return;
                 }
@@ -73,28 +77,99 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             _movementStateConfig.IsPerformingAction = false;
         }
         #endregion
-
-        public override void OnAnimationExitEvent() //  ТРИГГЕР ЗАВЕРШЕНИЯ АНИМАЦИИ
+        
+        #region DODGE
+        public void StartDodge()
         {
-            base.OnAnimationExitEvent();
+            // Сохраняем текущее направление кувырка
+            Transform cameraObjectTransform = _playerCameraMovement.CameraObject.transform;
+
+            Vector3 cameraObjectForward = cameraObjectTransform.forward;
+            Vector3 cameraObjectRight = cameraObjectTransform.right;
+
+            _dodgeStateConfig._lastDodgeDirection = cameraObjectForward * Data.VerticalInput + cameraObjectRight * Data.HorizontalInput;
+            _dodgeStateConfig._lastDodgeDirection.y = 0; // Убираем вертикальный компонент
+            _dodgeStateConfig._lastDodgeDirection.Normalize();
+
+            if (_dodgeStateConfig._lastDodgeDirection != Vector3.zero)
+            {
+                // Устанавливаем начальное вращение персонажа в направлении кувырка
+                Quaternion newRotation = Quaternion.LookRotation(_dodgeStateConfig._lastDodgeDirection);
+                PlayerView.transform.rotation = newRotation;
+            }
+
+            _dodgeStateConfig._startTime = Time.time;
+            _dodgeStateConfig._startDodgePosition = _playerInputHandler.CharacterController.transform.position;
         }
 
-        protected override void AddInputActionsCallbacks()
+        public void PerformDodge()
         {
-            base.AddInputActionsCallbacks();
-
-            PlayerControls.PlayerMovement.Movement.performed += OnMovementPerformed;
+            if (IsDodgeInProgress() && HasNotExceededDodgeDistance())
+            {
+                MoveCharacterForward();
+            }
+            else
+            {
+                EndDodge();
+            }
         }
 
-        protected override void RemoveInputActionsCallbacks()
+        private void EndDodge()
         {
-            base.RemoveInputActionsCallbacks();
-            
-            PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
+            _movementStateConfig.IsPerformingAction = false;
+        }
+
+        private bool IsDodgeInProgress()
+        {
+            return Time.time < _dodgeStateConfig._startTime + _dodgeStateConfig._dodgeDuration;
+        }
+
+        private bool HasNotExceededDodgeDistance()
+        {
+            return Vector3.Distance(
+                _dodgeStateConfig._startDodgePosition, 
+                _playerInputHandler.CharacterController.transform.position) < _dodgeStateConfig._dodgeDistance;
         }
         
-        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        private void MoveCharacterForward()
         {
+            // Используем сохраненное направление для движения персонажа
+            if (_dodgeStateConfig._lastDodgeDirection != Vector3.zero)
+            {
+                _playerInputHandler.CharacterController.Move(
+                    _dodgeStateConfig._lastDodgeDirection * _dodgeStateConfig._dodgeSpeed * Time.deltaTime);
+            }
+            else
+            {
+                // Если нет сохраненного направления, завершаем кувырок
+                EndDodge();
+            }
         }
+        #endregion
+        
+        #region COMMENTED CODE
+        // public override void OnAnimationExitEvent() //  ТРИГГЕР ЗАВЕРШЕНИЯ АНИМАЦИИ
+        // {
+        //     base.OnAnimationExitEvent();
+        // }
+
+        // protected override void AddInputActionsCallbacks()
+        // {
+        //     base.AddInputActionsCallbacks();
+        //
+        //     PlayerControls.PlayerMovement.Movement.performed += OnMovementPerformed;
+        // }
+        //
+        // protected override void RemoveInputActionsCallbacks()
+        // {
+        //     base.RemoveInputActionsCallbacks();
+        //     
+        //     PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
+        // }
+        //
+        // protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        // {
+        // }
+        #endregion
     }
 }

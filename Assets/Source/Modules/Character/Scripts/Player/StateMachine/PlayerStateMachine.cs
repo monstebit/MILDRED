@@ -27,6 +27,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 new RunningState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new SprintingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new DodgingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
+                new BackSteppingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new JumpingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new FallingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
             };

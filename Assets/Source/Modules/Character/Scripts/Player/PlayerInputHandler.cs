@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Threading.Tasks;
 using Source.Modules.Character.Scripts.Player.StateMachine;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Unity.Netcode;
@@ -88,16 +90,6 @@ namespace Source.Modules.Character.Scripts.Player
         public void OnMovementStateAnimationTransitionEvent()
         {
             _playerStateMachine.OnAnimationTransitionEvent();
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="seconds"></param>
-        /// <returns></returns>
-        public IEnumerator WaitBeforeAction(float seconds)
-        {
-            yield return new WaitForSeconds(seconds);
         }
     }
 }

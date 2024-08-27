@@ -4,17 +4,15 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Confi
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
-using Debug = UnityEngine.Debug;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
     public abstract class GroundedState : MovementState
     {
-        private float _dodgingTimer; 
         private PlayerInputHandler _playerInputHandler;
         private PlayerConfig _playerConfig;
-        private MovementStateConfig _movementStateConfig;
+        
+        private DodgeStateConfig _dodgeStateConfig;
         
         public GroundedState(
             IStateSwitcher stateSwitcher,
@@ -30,7 +28,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             _playerConfig = playerInputHandler.PlayerConfig;
             _playerInputHandler = playerInputHandler;
-            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+            _dodgeStateConfig = _playerConfig.DodgeStateConfig;
         }
         
         #region IState METHODS
@@ -111,7 +109,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
             PlayerControls.PlayerMovement.Dodge.performed += OnDodgeStarted;
             PlayerControls.PlayerMovement.Jump.performed += OnJumpStarted;
-            
+            PlayerControls.PlayerMovement.BackStep.performed += OnBackStepped;
         }
         
         protected override void RemoveInputActionsCallbacks()
@@ -122,10 +120,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
             PlayerControls.PlayerMovement.Dodge.performed -= OnDodgeStarted;
             PlayerControls.PlayerMovement.Jump.performed -= OnJumpStarted;
+            PlayerControls.PlayerMovement.BackStep.performed -= OnBackStepped;
         }
         #endregion
         
-  
+        protected virtual void OnBackStepped(InputAction.CallbackContext context)
+        {
+            if (Data.MovementInput != Vector2.zero)
+                return;
+            
+            if (_playerConfig.MovementStateConfig.IsPerformingAction)
+                return;
+            
+            StateSwitcher.SwitchState<BackSteppingState>();
+        }
+        
         protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
         {
             _playerConfig.MovementStateConfig.ShouldSprint = true;
@@ -138,9 +147,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         private void DodgingTimer()
         {
-            if (_dodgingTimer >= 0)
+            if (_dodgeStateConfig._dodgingTimer >= 0)
             {
-                _dodgingTimer -= Time.deltaTime;
+                _dodgeStateConfig._dodgingTimer -= Time.deltaTime;
             }
         }
         
@@ -152,9 +161,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             if (_playerConfig.MovementStateConfig.IsPerformingAction)
                 return;
             
-            if (_dodgingTimer <= 0)
+            if (_dodgeStateConfig._dodgingTimer <= 0)
             {
-                _dodgingTimer = 0.4f;
+                // _dodgeStateConfig._dodgingTimer = 0.4f;
+                _dodgeStateConfig._dodgingTimer = 0.2f;
                 return;
             }
             

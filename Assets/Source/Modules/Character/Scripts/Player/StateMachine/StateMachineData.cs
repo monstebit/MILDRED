@@ -5,8 +5,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
     public class StateMachineData
     {
-        // public bool ShouldWalk { get; set; }
-        // public bool ShouldSprint { get; set; }
         public Vector2 CameraInput { get; set; }
         public Vector2 MovementInput { get; set; }
         public float BaseSpeed { get; set; } = 5f;
@@ -20,8 +18,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 return ref _currentTargetRotation;
             }
         }
-        // public float YVelocity;
-        // public Vector3 YVelocity;
+
         public float XVelocity;
         private float _verticalInput;
         private float _horizontalInput;

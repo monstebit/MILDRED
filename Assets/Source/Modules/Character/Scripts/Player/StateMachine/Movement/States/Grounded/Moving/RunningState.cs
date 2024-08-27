@@ -30,7 +30,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
         }
 
-        #region IState METHODS
         public override void Enter()
         {
             Data.MovementSpeedModifier = _runningStateConfig.SpeedModifier;
@@ -38,10 +37,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Enter();
 
             PlayerView.StartRunning();
-
-            #region ЗАДАТЬ СИЛУ ПРЫЖКА В СОСТОЯНИИ БЕГА?
-            // stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.MediumForce;
-            #endregion
             
             _startTime = Time.time;
         }
@@ -57,16 +52,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
 
-            #region SPRINT STATE
             if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
                 
                 return;
             }
-            #endregion
-
-
+            
             //Этот текст объясняет, что существует определенная логика перехода между состояниями
             //в зависимости от текущих флагов и предыдущих состояний игрока.
             //В данном случае, если игрок был в состоянии ускорения и затем перестал ускоряться,
@@ -88,29 +80,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             StopRunning();
         }
-        #endregion
 
-        #region MAIN METHODS
         private void StopRunning()
         {
             if (Data.MovementInput == Vector2.zero)
             {
                 StateSwitcher.SwitchState<IdlingState>();
-                
-                return;
             }
-            
-            // StateSwitcher.SwitchState<WalkingState>();
         }
-        #endregion
         
-        #region INPUT METHODS
         protected override void OnWalkToggleStarted(InputAction.CallbackContext context)
         {
             base.OnWalkToggleStarted(context);
             
             StateSwitcher.SwitchState<WalkingState>();
         }
-        #endregion
     }
 }

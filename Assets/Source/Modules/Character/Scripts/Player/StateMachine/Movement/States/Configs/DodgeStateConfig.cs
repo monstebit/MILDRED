@@ -8,11 +8,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
     {
         [field: SerializeField] [field: Range(1f, 3f)] public float SpeedModifier { get; private set; } = 2f;
         
-        public float _dodgeDuration;
-        public float _dodgeSpeed;
-        public float _startTime;
-        public float _dodgeDistance ;
-        public Vector3  _startDodgePosition ;
-        private float dashTimeRemaining;
+        [SerializeField] public Vector3 _lastDodgeDirection;
+        [SerializeField] public Vector3  _startDodgePosition ;
+        [SerializeField] public float _dodgingTimer; 
+        [SerializeField] public float _dodgeDuration;
+        [SerializeField] public float _dodgeSpeed;
+        [SerializeField] public float _startTime;
+        [SerializeField] public float _dodgeDistance ;
+        [SerializeField] public float dashTimeRemaining;
     }
 }
