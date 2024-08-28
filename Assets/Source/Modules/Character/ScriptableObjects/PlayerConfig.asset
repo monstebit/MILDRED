@@ -13,43 +13,68 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   _movementStateConfig:
-    YVelocity: {x: 0, y: -2, z: 0}
-    ShouldWalk: 0
-    ShouldSprint: 0
-    IsPerformingAction: 0
-    MoveAmount: 0
     MovementInput: {x: 0, y: 0}
     VerticalInput: 0
     HorizontalInput: 0
-    _lastDodgeDirection: {x: -0.994522, y: 0, z: 0.104527555}
+    MoveAmount: 0
+    _movementDirection: {x: -1, y: 0, z: -0.0000026587923}
+    YVelocity: {x: 0, y: -2, z: 0}
+    GroundedGravityForce: -2
+    ShouldWalk: 0
+    ShouldSprint: 0
+    IsPerformingAction: 0
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
     _rotationSpeed: 50
-  _walkingStateConfig:
-    <SpeedModifier>k__BackingField: 0.5
   _runningStateConfig:
     <SpeedModifier>k__BackingField: 1
+  _walkingStateConfig:
+    <SpeedModifier>k__BackingField: 0.5
   _sprintingStateConfig:
     <SpeedModifier>k__BackingField: 1.5
     <RunToWalkTime>k__BackingField: 0.5
   _dodgeStateConfig:
     <SpeedModifier>k__BackingField: 1.491
+    _lastDodgeDirection: {x: 0.9832549, y: 0, z: 0.18223548}
+    _startDodgePosition: {x: 9.445134, y: 0.00019991398, z: 3.0262537}
+    _dodgingTimer: -0.002783934
     _dodgeDuration: 0.75
     _dodgeSpeed: 10
-    _startTime: 97.17045
+    _startTime: 11.648926
     _dodgeDistance: 5
-    _startDodgePosition: {x: 30.616945, y: 0.00019985437, z: -4.815287}
+    dashTimeRemaining: 0
+  _backSteppingStateConfig:
+    DodgeCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1.8692918
+        value: 4.7902813
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    DodgeTimer: 1.8692918
+    timer: 0
+    isDodging: 0
+    LastStepDirection: {x: -0.9999736, y: 0, z: 0.0072695613}
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:
       _maxHeight: 1
       _timeToReachMaxHeight: 0.5
-  _backSteppingStateConfig:
-    StepBackDelay: 0.2
-    StepBackSpeed: 5
-    StepBackDuration: 1
-    StepBackDistance: 2
-    _lastStepBackDirection: {x: -0.99452204, y: 0, z: 0.10452747}
-    _startStepBackPosition: {x: 26.674852, y: 0.00019985437, z: -3.6546135}
-    _startTime: 94.85349

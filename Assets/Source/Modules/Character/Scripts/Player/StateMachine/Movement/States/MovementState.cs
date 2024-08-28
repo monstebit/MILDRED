@@ -67,7 +67,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             
             HandleAllCameraActions();
-            
         }
         #endregion
         
@@ -129,6 +128,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         protected virtual void AddInputActionsCallbacks()
         {
+            if (_movementStateConfig.IsPerformingAction)
+            {
+                return;
+            }
+            
             PlayerControls.PlayerMovement.Movement.performed += OnMovementPerformed;
             PlayerControls.PlayerMovement.Movement.canceled += OnMovementCanceled;
             // PlayerControls.PlayerMovement.WalkToggle.started += OnWalkToggleStarted;
@@ -138,6 +142,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         protected virtual void RemoveInputActionsCallbacks()
         {
+            if (_movementStateConfig.IsPerformingAction)
+            {
+                return;
+            }
+            
             PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
             PlayerControls.PlayerMovement.Movement.canceled -= OnMovementCanceled;
             // PlayerControls.PlayerMovement.WalkToggle.started -= OnWalkToggleStarted;
@@ -161,7 +170,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            if (_movementStateConfig.IsPerformingAction)
+            if (_movementStateConfig.IsPerformingAction)    //  ЗАПРЕТ РЕАГИРОВАТЬ НА ИНПУТ ВО ВРЕМЯ ДЕЙСТВИЯ
             {
                 return;
             }

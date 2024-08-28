@@ -13,6 +13,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         private PlayerConfig _playerConfig;
         
         private DodgeStateConfig _dodgeStateConfig;
+        private MovementStateConfig _movementStateConfig;
         
         public GroundedState(
             IStateSwitcher stateSwitcher,
@@ -29,6 +30,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             _playerConfig = playerInputHandler.PlayerConfig;
             _playerInputHandler = playerInputHandler;
             _dodgeStateConfig = _playerConfig.DodgeStateConfig;
+            _movementStateConfig = _playerConfig.MovementStateConfig;
         }
         
         #region IState METHODS
@@ -108,8 +110,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
             PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
             PlayerControls.PlayerMovement.Dodge.performed += OnDodgeStarted;
-            PlayerControls.PlayerMovement.Jump.performed += OnJumpStarted;
             PlayerControls.PlayerMovement.BackStep.performed += OnBackStepped;
+            PlayerControls.PlayerMovement.Jump.performed += OnJumpStarted;
         }
         
         protected override void RemoveInputActionsCallbacks()
@@ -119,18 +121,22 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
             PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
             PlayerControls.PlayerMovement.Dodge.performed -= OnDodgeStarted;
-            PlayerControls.PlayerMovement.Jump.performed -= OnJumpStarted;
             PlayerControls.PlayerMovement.BackStep.performed -= OnBackStepped;
+            PlayerControls.PlayerMovement.Jump.performed -= OnJumpStarted;
         }
         #endregion
         
         protected virtual void OnBackStepped(InputAction.CallbackContext context)
         {
-            if (Data.MovementInput != Vector2.zero)
-                return;
-            
             if (_playerConfig.MovementStateConfig.IsPerformingAction)
+            {
                 return;
+            }
+            
+            if (Data.MovementInput != Vector2.zero)
+            {
+                return;
+            }
             
             StateSwitcher.SwitchState<BackSteppingState>();
         }
