@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
@@ -8,10 +6,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class BackSteppingState : PerformingActionState
     {
-        //
-        private Vector3 dodgeDirection;
-        private float waitTimer;
-        
         private MovementStateConfig _movementStateConfig;
         private BackSteppingStateConfig _backSteppingStateConfig;
         private PlayerInputHandler _playerInputHandler;
@@ -39,70 +33,48 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StartBackStepping();
             
+            _backSteppingStateConfig.IsBackStepping = true;
             
+            Keyframe LastFrame = _backSteppingStateConfig.BackStepCurve[_backSteppingStateConfig.BackStepCurve.length - 1];
             
-            
-            _backSteppingStateConfig.isDodging = true;
-            Keyframe LastFrame = _backSteppingStateConfig.DodgeCurve[_backSteppingStateConfig.DodgeCurve.length - 1];
-            _backSteppingStateConfig.DodgeTimer = LastFrame.time;
+            _backSteppingStateConfig.BackStepTimer = LastFrame.time;
             
             _backSteppingStateConfig.LastStepDirection = PlayerView.transform.forward;
+            
             _backSteppingStateConfig.LastStepDirection.y = 0;
+            
             _backSteppingStateConfig.LastStepDirection.Normalize();
-
-            waitTimer = Time.time;;
-            
-            
-            
-            
-            
-            // _backSteppingStateConfig.StartTime = Time.time;
             
             _movementStateConfig.IsPerformingAction = true;
-            
-            // StartBackStep();
         }
 
         public override void Update()
         {
             base.Update();
             
-            // PerformBackStep();
-            
-            
-            
-            
-            
-            if (_backSteppingStateConfig.isDodging)
+            if (_backSteppingStateConfig.IsBackStepping)
             {
-                _backSteppingStateConfig.timer += Time.deltaTime;
+                _backSteppingStateConfig.Timer += Time.deltaTime;
 
-                if (_backSteppingStateConfig.timer < _backSteppingStateConfig.DodgeTimer)
+                if (_backSteppingStateConfig.Timer < _backSteppingStateConfig.BackStepTimer)
                 {
                     float speed = 
-                        _backSteppingStateConfig.DodgeCurve.Evaluate(_backSteppingStateConfig.timer);
+                        _backSteppingStateConfig.BackStepCurve.Evaluate(_backSteppingStateConfig.Timer);
 
                     _playerInputHandler.CharacterController.Move(
-                        // -_backSteppingStateConfig.LastStepDirection * Time.deltaTime);
                         -_backSteppingStateConfig.LastStepDirection * speed * Time.deltaTime);
-                    // -_backSteppingStateConfig.LastStepDirection * 5 * Time.deltaTime);
                 }
                 else
                 {
                     _movementStateConfig.IsPerformingAction = false;
                     
-                    _backSteppingStateConfig.isDodging = false;
-                    _backSteppingStateConfig.timer = 0;
+                    _backSteppingStateConfig.IsBackStepping = false;
+                    
+                    _backSteppingStateConfig.Timer = 0;
                 }
             }
-
-            
-            
-            
-            
             
             if (_movementStateConfig.IsPerformingAction == false) 
-                // && waitTimer == _backSteppingStateConfig.DodgeTimer + 1f )
             {
                 if (Data.MovementInput == Vector2.zero)
                 {
@@ -121,83 +93,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StopBackStepping();
 
-            _backSteppingStateConfig.timer = 0f;
+            _backSteppingStateConfig.Timer = 0f;
             
             _movementStateConfig.IsPerformingAction = false;
-            _backSteppingStateConfig.isDodging = false;
+            _backSteppingStateConfig.IsBackStepping = false;
         }
-        #endregion
-        
-        #region BackStep
-        // public void PerformBackStep()
-        // {
-        //     if (IsValidBackStep() && IsBackStepInProgress() && IsWithinBackStepDistance())
-        //     {
-        //         ContinueBackStep();
-        //     }
-        //     else
-        //     {
-        //         CompleteBackStep();
-        //     }
-        // }
-        //
-        // private bool IsValidBackStep()
-        // {
-        //     return _backSteppingStateConfig.LastStepDirection != Vector3.zero;
-        // }
-        //
-        // private bool IsBackStepInProgress()
-        // {
-        //     return Time.time < _backSteppingStateConfig.StartTime + _backSteppingStateConfig.BackStepDuration;
-        // }
-        //
-        // private bool IsWithinBackStepDistance()
-        // {
-        //     return Vector3.Distance(_backSteppingStateConfig.StartStepPosition, 
-        //                _playerInputHandler.CharacterController.transform.position) 
-        //            < _backSteppingStateConfig.BackStepDistance;
-        // }
-        //
-        // private void ContinueBackStep()
-        // {
-        //     if (IsValidBackStep())
-        //     {
-        //         PerformDelayedBackStep();
-        //     }
-        //     else
-        //     {
-        //         CompleteBackStep();
-        //     }
-        // }
-        //
-        // private async Task PerformDelayedBackStep()
-        // {
-        //     await Task.Delay(TimeSpan.FromSeconds(_backSteppingStateConfig.BackStepDelay));
-        //
-        //     _playerInputHandler.CharacterController.Move(
-        //         -_backSteppingStateConfig.LastStepDirection * _backSteppingStateConfig.BackStepSpeed * Time.deltaTime);
-        // }
-        //
-        // public void StartBackStep()
-        // {
-        //     _backSteppingStateConfig.LastStepDirection = PlayerView.transform.forward;
-        //     _backSteppingStateConfig.LastStepDirection.y = 0;
-        //     _backSteppingStateConfig.LastStepDirection.Normalize();
-        //
-        //     if (IsValidBackStep())
-        //     {
-        //         Quaternion newRotation = Quaternion.LookRotation(_backSteppingStateConfig.LastStepDirection);
-        //         PlayerView.transform.rotation = newRotation;
-        //     }
-        //
-        //     _backSteppingStateConfig.StartTime = Time.time;
-        //     _backSteppingStateConfig.StartStepPosition = _playerInputHandler.CharacterController.transform.position;
-        // }
-        //
-        // private void CompleteBackStep()
-        // {
-        //     _movementStateConfig.IsPerformingAction = false;
-        // }
         #endregion
         
         #region COMMENTED CODE
@@ -218,11 +118,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         // protected override void OnMovementCanceled(InputAction.CallbackContext context)
         // {
         //     Debug.Log("OnMovementCanceled");
-        // }
-
-        // private async Task WaitAfterBackStep()
-        // {
-        //     await Task.Delay(TimeSpan.FromSeconds(2f));
         // }
         #endregion
     }

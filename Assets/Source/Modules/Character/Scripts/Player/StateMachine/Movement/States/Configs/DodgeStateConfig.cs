@@ -6,15 +6,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
     [Serializable]
     public class DodgeStateConfig
     {
-        [field: SerializeField] [field: Range(1f, 3f)] public float SpeedModifier { get; private set; } = 2f;
+        [SerializeField] public AnimationCurve DodgeCurve;
+        [SerializeField] public float DodgeTimer;
+        [SerializeField] public float Timer;
+        [SerializeField] public bool IsDodging;
+        [SerializeField] public Vector3 LastDodgeDirection; // Направление последнего шага назад
         
-        [SerializeField] public Vector3 _lastDodgeDirection;
-        [SerializeField] public Vector3  _startDodgePosition ;
+        [Header("_dodgingTimer ?= Timer")]
         [SerializeField] public float _dodgingTimer; 
-        [SerializeField] public float _dodgeDuration;
-        [SerializeField] public float _dodgeSpeed;
-        [SerializeField] public float _startTime;
-        [SerializeField] public float _dodgeDistance ;
-        [SerializeField] public float dashTimeRemaining;
     }
 }
