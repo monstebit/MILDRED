@@ -1,6 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
@@ -22,17 +23,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             playerCameraMovement,
             data)
         {
-
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
             _playerInputHandler = playerInputHandler;
         }
         
+        //  TODO: СДЕЛАТЬ УГАСАНИЕ СКОРОСТИ В ГОРИЗОНТАЛЬНОМ НАПРАВЛЕНИИ
         public override void Enter()
         {
             base.Enter();
             
             PlayerView.StartAirborne();
-
+            
             ResetSprintState();
             ResetPerformingAction();
         }
@@ -50,7 +51,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             ApplyGravity();
 
-            AirbornMove();
+            AirborneMove();
         }
 
         private void ApplyGravity()
@@ -68,12 +69,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _movementStateConfig.IsPerformingAction = false;
         }
         
-        public void AirbornMove()
+        public void AirborneMove()  //  ГОРИЗОНТАЛЬНОЕ ДВИЖЕНИЕ В ВОЗДУХЕ
         {
             _movementStateConfig._movementDirection = GetMovementInputDirection();
             
             _playerInputHandler.CharacterController.Move(
-                _movementStateConfig._movementDirection * Data.BaseSpeed * Time.deltaTime);
+                // _movementStateConfig._movementDirection * Data.MovementSpeedModifier * Time.deltaTime);
+                _movementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
+        }
+        
+        //  
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        {
         }
     }
 }

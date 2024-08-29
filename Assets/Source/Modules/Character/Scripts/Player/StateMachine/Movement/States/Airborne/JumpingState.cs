@@ -7,6 +7,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     public class JumpingState : AirborneState
     {
         private MovementStateConfig _movementStateConfig;
+        private AirborneStateConfig _airborneStateConfig;
+        private JumpingStateConfig _jumpingStateConfig;
+        private PlayerInputHandler _playerInputHandler;
         
         private Vector3 jumpDirection;
 
@@ -22,46 +25,103 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             data)
         {
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+            _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
+            _jumpingStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
+            _playerInputHandler = playerInputHandler;
         }
 
         #region IState METHODS
         public override void Enter()
         {
             base.Enter();
-
-            ApplyJumpForce();
             
             PlayerView.StartJumping();
-        }
 
-        public override void Exit()
-        {
-            base.Exit();
+            _jumpingStateConfig.SpeedModifier = GetSpeedModifier();
+            Data.MovementSpeedModifier = _jumpingStateConfig.SpeedModifier;
+
+            // ApplyJumpForce();
+            //
+            _jumpingStateConfig.IsJumping = true;
             
-            PlayerView.StopJumping();
+            Keyframe LastFrame = _jumpingStateConfig.JumpCurve[_airborneStateConfig.JumpingStateConfig.JumpCurve.length - 1];
+            
+            _jumpingStateConfig.JumpTimer = LastFrame.time;
+            Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
         }
 
         public override void Update()
         {
             base.Update();
             
-            if (_movementStateConfig.YVelocity.y < 0)
+            // if (_movementStateConfig.YVelocity.y < 0)
+            // {
+            //     StateSwitcher.SwitchState<FallingState>();
+            // }
+            //
+            if (_jumpingStateConfig.IsJumping)
             {
-                StateSwitcher.SwitchState<FallingState>();
+                _jumpingStateConfig.Timer += Time.deltaTime;
+            
+                if (_jumpingStateConfig.Timer > 0.5f)
+                {
+                    StateSwitcher.SwitchState<FallingState>();
+                }
+                
+                if (_jumpingStateConfig.Timer < _jumpingStateConfig.JumpTimer)
+                {
+                    _movementStateConfig.YVelocity.y = 
+                        _jumpingStateConfig.JumpCurve.Evaluate(_jumpingStateConfig.Timer);
+                }
             }
+            else
+            {
+                _jumpingStateConfig.Timer = 0;
+                _jumpingStateConfig.IsJumping = false;
+            }
+        }
+        
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopJumping();
+            //
+            _jumpingStateConfig.Timer = 0;
+            _jumpingStateConfig.IsJumping = false;
         }
         #endregion
         
         private void ApplyJumpForce()
         {
-            float jumpForce = 2f;
-            float gravity = -9.81f;
-            _movementStateConfig.YVelocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+            _movementStateConfig.YVelocity.y = 
+                Mathf.Sqrt(_airborneStateConfig.JumpingStateConfig.JumpForce * -2f * _airborneStateConfig.Gravity);
+        }
+        
+        private float GetSpeedModifier()
+        {
+            float speedModifier = 1f;
+
+            if (Data.MovementInput == Vector2.zero)
+            {
+                speedModifier = 0.25f;
+            }
+            
+            if (_movementStateConfig.ShouldSprint)
+            {
+                speedModifier = 1.25f;
+            }
+            else if (_movementStateConfig.ShouldWalk)
+            {
+                speedModifier = 0.5f;
+            }
+
+            return speedModifier;
         }
         
         protected override void ResetSprintState()
         {
-            base.ResetSprintState();
+            // base.ResetSprintState();
         }
     }
 }

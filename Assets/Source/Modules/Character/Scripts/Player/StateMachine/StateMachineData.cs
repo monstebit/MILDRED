@@ -92,16 +92,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 _moveAmount = value;
             }
         }
-        public float Speed
-        {
-            get => _speed;
-            set
-            {
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), "Speed cannot be negative");
-        
-                _speed = value;
-            }
-        }
+        // public float Speed
+        // {
+        //     get => _speed;
+        //     set
+        //     {
+        //         if (value < 0)
+        //             throw new ArgumentOutOfRangeException(nameof(value), "Speed cannot be negative");
+        //
+        //         _speed = value;
+        //     }
+        // }
     }
 }

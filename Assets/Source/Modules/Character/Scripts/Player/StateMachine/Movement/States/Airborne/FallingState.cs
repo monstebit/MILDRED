@@ -29,6 +29,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Enter()
         {
             base.Enter();
+
+            // Data.MovementSpeedModifier = 0;
             
             PlayerView.StartFalling();
         }
@@ -46,8 +48,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             if (_groundChecker.isTouches)
             {
-                // _movementStateConfig.YVelocity.y = -2f;
-                _movementStateConfig.YVelocity.y = _movementStateConfig.GroundedGravityForce;
+                _movementStateConfig.YVelocity.y = _movementStateConfig.GroundedGravityForce;   //  "ПРИЛИПАНИЕ" К ЗЕМЛЕ
 
                 if (Data.MovementInput == Vector2.zero)
                 {
@@ -55,23 +56,28 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
                     
                     return;
                 }
-                
-                if (_movementStateConfig.ShouldSprint)
-                {
-                    StateSwitcher.SwitchState<SprintingState>();
-                
-                    return;
-                }
-            
-                if (_movementStateConfig.ShouldWalk)
-                {
-                    StateSwitcher.SwitchState<WalkingState>();
-                
-                    return;
-                }
-            
-                StateSwitcher.SwitchState<RunningState>();
+
+                OnMove();
             }
+        }
+
+        public void OnMove()
+        {
+            if (_movementStateConfig.ShouldSprint)
+            {
+                StateSwitcher.SwitchState<SprintingState>();
+                
+                return;
+            }
+            
+            if (_movementStateConfig.ShouldWalk)
+            {
+                StateSwitcher.SwitchState<WalkingState>();
+                
+                return;
+            }
+            
+            StateSwitcher.SwitchState<RunningState>();
         }
         
         protected override void ResetSprintState()

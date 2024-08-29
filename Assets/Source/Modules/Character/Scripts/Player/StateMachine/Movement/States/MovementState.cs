@@ -38,7 +38,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         #region IState METHODS
         public virtual void Enter()
         {
-            Debug.Log($"State: {GetType().Name}");
+            // Debug.Log($"State: {GetType().Name}");
+            // Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
             
             AddInputActionsCallbacks();
         }
@@ -200,7 +201,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             }
 
-            if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
+            // if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
+            if (Data.MovementInput == Vector2.zero)
             {
                 return;
             }
@@ -212,15 +214,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             
             _movementStateConfig._movementDirection = GetMovementInputDirection();
             
-            float movementSpeed = GetMovementSpeed();
-            
             _playerInputHandler.CharacterController.Move(
-                _movementStateConfig._movementDirection * movementSpeed * Time.deltaTime);
+                _movementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
         }
         
-        public void HandleVerticalMovement()
+        public void HandleVerticalMovement()    //  JUMPING STATE
         {
-            _playerInputHandler.CharacterController.Move(_movementStateConfig.YVelocity * Time.deltaTime);
+            _playerInputHandler.CharacterController.Move(
+                _movementStateConfig.YVelocity * Time.deltaTime);
         }
         
         private void Rotate()
@@ -291,11 +292,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             movementDirection.Normalize();
             
             return movementDirection;
-        }
-        
-        public float GetMovementSpeed()
-        {
-            return Data.BaseSpeed * Data.MovementSpeedModifier;
         }
         #endregion
     }

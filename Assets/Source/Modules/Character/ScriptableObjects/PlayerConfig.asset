@@ -18,7 +18,7 @@ MonoBehaviour:
     HorizontalInput: 0
     MoveAmount: 0
     _movementDirection: {x: 0, y: 0, z: 0}
-    YVelocity: {x: 0, y: -5.0101266, z: 0}
+    YVelocity: {x: 0, y: -2, z: 0}
     GroundedGravityForce: -2
     ShouldWalk: 0
     ShouldSprint: 0
@@ -71,8 +71,8 @@ MonoBehaviour:
     DodgeTimer: 0.6
     Timer: 0
     IsDodging: 0
-    LastDodgeDirection: {x: -0.86652756, y: 0, z: 0.49912912}
-    _dodgingTimer: -0.000025309622
+    LastDodgeDirection: {x: -0.9877019, y: 0, z: 0.15634851}
+    _dodgingTimer: -0.0047842865
   _backSteppingStateConfig:
     BackStepCurve:
       serializedVersion: 2
@@ -119,9 +119,57 @@ MonoBehaviour:
     BackStepTimer: 0.75
     Timer: 0
     IsBackStepping: 0
-    LastStepDirection: {x: 0.72537434, y: 0, z: 0.6883546}
+    LastStepDirection: {x: 0.13052739, y: 0, z: -0.9914447}
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:
-      _maxHeight: 1
-      _timeToReachMaxHeight: 0.5
+      <SpeedModifier>k__BackingField: 1
+      JumpForce: 2
+      JumpCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.15
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.5
+          value: 15
+          inSlope: -0.15687089
+          outSlope: -0.15687089
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1.5
+          value: 0
+          inSlope: -1.620743
+          outSlope: -1.620743
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.34064332
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      JumpTimer: 1.5
+      Timer: 0
+      IsJumping: 0
+    _fallingStateConfig:
+      <SpeedModifier>k__BackingField: 1
+    Gravity: -9.81
