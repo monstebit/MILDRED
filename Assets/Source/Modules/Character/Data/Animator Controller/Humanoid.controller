@@ -8,7 +8,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: core_main_back_step_medium_01
-  m_Speed: 0.8
+  m_Speed: 0.7
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 2623161794477603663}
@@ -105,8 +105,8 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
-  - {fileID: -5629362575110513300}
   - {fileID: -4927638694339876299}
+  - {fileID: -5629362575110513300}
   - {fileID: 403662323963594348}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
@@ -756,8 +756,8 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
-  - {fileID: -3562374184404277325}
   - {fileID: -2739466517662353335}
+  - {fileID: -3562374184404277325}
   - {fileID: 6142390201490169365}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
@@ -1043,8 +1043,8 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
-  - {fileID: -6839544415862908520}
   - {fileID: 3847740015616714124}
+  - {fileID: -6839544415862908520}
   - {fileID: 8884592676508565612}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}

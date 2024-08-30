@@ -47,7 +47,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             Keyframe LastFrame = _jumpingStateConfig.JumpCurve[_airborneStateConfig.JumpingStateConfig.JumpCurve.length - 1];
             
             _jumpingStateConfig.JumpTimer = LastFrame.time;
-            Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
         }
 
         public override void Update()
@@ -100,7 +99,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         
         private float GetSpeedModifier()
         {
-            float speedModifier = 1f;
+            float speedModifier = 0.75f;
 
             if (Data.MovementInput == Vector2.zero)
             {
@@ -109,7 +108,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             if (_movementStateConfig.ShouldSprint)
             {
-                speedModifier = 1.25f;
+                speedModifier = 1;
             }
             else if (_movementStateConfig.ShouldWalk)
             {

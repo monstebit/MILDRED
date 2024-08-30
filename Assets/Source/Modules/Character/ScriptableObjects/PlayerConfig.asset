@@ -17,7 +17,7 @@ MonoBehaviour:
     VerticalInput: 0
     HorizontalInput: 0
     MoveAmount: 0
-    _movementDirection: {x: 0, y: 0, z: 0}
+    _movementDirection: {x: 0.1045257, y: 0, z: -0.99452215}
     YVelocity: {x: 0, y: -2, z: 0}
     GroundedGravityForce: -2
     ShouldWalk: 0
@@ -71,8 +71,8 @@ MonoBehaviour:
     DodgeTimer: 0.6
     Timer: 0
     IsDodging: 0
-    LastDodgeDirection: {x: -0.9877019, y: 0, z: 0.15634851}
-    _dodgingTimer: -0.0047842865
+    LastDodgeDirection: {x: 0.99489075, y: 0, z: 0.1009572}
+    _dodgingTimer: -0.00046850462
   _backSteppingStateConfig:
     BackStepCurve:
       serializedVersion: 2
@@ -105,7 +105,7 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.75
+        time: 1
         value: 0
         inSlope: -1.620743
         outSlope: -1.620743
@@ -116,10 +116,10 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    BackStepTimer: 0.75
+    BackStepTimer: 1
     Timer: 0
     IsBackStepping: 0
-    LastStepDirection: {x: 0.13052739, y: 0, z: -0.9914447}
+    LastStepDirection: {x: 1, y: 0, z: 0.00000017881395}
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:

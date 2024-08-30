@@ -38,7 +38,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         #region IState METHODS
         public virtual void Enter()
         {
-            // Debug.Log($"State: {GetType().Name}");
+            Debug.Log($"State: {GetType().Name}");
             // Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
             
             AddInputActionsCallbacks();
@@ -201,8 +201,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             }
 
-            // if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
-            if (Data.MovementInput == Vector2.zero)
+            if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
+            // if (Data.MovementInput == Vector2.zero)
             {
                 return;
             }
