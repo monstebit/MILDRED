@@ -4,6 +4,7 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
@@ -30,6 +31,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 new BackSteppingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new JumpingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
                 new FallingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
+                new LightLandingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
             };
 
             _currentState = _states[0];
