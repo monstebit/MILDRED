@@ -1,6 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving
 {
@@ -58,15 +59,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             if (Data.MovementInput == Vector2.zero)
             {
                 StateSwitcher.SwitchState<IdlingState>();
+                
+                return;
             }
-            else if (_movementStateConfig.ShouldWalk)
+            
+            if (_movementStateConfig.ShouldWalk)
             {
                 StateSwitcher.SwitchState<WalkingState>();
+                
+                return;
             }
-            else
-            {
-                StateSwitcher.SwitchState<RunningState>();
-            }
+            
+            StateSwitcher.SwitchState<RunningState>();
         }
     }
 }

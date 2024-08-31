@@ -67,9 +67,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 else
                 {
                     _movementStateConfig.IsPerformingAction = false;
-                    
                     _backSteppingStateConfig.IsBackStepping = false;
-                    
                     _backSteppingStateConfig.Timer = 0;
                 }
             }

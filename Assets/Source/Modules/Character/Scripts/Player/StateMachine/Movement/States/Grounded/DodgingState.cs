@@ -76,7 +76,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                     
                     _dodgeStateConfig.IsDodging = false;
                     
-                    _dodgeStateConfig.Timer = 0;
+                    _dodgeStateConfig.Timer = 0f;
                 }
             }
                 

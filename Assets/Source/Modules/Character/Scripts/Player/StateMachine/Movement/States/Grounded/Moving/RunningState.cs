@@ -64,7 +64,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             //В данном случае, если игрок был в состоянии ускорения и затем перестал ускоряться,
             //он перейдет в состояние бега, даже если флаг shouldWalk установлен в true.
             //В противном случае, если бы игрок не был в состоянии ускорения, он бы перешел в состояние ходьбы.
-            if (!_playerConfig.MovementStateConfig.ShouldWalk)
+            if (_playerConfig.MovementStateConfig.ShouldWalk == false)
             {
                 return;
             }

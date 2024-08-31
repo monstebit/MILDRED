@@ -34,7 +34,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             PlayerView.StartAirborne();
             
-            ResetSprintState();
+            // ResetSprintState();
             ResetPerformingAction();
         }
 
@@ -78,9 +78,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
                 _movementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
         }
         
-        //  
+        //  TEST
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
+        }
+
+        protected override void AddInputActionsCallbacks()
+        {
+            base.AddInputActionsCallbacks();
+        }
+        
+        protected override void RemoveInputActionsCallbacks()
+        {
+            base.RemoveInputActionsCallbacks();
         }
     }
 }

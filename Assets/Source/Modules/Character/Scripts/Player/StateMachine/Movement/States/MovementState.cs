@@ -129,31 +129,45 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         protected virtual void AddInputActionsCallbacks()
         {
-            if (_movementStateConfig.IsPerformingAction)
-            {
-                return;
-            }
+            // if (_movementStateConfig.IsPerformingAction)
+            // {
+            //     return;
+            // }
+            PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
+            PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
             
             PlayerControls.PlayerMovement.Movement.performed += OnMovementPerformed;
             PlayerControls.PlayerMovement.Movement.canceled += OnMovementCanceled;
-            // PlayerControls.PlayerMovement.WalkToggle.started += OnWalkToggleStarted;
             PlayerControls.PlayerMovement.WalkToggle.performed += OnWalkToggleStarted;
             PlayerControls.PlayerMovement.WalkToggle.canceled += OnWalkToggleCanceled;
         }
 
         protected virtual void RemoveInputActionsCallbacks()
         {
-            if (_movementStateConfig.IsPerformingAction)
-            {
-                return;
-            }
+            // if (_movementStateConfig.IsPerformingAction)
+            // {
+            //     return;
+            // }
+            PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
+            PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
             
             PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
             PlayerControls.PlayerMovement.Movement.canceled -= OnMovementCanceled;
-            // PlayerControls.PlayerMovement.WalkToggle.started -= OnWalkToggleStarted;
             PlayerControls.PlayerMovement.WalkToggle.performed -= OnWalkToggleStarted;
             PlayerControls.PlayerMovement.WalkToggle.canceled -= OnWalkToggleCanceled;
         }
+        
+        //  TEST
+        protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
+        {
+            _movementStateConfig.ShouldSprint = true;
+        }
+        
+        protected virtual void OnSprintCanceled(InputAction.CallbackContext context)
+        {
+            _movementStateConfig.ShouldSprint = false;
+        }
+        //  END TEST
         
         protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
         {
@@ -171,6 +185,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
         {
+            //  TEST
             if (_movementStateConfig.IsPerformingAction)    //  ЗАПРЕТ РЕАГИРОВАТЬ НА ИНПУТ ВО ВРЕМЯ ДЕЙСТВИЯ
             {
                 return;
