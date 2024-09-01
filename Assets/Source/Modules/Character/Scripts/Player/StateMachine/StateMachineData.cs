@@ -11,15 +11,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         public float MovementSpeedModifier { get; set; } = 1f;
 
         private Vector3 _currentTargetRotation;
-        public ref Vector3 CurrentTargetRotation
-        {
-            get
-            {
-                return ref _currentTargetRotation;
-            }
-        }
 
-        public float XVelocity;
         private float _verticalInput;
         private float _horizontalInput;
         private float _cameraVerticalInput;
@@ -27,15 +19,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         private float _moveAmount;
         private float _speed;
         private Vector3 dampedTargetRotationCurrentVelocity;
-
-        
-        public ref Vector3 DampedTargetRotationCurrentVelocity
-        {
-            get
-            {
-                return ref dampedTargetRotationCurrentVelocity;
-            }
-        }
         
         public float VerticalInput
         {
@@ -92,16 +75,5 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 _moveAmount = value;
             }
         }
-        // public float Speed
-        // {
-        //     get => _speed;
-        //     set
-        //     {
-        //         if (value < 0)
-        //             throw new ArgumentOutOfRangeException(nameof(value), "Speed cannot be negative");
-        //
-        //         _speed = value;
-        //     }
-        // }
     }
 }

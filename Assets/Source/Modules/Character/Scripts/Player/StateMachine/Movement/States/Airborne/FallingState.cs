@@ -80,11 +80,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             StateSwitcher.SwitchState<RunningState>();
         }
         
-        protected override void ResetSprintState()
-        {
-            base.ResetSprintState();
-        }
-        
         protected override void ResetPerformingAction()
         {
             base.ResetPerformingAction();

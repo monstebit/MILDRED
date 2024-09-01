@@ -27,15 +27,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _playerInputHandler = playerInputHandler;
         }
         
-        //  TODO: СДЕЛАТЬ УГАСАНИЕ СКОРОСТИ В ГОРИЗОНТАЛЬНОМ НАПРАВЛЕНИИ
         public override void Enter()
         {
             base.Enter();
             
             PlayerView.StartAirborne();
             
-            // ResetSprintState();
             ResetPerformingAction();
+            
+            _movementStateConfig.IsAirborning = true;
         }
 
         public override void Exit()
@@ -43,6 +43,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Exit();
             
             PlayerView.StopAirborne();
+            
+            _movementStateConfig.IsAirborning = false;
         }
 
         public override void Update()

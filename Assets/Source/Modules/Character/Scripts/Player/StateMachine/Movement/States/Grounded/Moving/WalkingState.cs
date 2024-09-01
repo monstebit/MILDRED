@@ -63,20 +63,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         }
         #endregion
         
-        // protected override void OnWalkToggleStarted(InputAction.CallbackContext context)
-        // {
-        //     base.OnWalkToggleStarted(context);
-        //     
-        //     StateSwitcher.SwitchState<RunningState>();
-        // }
-        
-        // protected override void OnWalkToggleCanceled(InputAction.CallbackContext context)
-        // {
-        //     base.OnWalkToggleStarted(context);
-        //     
-        //     StateSwitcher.SwitchState<RunningState>();
-        // }
-        
         private void StopWalking()
         {
             if (Data.MovementInput == Vector2.zero)

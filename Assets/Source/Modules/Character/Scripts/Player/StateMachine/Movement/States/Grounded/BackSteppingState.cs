@@ -91,26 +91,5 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             _backSteppingStateConfig.IsBackStepping = false;
         }
         #endregion
-        
-        #region COMMENTED CODE
-        // protected override void AddInputActionsCallbacks()
-        // {
-        //     base.AddInputActionsCallbacks();
-        //
-        //     PlayerControls.PlayerMovement.Movement.performed += OnMovementPerformed;
-        // }
-        //
-        // protected override void RemoveInputActionsCallbacks()
-        // {
-        //     base.RemoveInputActionsCallbacks();
-        //     
-        //     PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
-        // }
-        
-        // protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        // {
-        //     Debug.Log("OnMovementCanceled");
-        // }
-        #endregion
     }
 }

@@ -69,8 +69,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
             
-            DodgingTimer();
-            
             if (_playerInputHandler.GroundChecker.isTouches == false)
             {
                 StateSwitcher.SwitchState<FallingState>();
@@ -101,84 +99,24 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         protected override void AddInputActionsCallbacks()
         {
             base.AddInputActionsCallbacks();
-
-            // PlayerControls.PlayerMovement.Dodge.performed += OnDodgeStarted;
-            // PlayerControls.PlayerMovement.Dodge.started += OnDodgeStarted;
-            // PlayerControls.PlayerMovement.BackStep.performed += OnBackStepped;
-            PlayerControls.PlayerMovement.Jump.performed += OnJumpStarted;
+            
+            PlayerControls.Player.Jump.performed += OnJumpStarted;
         }
         
         protected override void RemoveInputActionsCallbacks()
         {
             base.RemoveInputActionsCallbacks();
             
-            // PlayerControls.PlayerMovement.Dodge.performed -= OnDodgeStarted;
-            // PlayerControls.PlayerMovement.Dodge.started -= OnDodgeStarted;
-            // PlayerControls.PlayerMovement.BackStep.performed -= OnBackStepped;
-            PlayerControls.PlayerMovement.Jump.performed -= OnJumpStarted;
+            PlayerControls.Player.Jump.performed -= OnJumpStarted;
         }
         #endregion
         
-        protected virtual void OnBackStepped(InputAction.CallbackContext context)
-        {
-            if (_playerConfig.MovementStateConfig.IsPerformingAction)
-            {
-                return;
-            }
-            
-            if (Data.MovementInput != Vector2.zero)
-            {
-                return;
-            }
-            
-            StateSwitcher.SwitchState<BackSteppingState>();
-        }
-        
-        private void DodgingTimer()
-        {
-            // if (_dodgeStateConfig._dodgingTimer >= 0)
-            // {
-            //     _dodgeStateConfig._dodgingTimer -= Time.deltaTime;
-            // }
-        }
-        
-        protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
-        {
-            _dodgeStateConfig._dodgingTimer = 0f;
-            
-            //  TEST
-            if (Data.MovementInput == Vector2.zero)
-            {
-                return;
-            }
-            
-            if (_playerConfig.MovementStateConfig.IsPerformingAction)
-            {
-                return;
-            }
-            
-            // if (_dodgeStateConfig._dodgingTimer <= 0)
-            // {
-            //     _dodgeStateConfig._dodgingTimer = 0.25f;
-            //     
-            //     return;
-            // }
-            //  END TEST
-
-            
-            
-            
-            
-            StateSwitcher.SwitchState<DodgingState>();
-        }
-        
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
         {
-            //  TEST
-            // if (_playerConfig.MovementStateConfig.IsPerformingAction)
-            // {
-            //     return;
-            // }
+            if (_playerConfig.MovementStateConfig.IsPerformingAction)
+            {
+                return;
+            }
             
             StateSwitcher.SwitchState<JumpingState>();
         }

@@ -71,7 +71,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                     {
                         // Запуск спринта после достижения порога времени удержания
                         _movementStateConfig.ShouldSprint = true;
-                        Debug.Log("Начат спринт");
+                        // Debug.Log("Начат спринт");
                     }
                 }
             }
@@ -95,7 +95,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         private void HandleMovementInput()
         {
-            Data.MovementInput = PlayerControls.PlayerMovement.Movement.ReadValue<Vector2>();
+            Data.MovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
             _movementStateConfig.MovementInput = Data.MovementInput;    //  TEST MONITORING
             
             Data.VerticalInput = Data.MovementInput.y;
@@ -120,7 +120,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         private void HandleCameraInput()
         {
-            Data.CameraInput = PlayerControls.PlayerCamera.Movement.ReadValue<Vector2>();
+            Data.CameraInput = PlayerControls.Player.Look.ReadValue<Vector2>();
             Data.CameraVerticalInput = Data.CameraInput.y;
             Data.CameraHorizontalInput = Data.CameraInput.x;
             
@@ -141,52 +141,27 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                     _characterNetworkManager.NetworkRotation.Value, _characterNetworkManager.NetworkRotationSmoothTime);
             }
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         protected virtual void AddInputActionsCallbacks()
         {
-            // if (_movementStateConfig.IsPerformingAction)
-            // {
-            //     return;
-            // }
-            PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
-            PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
-
-            
-            PlayerControls.PlayerMovement.Movement.performed += OnMovementPerformed;
-            PlayerControls.PlayerMovement.Movement.canceled += OnMovementCanceled;
-            PlayerControls.PlayerMovement.WalkToggle.performed += OnWalkToggleStarted;
-            PlayerControls.PlayerMovement.WalkToggle.canceled += OnWalkToggleCanceled;
+            PlayerControls.Player.Sprint.performed += OnSprintPerformed;
+            PlayerControls.Player.Sprint.canceled += OnSprintCanceled;
+            PlayerControls.Player.Move.performed += OnMovementPerformed;
+            PlayerControls.Player.Move.canceled += OnMovementCanceled;
+            PlayerControls.Player.WalkToggle.performed += OnWalkToggleStarted;
+            PlayerControls.Player.WalkToggle.canceled += OnWalkToggleCanceled;
         }
 
         protected virtual void RemoveInputActionsCallbacks()
         {
-            // if (_movementStateConfig.IsPerformingAction)
-            // {
-            //     return;
-            // }
-            PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
-            PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
-
-            
-            
-            PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
-            PlayerControls.PlayerMovement.Movement.canceled -= OnMovementCanceled;
-            PlayerControls.PlayerMovement.WalkToggle.performed -= OnWalkToggleStarted;
-            PlayerControls.PlayerMovement.WalkToggle.canceled -= OnWalkToggleCanceled;
+            PlayerControls.Player.Sprint.performed -= OnSprintPerformed;
+            PlayerControls.Player.Sprint.canceled -= OnSprintCanceled;
+            PlayerControls.Player.Move.performed -= OnMovementPerformed;
+            PlayerControls.Player.Move.canceled -= OnMovementCanceled;
+            PlayerControls.Player.WalkToggle.performed -= OnWalkToggleStarted;
+            PlayerControls.Player.WalkToggle.canceled -= OnWalkToggleCanceled;
         }
         
-        
-        
-        //  TEST
         protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
         {
             _movementStateConfig._isButtonHeld = true;  // Устанавливаем флаг удержания кнопки
@@ -195,7 +170,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         protected virtual void OnSprintCanceled(InputAction.CallbackContext context)
         {
-            if (!_movementStateConfig._isButtonHeld)
+            if (_movementStateConfig._isButtonHeld == false)
             {
                 return;
             }
@@ -210,6 +185,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             }
             else
             {
+                if (_movementStateConfig.IsAirborning)
+                {
+                    return;
+                }
+                
                 // Выполняем кувырок, если кнопка была нажата кратковременно
                 OnDodgeStarted(context);
             }
@@ -241,18 +221,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
     
             StateSwitcher.SwitchState<BackSteppingState>();
         }
-        //  END TEST
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
         {
@@ -270,7 +238,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            //  TEST
             if (_movementStateConfig.IsPerformingAction)    //  ЗАПРЕТ РЕАГИРОВАТЬ НА ИНПУТ ВО ВРЕМЯ ДЕЙСТВИЯ
             {
                 return;
@@ -318,7 +285,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 _movementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
         }
         
-        public void HandleVerticalMovement()    //  JUMPING STATE
+        public void HandleVerticalMovement()
         {
             _playerInputHandler.CharacterController.Move(
                 _movementStateConfig.YVelocity * Time.deltaTime);

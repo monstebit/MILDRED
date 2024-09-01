@@ -1,14 +1,10 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
     public class IdlingState : GroundedState
     {
-        private PlayerInputHandler _playerInputHandler;
-        private MovementStateConfig _movementStateConfig;
-        
         public IdlingState(
             IStateSwitcher stateSwitcher, 
             PlayerInputHandler playerInputHandler, 
@@ -21,8 +17,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCameraMovement, 
             data)
         {
-            _playerInputHandler = playerInputHandler;
-            _movementStateConfig = _playerInputHandler.PlayerConfig.MovementStateConfig;
         }
         
         #region IState METHODS

@@ -9,7 +9,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         private MovementStateConfig _movementStateConfig;
         private AirborneStateConfig _airborneStateConfig;
         private JumpingStateConfig _jumpingStateConfig;
-        private PlayerInputHandler _playerInputHandler;
         
         private Vector3 jumpDirection;
 
@@ -27,7 +26,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
             _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
             _jumpingStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
-            _playerInputHandler = playerInputHandler;
         }
 
         #region IState METHODS
@@ -38,10 +36,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             PlayerView.StartJumping();
 
             _jumpingStateConfig.SpeedModifier = GetSpeedModifier();
+            
             Data.MovementSpeedModifier = _jumpingStateConfig.SpeedModifier;
-
-            // ApplyJumpForce();
-            //
+            
             _jumpingStateConfig.IsJumping = true;
             
             Keyframe LastFrame = _jumpingStateConfig.JumpCurve[_airborneStateConfig.JumpingStateConfig.JumpCurve.length - 1];
@@ -53,11 +50,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
             
-            // if (_movementStateConfig.YVelocity.y < 0)
-            // {
-            //     StateSwitcher.SwitchState<FallingState>();
-            // }
-            //
             if (_jumpingStateConfig.IsJumping)
             {
                 _jumpingStateConfig.Timer += Time.deltaTime;
@@ -85,7 +77,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Exit();
             
             PlayerView.StopJumping();
-            //
+            
             _jumpingStateConfig.Timer = 0;
             _jumpingStateConfig.IsJumping = false;
         }
@@ -116,11 +108,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             }
 
             return speedModifier;
-        }
-        
-        protected override void ResetSprintState()
-        {
-            // base.ResetSprintState();
         }
     }
 }
