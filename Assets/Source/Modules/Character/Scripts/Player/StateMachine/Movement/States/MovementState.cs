@@ -58,8 +58,23 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             
             Move();
             Rotate();
-
             HandleVerticalMovement();
+            
+            //
+            if (_movementStateConfig._isButtonHeld)
+            {
+                _movementStateConfig._timeButtonHeld += Time.deltaTime;
+
+                if (_movementStateConfig._timeButtonHeld >= _movementStateConfig._holdTimeThreshold)
+                {
+                    if (!_movementStateConfig.ShouldSprint)
+                    {
+                        // Запуск спринта после достижения порога времени удержания
+                        _movementStateConfig.ShouldSprint = true;
+                        Debug.Log("Начат спринт");
+                    }
+                }
+            }
         }
 
         public virtual void LateUpdate()
@@ -127,6 +142,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             }
         }
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
         protected virtual void AddInputActionsCallbacks()
         {
             // if (_movementStateConfig.IsPerformingAction)
@@ -135,6 +159,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             // }
             PlayerControls.PlayerMovement.Sprint.performed += OnSprintPerformed;
             PlayerControls.PlayerMovement.Sprint.canceled += OnSprintCanceled;
+
             
             PlayerControls.PlayerMovement.Movement.performed += OnMovementPerformed;
             PlayerControls.PlayerMovement.Movement.canceled += OnMovementCanceled;
@@ -150,6 +175,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             // }
             PlayerControls.PlayerMovement.Sprint.performed -= OnSprintPerformed;
             PlayerControls.PlayerMovement.Sprint.canceled -= OnSprintCanceled;
+
+            
             
             PlayerControls.PlayerMovement.Movement.performed -= OnMovementPerformed;
             PlayerControls.PlayerMovement.Movement.canceled -= OnMovementCanceled;
@@ -157,17 +184,75 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             PlayerControls.PlayerMovement.WalkToggle.canceled -= OnWalkToggleCanceled;
         }
         
+        
+        
         //  TEST
         protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
         {
-            _movementStateConfig.ShouldSprint = true;
+            _movementStateConfig._isButtonHeld = true;  // Устанавливаем флаг удержания кнопки
+            _movementStateConfig._timeButtonHeld = 0f;  // Сбрасываем таймер удержания
         }
         
         protected virtual void OnSprintCanceled(InputAction.CallbackContext context)
         {
-            _movementStateConfig.ShouldSprint = false;
+            if (!_movementStateConfig._isButtonHeld)
+            {
+                return;
+            }
+
+            _movementStateConfig._isButtonHeld = false;
+
+            if (_movementStateConfig.ShouldSprint)
+            {
+                // Завершаем спринт, если он был активирован
+                _movementStateConfig.ShouldSprint = false;
+                // Debug.Log("Спринт завершён");
+            }
+            else
+            {
+                // Выполняем кувырок, если кнопка была нажата кратковременно
+                OnDodgeStarted(context);
+            }
+        }
+        
+        protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
+        {
+            if (Data.MovementInput == Vector2.zero || _movementStateConfig.IsPerformingAction)
+            {
+                OnBackStepped(context);
+                return;
+            }
+    
+            StateSwitcher.SwitchState<DodgingState>();
+            // Debug.Log("Выполнен кувырок");
+        }
+        
+        protected virtual void OnBackStepped(InputAction.CallbackContext context)
+        {
+            if (_movementStateConfig.IsPerformingAction)
+            {
+                return;
+            }
+    
+            if (Data.MovementInput != Vector2.zero)
+            {
+                return;
+            }
+    
+            StateSwitcher.SwitchState<BackSteppingState>();
         }
         //  END TEST
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
         {

@@ -120,7 +120,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         
         protected override void ResetSprintState()
         {
-            base.ResetSprintState();
+            // base.ResetSprintState();
         }
     }
 }

@@ -102,8 +102,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.AddInputActionsCallbacks();
 
-            PlayerControls.PlayerMovement.Dodge.performed += OnDodgeStarted;
-            PlayerControls.PlayerMovement.BackStep.performed += OnBackStepped;
+            // PlayerControls.PlayerMovement.Dodge.performed += OnDodgeStarted;
+            // PlayerControls.PlayerMovement.Dodge.started += OnDodgeStarted;
+            // PlayerControls.PlayerMovement.BackStep.performed += OnBackStepped;
             PlayerControls.PlayerMovement.Jump.performed += OnJumpStarted;
         }
         
@@ -111,8 +112,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.RemoveInputActionsCallbacks();
             
-            PlayerControls.PlayerMovement.Dodge.performed -= OnDodgeStarted;
-            PlayerControls.PlayerMovement.BackStep.performed -= OnBackStepped;
+            // PlayerControls.PlayerMovement.Dodge.performed -= OnDodgeStarted;
+            // PlayerControls.PlayerMovement.Dodge.started -= OnDodgeStarted;
+            // PlayerControls.PlayerMovement.BackStep.performed -= OnBackStepped;
             PlayerControls.PlayerMovement.Jump.performed -= OnJumpStarted;
         }
         #endregion
@@ -134,14 +136,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         private void DodgingTimer()
         {
-            if (_dodgeStateConfig._dodgingTimer >= 0)
-            {
-                _dodgeStateConfig._dodgingTimer -= Time.deltaTime;
-            }
+            // if (_dodgeStateConfig._dodgingTimer >= 0)
+            // {
+            //     _dodgeStateConfig._dodgingTimer -= Time.deltaTime;
+            // }
         }
         
         protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
         {
+            _dodgeStateConfig._dodgingTimer = 0f;
+            
             //  TEST
             if (Data.MovementInput == Vector2.zero)
             {
@@ -153,13 +157,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            if (_dodgeStateConfig._dodgingTimer <= 0)
-            {
-                _dodgeStateConfig._dodgingTimer = 0.25f;
-                
-                return;
-            }
+            // if (_dodgeStateConfig._dodgingTimer <= 0)
+            // {
+            //     _dodgeStateConfig._dodgingTimer = 0.25f;
+            //     
+            //     return;
+            // }
             //  END TEST
+
+            
+            
+            
             
             StateSwitcher.SwitchState<DodgingState>();
         }

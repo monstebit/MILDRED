@@ -34,17 +34,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerView.StartBackStepping();
             
             _backSteppingStateConfig.IsBackStepping = true;
-            
             Keyframe LastFrame = _backSteppingStateConfig.BackStepCurve[_backSteppingStateConfig.BackStepCurve.length - 1];
-            
             _backSteppingStateConfig.BackStepTimer = LastFrame.time;
-            
             _backSteppingStateConfig.LastStepDirection = PlayerView.transform.forward;
-            
             _backSteppingStateConfig.LastStepDirection.y = 0;
-            
             _backSteppingStateConfig.LastStepDirection.Normalize();
-            
             _movementStateConfig.IsPerformingAction = true;
         }
 
