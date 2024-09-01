@@ -15,7 +15,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
         public void TriggerOnMovementStateAnimationEnterEvent()
         {
-            if (IsInAnimationTransition())
+            if (InAnimationTransition())
             {
                 return;
             }
@@ -25,31 +25,27 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
         public void TriggerOnMovementStateAnimationExitEvent()
         {
-            if (IsInAnimationTransition())
+            if (InAnimationTransition())
             {
                 return;
             }
 
             _playerInputHandler.OnMovementStateAnimationExitEvent();
-            
-            // Debug.Log("[ TRIGGER EXIT EVENT ]");
         }
 
         public void TriggerOnMovementStateAnimationTransitionEvent()
         {
-            if (IsInAnimationTransition())
+            if (InAnimationTransition())
             {
                 return;
             }
 
             _playerInputHandler.OnMovementStateAnimationTransitionEvent();
-            
-            // Debug.Log("[ Trigger_Transition_Event ]");
         }
 
-        private bool IsInAnimationTransition(int layerIndex = 0)
+        private bool InAnimationTransition(int layerIndex = 0)
         {
-            return _playerInputHandler.PlayerView._animator.IsInTransition(layerIndex);
+            return _playerInputHandler.PlayerView.Animator.IsInTransition(layerIndex);
         }
     }
 }

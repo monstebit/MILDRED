@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player
 {
@@ -6,60 +7,56 @@ namespace Source.Modules.Character.Scripts.Player
     public class PlayerView : MonoBehaviour
     {
         private const string IsGrounded = "IsGrounded";
-        private const string IsMoving = "IsMoving";
-        
         private const string IsIdling = "IsIdling";
+        private const string IsMoving = "IsMoving";
         private const string IsWalking = "IsWalking";
         private const string IsRunning = "IsRunning";
         private const string IsSprinting = "IsSprinting";
-        
+        private const string IsPerformingAction = "IsPerformingAction";
+        private const string IsDodging = "IsDodging";
+        private const string IsBackStepping = "IsBackStepping";
         private const string IsAirborne = "IsAirborne";
         private const string IsJumping = "IsJumping";
         private const string IsFalling = "IsFalling";
         
-        private const string IsDodging = "IsDodging";
-        private const string IsBackStep = "IsBackStepping";
+        public Animator Animator;
         
-        private const string IsPerformingAction = "IsPerformingAction";
+        public void Initialize() => Animator = GetComponent<Animator>();
         
-        public Animator _animator;
+        public void StartGrounded() => Animator.SetBool(IsGrounded, true);
+        public void StopGrounded() => Animator.SetBool(IsGrounded, false);
         
-        public void Initialize() => _animator = GetComponent<Animator>();
+        public void StartMoving() => Animator.SetBool(IsMoving, true);
+        public void StopMoving() => Animator.SetBool(IsMoving, false);
         
-        public void StartGrounded() => _animator.SetBool(IsGrounded, true);
-        public void StopGrounded() => _animator.SetBool(IsGrounded, false);
+        public void StartIdling() => Animator.SetBool(IsIdling, true);
+        public void StopIdling() => Animator.SetBool(IsIdling, false);
         
-        public void StartMoving() => _animator.SetBool(IsMoving, true);
-        public void StopMoving() => _animator.SetBool(IsMoving, false);
+        public void StartWalking() => Animator.SetBool(IsWalking, true);
+        public void StopWalking() => Animator.SetBool(IsWalking, false);
         
-        public void StartIdling() => _animator.SetBool(IsIdling, true);
-        public void StopIdling() => _animator.SetBool(IsIdling, false);
+        public void StartRunning() => Animator.SetBool(IsRunning, true);
+        public void StopRunning() => Animator.SetBool(IsRunning, false);
         
-        public void StartWalking() => _animator.SetBool(IsWalking, true);
-        public void StopWalking() => _animator.SetBool(IsWalking, false);
+        public void StartSprinting() => Animator.SetBool(IsSprinting, true);
+        public void StopSprinting() => Animator.SetBool(IsSprinting, false);
         
-        public void StartRunning() => _animator.SetBool(IsRunning, true);
-        public void StopRunning() => _animator.SetBool(IsRunning, false);
+        public void StartDodging() => Animator.SetBool(IsDodging, true);
+        public void StopDodging() => Animator.SetBool(IsDodging, false);
         
-        public void StartSprinting() => _animator.SetBool(IsSprinting, true);
-        public void StopSprinting() => _animator.SetBool(IsSprinting, false);
+        public void StartBackStepping() => Animator.SetBool(IsBackStepping, true);
+        public void StopBackStepping() => Animator.SetBool(IsBackStepping, false);
         
-        public void StartDodging() => _animator.SetBool(IsDodging, true);
-        public void StopDodging() => _animator.SetBool(IsDodging, false);
+        public void StartAirborne() => Animator.SetBool(IsAirborne, true);
+        public void StopAirborne() => Animator.SetBool(IsAirborne, false);
         
-        public void StartBackStepping() => _animator.SetBool(IsBackStep, true);
-        public void StopBackStepping() => _animator.SetBool(IsBackStep, false);
-        
-        public void StartAirborne() => _animator.SetBool(IsAirborne, true);
-        public void StopAirborne() => _animator.SetBool(IsAirborne, false);
-        
-        public void StartJumping() => _animator.SetBool(IsJumping, true);
-        public void StopJumping() => _animator.SetBool(IsJumping, false);
+        public void StartJumping() => Animator.SetBool(IsJumping, true);
+        public void StopJumping() => Animator.SetBool(IsJumping, false);
 
-        public void StartFalling() => _animator.SetBool(IsFalling, true);
-        public void StopFalling() => _animator.SetBool(IsFalling, false);
+        public void StartFalling() => Animator.SetBool(IsFalling, true);
+        public void StopFalling() => Animator.SetBool(IsFalling, false);
         
-        public void StartPerformingAction() => _animator.SetBool(IsPerformingAction, true);
-        public void StopPerformingAction() => _animator.SetBool(IsPerformingAction, false);
+        public void StartPerformingAction() => Animator.SetBool(IsPerformingAction, true);
+        public void StopPerformingAction() => Animator.SetBool(IsPerformingAction, false);
     }
 }
