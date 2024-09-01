@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementStateConfig:
     _holdTimeThreshold: 0.2
-    _timeButtonHeld: 1.070838
+    _timeButtonHeld: 1.3654002
     _isButtonHeld: 0
     MovementInput: {x: 0, y: 0}
     VerticalInput: 0
     HorizontalInput: 0
     MoveAmount: 0
-    _movementDirection: {x: 0, y: 0, z: 0}
+    _movementDirection: {x: -0.8386706, y: 0, z: 0.544639}
     YVelocity: {x: 0, y: -2, z: 0}
     GroundedGravityForce: -2
     ShouldWalk: 0
@@ -29,13 +29,13 @@ MonoBehaviour:
     _sensitivity: 1.5
     _minimumPivot: -30
     _maximumPivot: 80
-    _rotationSpeed: 50
+    _rotationSpeed: 10
   _runningStateConfig:
     <SpeedModifier>k__BackingField: 1
   _walkingStateConfig:
     <SpeedModifier>k__BackingField: 0.5
   _sprintingStateConfig:
-    <SpeedModifier>k__BackingField: 1.5
+    <SpeedModifier>k__BackingField: 1.7
     <RunToWalkTime>k__BackingField: 0.5
   _dodgeStateConfig:
     DodgeCurve:
@@ -43,24 +43,24 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 5
-        inSlope: 16.666666
-        outSlope: 16.666666
+        value: 10
+        inSlope: 33.333332
+        outSlope: 33.333332
         tangentMode: 34
         weightedMode: 0
         inWeight: 0
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.3
-        value: 10
-        inSlope: -0.15687089
-        outSlope: -0.15687089
+        time: 0.15
+        value: 15
+        inSlope: -18.506945
+        outSlope: -18.506945
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 0.044232983
       - serializedVersion: 3
-        time: 0.8
+        time: 0.7
         value: 5
         inSlope: -1.620743
         outSlope: -1.620743
@@ -71,10 +71,10 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    DodgeTimer: 0.8
+    DodgeTimer: 0.7
     Timer: 0
     IsDodging: 0
-    LastDodgeDirection: {x: 0.29931524, y: 0, z: 0.95415425}
+    LastDodgeDirection: {x: 0.96340436, y: 0, z: -0.2680522}
     _dodgingTimer: 16.702066
   _backSteppingStateConfig:
     BackStepCurve:
@@ -84,23 +84,23 @@ MonoBehaviour:
         time: 0
         value: 0
         inSlope: 0
-        outSlope: 0
-        tangentMode: 0
+        outSlope: 5
+        tangentMode: 69
         weightedMode: 0
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
         time: 0.2
-        value: 0
-        inSlope: 0.033585995
-        outSlope: 0.033585995
-        tangentMode: 0
+        value: 1
+        inSlope: 5
+        outSlope: 280.00003
+        tangentMode: 69
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.13423552
       - serializedVersion: 3
-        time: 0.35
-        value: 8
+        time: 0.25
+        value: 15
         inSlope: -0.15687089
         outSlope: -0.15687089
         tangentMode: 0
@@ -122,11 +122,11 @@ MonoBehaviour:
     BackStepTimer: 0.75
     Timer: 0
     IsBackStepping: 0
-    LastStepDirection: {x: 0.9723695, y: 0, z: -0.23344731}
+    LastStepDirection: {x: 0.9374729, y: 0, z: -0.34805843}
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:
-      <SpeedModifier>k__BackingField: 0.75
+      <SpeedModifier>k__BackingField: 1
       JumpForce: 2
       JumpCurve:
         serializedVersion: 2
