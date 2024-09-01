@@ -33,20 +33,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StartBackStepping();
             
-            _backSteppingStateConfig.IsBackStepping = true;
             Keyframe LastFrame = _backSteppingStateConfig.BackStepCurve[_backSteppingStateConfig.BackStepCurve.length - 1];
             _backSteppingStateConfig.BackStepTimer = LastFrame.time;
             _backSteppingStateConfig.LastStepDirection = PlayerView.transform.forward;
             _backSteppingStateConfig.LastStepDirection.y = 0;
             _backSteppingStateConfig.LastStepDirection.Normalize();
-            // _movementStateConfig.IsPerformingAction = true;
         }
 
         public override void Update()
         {
             base.Update();
             
-            if (_backSteppingStateConfig.IsBackStepping)
+            if (_movementStateConfig.IsPerformingAction)
             {
                 _backSteppingStateConfig.Timer += Time.deltaTime;
 
@@ -61,7 +59,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 else
                 {
                     _movementStateConfig.IsPerformingAction = false;
-                    _backSteppingStateConfig.IsBackStepping = false;
                     _backSteppingStateConfig.Timer = 0;
                 }
             }
@@ -71,7 +68,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 if (Data.MovementInput == Vector2.zero)
                 {
                     StateSwitcher.SwitchState<IdlingState>();
-                    
                     return;
                 }
                 
@@ -86,9 +82,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerView.StopBackStepping();
 
             _backSteppingStateConfig.Timer = 0f;
-            
-            // _movementStateConfig.IsPerformingAction = false;
-            _backSteppingStateConfig.IsBackStepping = false;
         }
         #endregion
     }
