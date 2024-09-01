@@ -15,19 +15,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         public RunningState(
             IStateSwitcher stateSwitcher,
-            PlayerInputHandler playerInputHandler,
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerPlayerCameraMovement,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
             stateSwitcher,
-            playerInputHandler,
-            characterNetworkManager,
-            playerPlayerCameraMovement,
+            playerCompositionRoot,
             data)
         {
-            _playerConfig = playerInputHandler.PlayerConfig;
-            _runningStateConfig = playerInputHandler.PlayerConfig.RunningStateConfig;
-            _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+            _playerConfig = playerCompositionRoot.PlayerConfig;
+            _runningStateConfig = playerCompositionRoot.PlayerConfig.RunningStateConfig;
+            _sprintingStateConfig = playerCompositionRoot.PlayerConfig.SprintingStateConfig;
         }
 
         public override void Enter()

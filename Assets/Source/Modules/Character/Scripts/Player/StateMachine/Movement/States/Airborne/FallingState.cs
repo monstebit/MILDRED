@@ -13,17 +13,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 
         public FallingState(
             IStateSwitcher stateSwitcher,
-            PlayerInputHandler playerInputHandler,
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerCameraMovement,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
-            stateSwitcher, playerInputHandler,
-            characterNetworkManager,
-            playerCameraMovement,
+            stateSwitcher,
+            playerCompositionRoot,
             data)
         {
-            _groundChecker = playerInputHandler.GroundChecker;
-            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+            _groundChecker = playerCompositionRoot.GroundChecker;
+            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
         }
 
         public override void Enter()

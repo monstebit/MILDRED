@@ -7,15 +7,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     public class LandingState : GroundedState
     {
         public LandingState(
-            IStateSwitcher stateSwitcher, 
-            PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager, 
-            PlayerCameraMovement playerPlayerCameraMovement, 
+            IStateSwitcher stateSwitcher,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
-            stateSwitcher, 
-            playerInputHandler, 
-            characterNetworkManager, 
-            playerPlayerCameraMovement, 
+            stateSwitcher,
+            playerCompositionRoot,
             data)
         {
         }

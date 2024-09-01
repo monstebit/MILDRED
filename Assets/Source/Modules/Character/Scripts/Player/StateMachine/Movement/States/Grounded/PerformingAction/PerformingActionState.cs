@@ -9,17 +9,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         public PerformingActionState(
             IStateSwitcher stateSwitcher,
-            PlayerInputHandler playerInputHandler,
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerPlayerCameraMovement,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
             stateSwitcher,
-            playerInputHandler,
-            characterNetworkManager,
-            playerPlayerCameraMovement,
+            playerCompositionRoot,
             data)
         {
-            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
         }
         
         #region IState METHODS

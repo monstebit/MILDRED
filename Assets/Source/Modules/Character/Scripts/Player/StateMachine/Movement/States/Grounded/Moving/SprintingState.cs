@@ -11,17 +11,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         private SprintingStateConfig _sprintingStateConfig;
         
         public SprintingState(
-            IStateSwitcher stateSwitcher, 
-            PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager, 
-            PlayerCameraMovement playerPlayerCameraMovement, 
-            StateMachineData data) : base(stateSwitcher, 
-            playerInputHandler, characterNetworkManager, 
-            playerPlayerCameraMovement, 
+            IStateSwitcher stateSwitcher,
+            PlayerCompositionRoot playerCompositionRoot, 
+            StateMachineData data) : base(
+            stateSwitcher,
+            playerCompositionRoot,
             data)
         {
-            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
-            _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
+            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
+            _sprintingStateConfig = playerCompositionRoot.PlayerConfig.SprintingStateConfig;
         }
 
         #region IState METHODS

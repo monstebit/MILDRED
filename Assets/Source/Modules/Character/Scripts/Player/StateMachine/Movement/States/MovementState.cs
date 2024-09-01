@@ -9,32 +9,31 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 {
     public abstract class MovementState : IState
     {
-        private readonly PlayerInputHandler _playerInputHandler;
+        private readonly PlayerCompositionRoot _playerCompositionRoot;
+        private readonly PlayerCameraMovement _playerCameraMovement;
+        private readonly CharacterNetworkManager _characterNetworkManager;
+        
+        private MovementStateConfig _movementStateConfig;
         
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
         
-        private CharacterNetworkManager _characterNetworkManager;
-        private PlayerCameraMovement _playerCameraMovement;
-        private MovementStateConfig _movementStateConfig;
-        
         public MovementState(
             IStateSwitcher stateSwitcher, 
-            PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerCameraMovement,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data)
         {
             StateSwitcher = stateSwitcher;
-            _playerInputHandler = playerInputHandler;
-            _characterNetworkManager = characterNetworkManager;
-            _playerCameraMovement = playerCameraMovement;
-            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+            _playerCompositionRoot = playerCompositionRoot;
+            _playerCameraMovement = playerCompositionRoot.PlayerCameraMovement;
+            _characterNetworkManager = playerCompositionRoot.CharacterNetworkManager;
             Data = data;
+            
+            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
         }
         
-        protected PlayerControls PlayerControls => _playerInputHandler.PlayerControls;
-        protected PlayerView PlayerView => _playerInputHandler.PlayerView;
+        protected PlayerControls PlayerControls => _playerCompositionRoot.PlayerControls;
+        protected PlayerView PlayerView => _playerCompositionRoot.PlayerView;
 
         #region IState METHODS
         public virtual void Enter()
@@ -52,7 +51,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         public virtual void Update()
         {
-            if (!_playerInputHandler.IsOwner)
+            // if (!_playerInputHandler.IsOwner)
+            if (!_playerCompositionRoot.CharacterNetworkManager.IsOwner)
             {
                 return;
             }
@@ -80,7 +80,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         public virtual void LateUpdate()
         {
-            if (!_playerInputHandler.IsOwner)
+            // if (!_playerInputHandler.IsOwner)
+            if (!_playerCompositionRoot.CharacterNetworkManager.IsOwner)
                 return;
             
             HandleAllCameraActions();
@@ -125,20 +126,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             Data.CameraVerticalInput = Data.CameraInput.y;
             Data.CameraHorizontalInput = Data.CameraInput.x;
             
-            if (_playerInputHandler.IsOwner)
+            // if (_playerInputHandler.IsOwner)
+            if (!_playerCompositionRoot.CharacterNetworkManager.IsOwner)
             {
-                _characterNetworkManager.NetworkPosition.Value = _playerInputHandler.transform.position;
-                _characterNetworkManager.NetworkRotation.Value = _playerInputHandler.transform.rotation;
+                _characterNetworkManager.NetworkPosition.Value = _playerCompositionRoot.transform.position;
+                _characterNetworkManager.NetworkRotation.Value = _playerCompositionRoot.transform.rotation;
             }
             else
             {
-                _playerInputHandler.transform.position = Vector3.SmoothDamp(
-                    _playerInputHandler.transform.position,
+                _playerCompositionRoot.transform.position = Vector3.SmoothDamp(
+                    _playerCompositionRoot.transform.position,
                     _characterNetworkManager.NetworkPosition.Value,
                     ref _characterNetworkManager.NetworkPositionVelocity,
                     _characterNetworkManager.NetworkPositionSmoothTime);
 
-                _playerInputHandler.transform.rotation = Quaternion.Slerp(_playerInputHandler.transform.rotation,
+                _playerCompositionRoot.transform.rotation = Quaternion.Slerp(_playerCompositionRoot.transform.rotation,
                     _characterNetworkManager.NetworkRotation.Value, _characterNetworkManager.NetworkRotationSmoothTime);
             }
         }
@@ -275,20 +277,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             }
 
-            if (_playerInputHandler.GroundChecker.isTouches == false)
+            if (_playerCompositionRoot.GroundChecker.isTouches == false)
             {
                 return;
             }
             
             _movementStateConfig._movementDirection = GetMovementInputDirection();
             
-            _playerInputHandler.CharacterController.Move(
+            _playerCompositionRoot.CharacterController.Move(
                 _movementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
         }
         
         public void HandleVerticalMovement()
         {
-            _playerInputHandler.CharacterController.Move(
+            _playerCompositionRoot.CharacterController.Move(
                 _movementStateConfig.YVelocity * Time.deltaTime);
         }
         
@@ -320,11 +322,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         private void HandleFollowTarget()
         {
-            _playerCameraMovement.transform.position = Vector3.SmoothDamp(
-                _playerCameraMovement.transform.position,
-                _playerInputHandler.PlayerView.transform.position,
-                ref _playerCameraMovement.CameraVelocity,
-                _playerCameraMovement.CameraSmoothSpeed * Time.deltaTime);
+            _playerCameraMovement.FollowTarget(_playerCompositionRoot.PlayerView.transform);
+            // _playerCameraMovement.transform.position = Vector3.SmoothDamp(
+            //     _playerCameraMovement.transform.position,
+            //     _playerCompositionRoot.PlayerView.transform.position,
+            //     ref _playerCameraMovement.CameraVelocity,
+            //     _playerCameraMovement.CameraSmoothSpeed * Time.deltaTime);
         }
         
         private void HandleCameraRotation()

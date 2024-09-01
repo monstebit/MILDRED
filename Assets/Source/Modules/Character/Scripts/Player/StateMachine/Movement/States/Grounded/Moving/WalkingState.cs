@@ -13,19 +13,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
         public WalkingState(
             IStateSwitcher stateSwitcher,
-            PlayerInputHandler playerInputHandler,
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerCameraMovement,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
             stateSwitcher,
-            playerInputHandler,
-            characterNetworkManager,
-            playerCameraMovement,
+            playerCompositionRoot,
             data)
         {
-            _walkingStateConfig = playerInputHandler.PlayerConfig.WalkingStateConfig;
-            _sprintingStateConfig = playerInputHandler.PlayerConfig.SprintingStateConfig;
-            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
+            _walkingStateConfig = playerCompositionRoot.PlayerConfig.WalkingStateConfig;
+            _sprintingStateConfig = playerCompositionRoot.PlayerConfig.SprintingStateConfig;
+            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
         }
 
         #region IState METHODS

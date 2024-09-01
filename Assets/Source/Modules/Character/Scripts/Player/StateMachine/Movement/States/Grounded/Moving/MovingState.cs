@@ -5,14 +5,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     public class MovingState : GroundedState
     {
         public MovingState(
-            IStateSwitcher stateSwitcher, 
-            PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager, 
-            PlayerCameraMovement playerPlayerCameraMovement, 
+            IStateSwitcher stateSwitcher,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
-            stateSwitcher, playerInputHandler, 
-            characterNetworkManager, 
-            playerPlayerCameraMovement, 
+            stateSwitcher,
+            playerCompositionRoot,
             data)
         {
         }

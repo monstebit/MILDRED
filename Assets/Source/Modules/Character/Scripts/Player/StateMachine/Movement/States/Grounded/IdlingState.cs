@@ -6,15 +6,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     public class IdlingState : GroundedState
     {
         public IdlingState(
-            IStateSwitcher stateSwitcher, 
-            PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager, 
-            PlayerCameraMovement playerCameraMovement,
+            IStateSwitcher stateSwitcher,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
-            stateSwitcher, 
-            playerInputHandler, 
-            characterNetworkManager, 
-            playerCameraMovement, 
+            stateSwitcher,
+            playerCompositionRoot,
             data)
         {
         }

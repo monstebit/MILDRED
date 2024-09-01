@@ -8,22 +8,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     {
         private MovementStateConfig _movementStateConfig;
         private BackSteppingStateConfig _backSteppingStateConfig;
-        private PlayerInputHandler _playerInputHandler;
+        private PlayerCompositionRoot _playerCompositionRoot;
         
-        public BackSteppingState(IStateSwitcher stateSwitcher, 
-            PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager, 
-            PlayerCameraMovement playerPlayerCameraMovement, 
+        public BackSteppingState(
+            IStateSwitcher stateSwitcher,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
-            stateSwitcher, 
-            playerInputHandler, 
-            characterNetworkManager, 
-            playerPlayerCameraMovement, 
+            stateSwitcher,
+            playerCompositionRoot,
             data)
         {
-            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
-            _backSteppingStateConfig = playerInputHandler.PlayerConfig.BackSteppingStateConfig;
-            _playerInputHandler = playerInputHandler;
+            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
+            _backSteppingStateConfig = playerCompositionRoot.PlayerConfig.BackSteppingStateConfig;
+            _playerCompositionRoot = playerCompositionRoot;
         }
     
         #region IState METHODS
@@ -53,7 +50,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                     float speed = 
                         _backSteppingStateConfig.BackStepCurve.Evaluate(_backSteppingStateConfig.Timer);
 
-                    _playerInputHandler.CharacterController.Move(
+                    _playerCompositionRoot.CharacterController.Move(
                         -_backSteppingStateConfig.LastStepDirection * speed * Time.deltaTime);
                 }
                 else

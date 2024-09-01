@@ -392,14 +392,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca3a819a83aeaca449abb62bb6f94c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraObject: {fileID: 7433256940983990525}
-  CameraPivotTransform: {fileID: 1914071689693900990}
-  CameraVelocity: {x: 0, y: 0, z: 0}
-  PlayerCameraXRotation: 0
-  PlayerCameraYRotation: 0
-  CameraSmoothSpeed: 0.125
-  CameraZPosition: 0
-  TargetCameraZPosition: 0
+  _cameraPivotTransform: {fileID: 1914071689693900990}
+  _cameraVelocity: {x: 0, y: 0, z: 0}
+  _playerCameraXRotation: 0
+  _playerCameraYRotation: 0
+  _cameraSmoothSpeed: 0.125
 --- !u!1 &1469515255428881270
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,8 +456,8 @@ GameObject:
   - component: {fileID: 4175553896352746951}
   - component: {fileID: 872145108965141418}
   - component: {fileID: 6123789611473589101}
-  - component: {fileID: 613380661302881207}
   - component: {fileID: 1861307780936638204}
+  - component: {fileID: 613380661302881207}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -497,7 +494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3827538484
+  GlobalObjectIdHash: 1811658602
   InScenePlacedSourceGlobalObjectIdHash: 1368908093
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -518,6 +515,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 767fde62dfe28c44e97f9c7bddbcebea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1861307780936638204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780999330563793708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15f61a782e373bd439800e4db7078a48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerConfig: {fileID: 11400000, guid: a0f151924a2d23c428c0ef7e8c12708b, type: 2}
+  _playerView: {fileID: 5985968876740594145}
+  _playerCameraMovement: {fileID: 5624563302191773171}
+  _groundChecker: {fileID: 4083188193081805519}
+  _characterNetworkManager: {fileID: 613380661302881207}
 --- !u!114 &613380661302881207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -537,22 +551,6 @@ MonoBehaviour:
   NetworkPositionVelocity: {x: 0, y: 0, z: 0}
   NetworkPositionSmoothTime: 0.1
   NetworkRotationSmoothTime: 0.1
---- !u!114 &1861307780936638204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1780999330563793708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f61a782e373bd439800e4db7078a48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerConfig: {fileID: 11400000, guid: a0f151924a2d23c428c0ef7e8c12708b, type: 2}
-  _playerView: {fileID: 5985968876740594145}
-  _playerCameraMovement: {fileID: 5624563302191773171}
-  _groundChecker: {fileID: 4083188193081805519}
 --- !u!1 &2109200014847870042
 GameObject:
   m_ObjectHideFlags: 0
@@ -1043,7 +1041,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1914071689693900990}
   m_Layer: 7
-  m_Name: Camera View
+  m_Name: Camera Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1930,7 +1928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32fa52f244b4c434687e79bf9c2fa31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 2376990045926730743}
+  Animator: {fileID: 0}
 --- !u!114 &6724067212064225470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1943,7 +1941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 065f45211cb716345986eecfd6a05c5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerInputHandler: {fileID: 1861307780936638204}
+  playerCompositionRoot: {fileID: 1861307780936638204}
 --- !u!1 &6923230505698837370
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,24 +7,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 {
     public abstract class AirborneState : MovementState
     {
-        private readonly PlayerInputHandler _playerInputHandler;
+        private readonly PlayerCompositionRoot _playerCompositionRoot;
         private readonly MovementStateConfig _movementStateConfig;
         private readonly AirborneStateConfig _airborneStateConfig;
         private float _gravity = -9.81f;
 
         public AirborneState(
             IStateSwitcher stateSwitcher,
-            PlayerInputHandler playerInputHandler,
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerCameraMovement, StateMachineData data) : base(
+            PlayerCompositionRoot playerCompositionRoot, 
+            StateMachineData data) : base(
             stateSwitcher,
-            playerInputHandler,
-            characterNetworkManager,
-            playerCameraMovement,
+            playerCompositionRoot,
             data)
         {
-            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
-            _playerInputHandler = playerInputHandler;
+            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
+            _playerCompositionRoot = playerCompositionRoot;
         }
         
         public override void Enter()
@@ -75,7 +72,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             _movementStateConfig._movementDirection = GetMovementInputDirection();
             
-            _playerInputHandler.CharacterController.Move(
+            _playerCompositionRoot.CharacterController.Move(
                 // _movementStateConfig._movementDirection * Data.MovementSpeedModifier * Time.deltaTime);
                 _movementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
         }

@@ -16,23 +16,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         private IState _currentState;
 
         public PlayerStateMachine(
-            PlayerInputHandler playerInputHandler, 
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerCameraMovement)
+            PlayerCompositionRoot playerCompositionRoot)
         {
             StateMachineData data = new StateMachineData();
             
             _states = new List<IState>()
             {
-                new IdlingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement,data),
-                new WalkingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
-                new RunningState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
-                new SprintingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
-                new DodgingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
-                new BackSteppingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
-                new JumpingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
-                new FallingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
-                new LightLandingState(this, playerInputHandler, characterNetworkManager, playerCameraMovement, data),
+                new IdlingState(this, playerCompositionRoot, data),
+                new WalkingState(this, playerCompositionRoot, data),
+                new RunningState(this, playerCompositionRoot, data),
+                new SprintingState(this, playerCompositionRoot, data),
+                new DodgingState(this, playerCompositionRoot, data),
+                new BackSteppingState(this, playerCompositionRoot, data),
+                new JumpingState(this, playerCompositionRoot, data),
+                new FallingState(this, playerCompositionRoot, data),
+                new LightLandingState(this, playerCompositionRoot, data),
             };
 
             _currentState = _states[0];

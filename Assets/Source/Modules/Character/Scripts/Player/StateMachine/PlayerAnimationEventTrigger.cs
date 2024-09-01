@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
@@ -9,7 +10,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     /// </summary>
     public class PlayerAnimationEventTrigger : MonoBehaviour
     {
-        [SerializeField] private PlayerInputHandler _playerInputHandler;
+        [FormerlySerializedAs("_playerInputHandler")] [SerializeField] private PlayerCompositionRoot playerCompositionRoot;
         
         private Animator _animator;
 
@@ -20,7 +21,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 return;
             }
 
-            _playerInputHandler.OnMovementStateAnimationEnterEvent();
+            playerCompositionRoot.OnMovementStateAnimationEnterEvent();
         }
 
         public void TriggerOnMovementStateAnimationExitEvent()
@@ -30,7 +31,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 return;
             }
 
-            _playerInputHandler.OnMovementStateAnimationExitEvent();
+            playerCompositionRoot.OnMovementStateAnimationExitEvent();
         }
 
         public void TriggerOnMovementStateAnimationTransitionEvent()
@@ -40,12 +41,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
                 return;
             }
 
-            _playerInputHandler.OnMovementStateAnimationTransitionEvent();
+            playerCompositionRoot.OnMovementStateAnimationTransitionEvent();
         }
 
         private bool InAnimationTransition(int layerIndex = 0)
         {
-            return _playerInputHandler.PlayerView.Animator.IsInTransition(layerIndex);
+            return playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
     }
 }

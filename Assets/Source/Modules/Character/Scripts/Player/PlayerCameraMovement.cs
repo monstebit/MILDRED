@@ -1,24 +1,46 @@
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player
-{
-    public class PlayerCameraMovement : MonoBehaviour
+{public class PlayerCameraMovement : MonoBehaviour
     {
-        public Camera CameraObject;
-        public Transform CameraPivotTransform;
-        public Vector3 CameraVelocity;
-        // public Vector3 CameraObjectPosition;
-        public float PlayerCameraXRotation;
-        public float PlayerCameraYRotation;
-        public float CameraSmoothSpeed = 0.125f;
-        
-        //  TODO: CAMERA COLLIDING LOGIC
-        public float CameraZPosition;
-        public float TargetCameraZPosition;
-        
-        private void Start()
+        [SerializeField] private Transform _cameraPivotTransform;
+        [SerializeField] private Vector3 _cameraVelocity;
+        [SerializeField] private float _playerCameraXRotation;
+        [SerializeField] private float _playerCameraYRotation;
+        [SerializeField] private float _cameraSmoothSpeed = 0.125f;
+
+        public Transform CameraPivotTransform => _cameraPivotTransform;
+        public Vector3 CameraVelocity
         {
-            // DontDestroyOnLoad(gameObject);
+            get => _cameraVelocity;
+            set => _cameraVelocity = value;
+        }
+
+        public float PlayerCameraXRotation
+        {
+            get => _playerCameraXRotation;
+            set => _playerCameraXRotation = value;
+        }
+
+        public float PlayerCameraYRotation
+        {
+            get => _playerCameraYRotation;
+            set => _playerCameraYRotation = value;
+        }
+
+        public float CameraSmoothSpeed
+        {
+            get => _cameraSmoothSpeed;
+            set => _cameraSmoothSpeed = value;
+        }
+        
+        public void FollowTarget(Transform target)
+        {
+            transform.position = Vector3.SmoothDamp(
+                transform.position,
+                target.position,
+                ref _cameraVelocity,
+                CameraSmoothSpeed * Time.deltaTime);
         }
     }
 }

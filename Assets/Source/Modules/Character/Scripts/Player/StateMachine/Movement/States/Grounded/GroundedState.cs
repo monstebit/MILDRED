@@ -9,28 +9,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public abstract class GroundedState : MovementState
     {
-        private PlayerInputHandler _playerInputHandler;
+        private PlayerCompositionRoot _playerCompositionRoot;
         private PlayerConfig _playerConfig;
         
-        private DodgeStateConfig _dodgeStateConfig;
-        private MovementStateConfig _movementStateConfig;
         
         public GroundedState(
             IStateSwitcher stateSwitcher,
-            PlayerInputHandler playerInputHandler,
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerPlayerCameraMovement,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
             stateSwitcher,
-            playerInputHandler,
-            characterNetworkManager,
-            playerPlayerCameraMovement,
+            playerCompositionRoot,
             data)
         {
-            _playerConfig = playerInputHandler.PlayerConfig;
-            _playerInputHandler = playerInputHandler;
-            _dodgeStateConfig = _playerConfig.DodgeStateConfig;
-            _movementStateConfig = _playerConfig.MovementStateConfig;
+            _playerCompositionRoot = playerCompositionRoot;
+            _playerConfig = playerCompositionRoot.PlayerConfig;
         }
         
         #region IState METHODS
@@ -69,7 +61,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
             
-            if (_playerInputHandler.GroundChecker.isTouches == false)
+            if (_playerCompositionRoot.GroundChecker.isTouches == false)
             {
                 StateSwitcher.SwitchState<FallingState>();
             }

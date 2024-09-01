@@ -14,18 +14,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 
         public JumpingState(
             IStateSwitcher stateSwitcher,
-            PlayerInputHandler playerInputHandler,
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerCameraMovement,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
-            stateSwitcher, playerInputHandler,
-            characterNetworkManager,
-            playerCameraMovement,
+            stateSwitcher,
+            playerCompositionRoot,
             data)
         {
-            _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
-            _airborneStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig;
-            _jumpingStateConfig = playerInputHandler.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
+            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
+            _airborneStateConfig = playerCompositionRoot.PlayerConfig.AirborneStateConfig;
+            _jumpingStateConfig = playerCompositionRoot.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
         }
 
         #region IState METHODS

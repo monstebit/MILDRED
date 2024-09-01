@@ -9,23 +9,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         private DodgeStateConfig _dodgeStateConfig;
         private MovementStateConfig _movementStateConfig;
         private PlayerConfig _playerConfig;
-        private PlayerInputHandler _playerInputHandler;
+        private PlayerCompositionRoot _playerCompositionRoot;
         
         public DodgingState(
             IStateSwitcher stateSwitcher,
-            PlayerInputHandler playerInputHandler,
-            CharacterNetworkManager characterNetworkManager,
-            PlayerCameraMovement playerPlayerCameraMovement,
+            PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
             stateSwitcher,
-            playerInputHandler,
-            characterNetworkManager,
-            playerPlayerCameraMovement,
+            playerCompositionRoot,
             data)
             {
-                _dodgeStateConfig = playerInputHandler.PlayerConfig.DodgeStateConfig;
-                _movementStateConfig = playerInputHandler.PlayerConfig.MovementStateConfig;
-                _playerInputHandler = playerInputHandler;
+                _dodgeStateConfig = playerCompositionRoot.PlayerConfig.DodgeStateConfig;
+                _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
+                _playerCompositionRoot = playerCompositionRoot;
             }
          
         #region IState METHODS
@@ -55,7 +51,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                     float speed = 
                         _dodgeStateConfig.DodgeCurve.Evaluate(_dodgeStateConfig.Timer);
 
-                    _playerInputHandler.CharacterController.Move(
+                    _playerCompositionRoot.CharacterController.Move(
                         _dodgeStateConfig.LastDodgeDirection * speed * Time.deltaTime);
                 }
                 else
