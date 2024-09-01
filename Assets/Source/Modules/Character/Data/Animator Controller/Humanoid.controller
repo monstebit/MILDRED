@@ -709,7 +709,7 @@ AnimatorStateMachine:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Moving Actions
+  m_Name: Performing Action
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -891654735930099067}
