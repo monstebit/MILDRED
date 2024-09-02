@@ -1,6 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 
@@ -46,15 +47,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             if (_groundChecker.isTouches)
             {
-                _movementStateConfig.YVelocity.y = _movementStateConfig.GroundedGravityForce;   //  "ПРИЛИПАНИЕ" К ЗЕМЛЕ
-
-                if (Data.MovementInput == Vector2.zero)
-                {
-                    StateSwitcher.SwitchState<IdlingState>();
-                    return;
-                }
-
-                OnMove();
+                StateSwitcher.SwitchState<LandingState>();  //  ON TESTING
+                
+                // _movementStateConfig.YVelocity.y = _movementStateConfig.GroundedGravityForce;   //  "ПРИЛИПАНИЕ" К ЗЕМЛЕ
+                
+                // if (Data.MovementInput == Vector2.zero)
+                // {
+                //     StateSwitcher.SwitchState<IdlingState>();
+                //     return;
+                // }
+                //
+                // OnMove();
             }
         }
 

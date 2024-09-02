@@ -1,6 +1,4 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing
 {
@@ -21,8 +19,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Enter();
         }
 
-        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        public override void Exit()
         {
+            base.Exit();
         }
+
+        // protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        // {
+        // }
     }
 }
