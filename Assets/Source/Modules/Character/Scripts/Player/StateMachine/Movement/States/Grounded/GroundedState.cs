@@ -1,6 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +10,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     {
         private PlayerCompositionRoot _playerCompositionRoot;
         private PlayerConfig _playerConfig;
-        
         
         public GroundedState(
             IStateSwitcher stateSwitcher,
@@ -105,7 +103,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
         {
-            if (_playerConfig.MovementStateConfig.IsPerformingAction)
+            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
             {
                 return;
             }

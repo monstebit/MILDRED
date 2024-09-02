@@ -13,10 +13,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private readonly PlayerCameraMovement _playerCameraMovement;
         private readonly CharacterNetworkManager _characterNetworkManager;
         
-        private MovementStateConfig _movementStateConfig;
-        
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
+        protected readonly PlayerConfig _playerConfig;
         
         public MovementState(
             IStateSwitcher stateSwitcher, 
@@ -25,11 +24,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         {
             StateSwitcher = stateSwitcher;
             _playerCompositionRoot = playerCompositionRoot;
+            _playerConfig = playerCompositionRoot.PlayerConfig;
             _playerCameraMovement = playerCompositionRoot.PlayerCameraMovement;
             _characterNetworkManager = playerCompositionRoot.CharacterNetworkManager;
             Data = data;
-            
-            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
         }
         
         protected PlayerControls PlayerControls => _playerCompositionRoot.PlayerControls;
@@ -62,16 +60,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             HandleVerticalMovement();
             
             //
-            if (_movementStateConfig._isButtonHeld)
+            if (_playerConfig.MovementStateConfig._isButtonHeld)
             {
-                _movementStateConfig._timeButtonHeld += Time.deltaTime;
+                _playerConfig.MovementStateConfig._timeButtonHeld += Time.deltaTime;
 
-                if (_movementStateConfig._timeButtonHeld >= _movementStateConfig._holdTimeThreshold)
+                if (_playerConfig.MovementStateConfig._timeButtonHeld >= _playerConfig.MovementStateConfig._holdTimeThreshold)
                 {
-                    if (!_movementStateConfig.ShouldSprint)
+                    if (!_playerConfig.MovementStateConfig.ShouldSprint)
                     {
                         // Запуск спринта после достижения порога времени удержания
-                        _movementStateConfig.ShouldSprint = true;
+                        _playerConfig.MovementStateConfig.ShouldSprint = true;
                         // Debug.Log("Начат спринт");
                     }
                 }
@@ -98,17 +96,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private void HandleMovementInput()
         {
             Data.MovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
-            _movementStateConfig.MovementInput = Data.MovementInput;    //  TEST MONITORING
+            _playerConfig.MovementStateConfig.MovementInput = Data.MovementInput;    //  TEST MONITORING
             
             Data.VerticalInput = Data.MovementInput.y;
-            _movementStateConfig.VerticalInput = Data.VerticalInput;    //  TEST MONITORING
+            _playerConfig.MovementStateConfig.VerticalInput = Data.VerticalInput;    //  TEST MONITORING
             
             Data.HorizontalInput = Data.MovementInput.x;
-            _movementStateConfig.HorizontalInput = Data.HorizontalInput;    //  TEST MONITORING
+            _playerConfig.MovementStateConfig.HorizontalInput = Data.HorizontalInput;    //  TEST MONITORING
     
             Data.MoveAmount = Mathf.Clamp01(
                 Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
-            _movementStateConfig.MoveAmount = Data.MoveAmount;  //  TEST MONITORING
+            _playerConfig.MovementStateConfig.MoveAmount = Data.MoveAmount;  //  TEST MONITORING
     
             if (Data.MoveAmount <= 0.5 && Data.MoveAmount > 0)
             {
@@ -167,28 +165,28 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
         {
-            _movementStateConfig._isButtonHeld = true;  // Устанавливаем флаг удержания кнопки
-            _movementStateConfig._timeButtonHeld = 0f;  // Сбрасываем таймер удержания
+            _playerConfig.MovementStateConfig._isButtonHeld = true;  // Устанавливаем флаг удержания кнопки
+            _playerConfig.MovementStateConfig._timeButtonHeld = 0f;  // Сбрасываем таймер удержания
         }
         
         protected virtual void OnSprintCanceled(InputAction.CallbackContext context)
         {
-            if (_movementStateConfig._isButtonHeld == false)
+            if (_playerConfig.MovementStateConfig._isButtonHeld == false)
             {
                 return;
             }
 
-            _movementStateConfig._isButtonHeld = false;
+            _playerConfig.MovementStateConfig._isButtonHeld = false;
 
-            if (_movementStateConfig.ShouldSprint)
+            if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 // Завершаем спринт, если он был активирован
-                _movementStateConfig.ShouldSprint = false;
+                _playerConfig.MovementStateConfig.ShouldSprint = false;
                 // Debug.Log("Спринт завершён");
             }
             else
             {
-                if (_movementStateConfig.IsAirborning)
+                if (_playerConfig.MovementStateConfig.IsAirborning) //  =СТРАННО=
                 {
                     return;
                 }
@@ -200,7 +198,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
         {
-            if (Data.MovementInput == Vector2.zero || _movementStateConfig.IsPerformingAction)
+            if (Data.MovementInput == Vector2.zero || _playerConfig.MovementStateConfig.IsPerformingStaticAction)
             {
                 OnBackStepped(context);
                 return;
@@ -212,7 +210,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         protected virtual void OnBackStepped(InputAction.CallbackContext context)
         {
-            if (_movementStateConfig.IsPerformingAction)
+            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
             {
                 return;
             }
@@ -227,12 +225,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
         {
-            _movementStateConfig.ShouldWalk = true;
+            _playerConfig.MovementStateConfig.ShouldWalk = true;
         }
         
         protected virtual void OnWalkToggleCanceled(InputAction.CallbackContext context)
         {
-            _movementStateConfig.ShouldWalk = false;
+            _playerConfig.MovementStateConfig.ShouldWalk = false;
         }
         
         protected virtual void OnMovementPerformed(InputAction.CallbackContext context)
@@ -241,7 +239,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            if (_movementStateConfig.IsPerformingAction)    //  ЗАПРЕТ РЕАГИРОВАТЬ НА ИНПУТ ВО ВРЕМЯ ДЕЙСТВИЯ
+            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)    //  ЗАПРЕТ РЕАГИРОВАТЬ НА ИНПУТ ВО ВРЕМЯ ДЕЙСТВИЯ
             {
                 return;
             }
@@ -266,13 +264,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         private void Move()
         {
-            if (_movementStateConfig.IsPerformingAction)
+            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
             {
                 return;
             }
 
-            if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
             // if (Data.MovementInput == Vector2.zero)
+            if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
             {
                 return;
             }
@@ -282,33 +280,33 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             }
             
-            _movementStateConfig._movementDirection = GetMovementInputDirection();
+            _playerConfig.MovementStateConfig._movementDirection = GetMovementInputDirection();
             
             _playerCompositionRoot.CharacterController.Move(
-                _movementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
+                _playerConfig.MovementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
         }
         
         public void HandleVerticalMovement()
         {
             _playerCompositionRoot.CharacterController.Move(
-                _movementStateConfig.YVelocity * Time.deltaTime);
+                _playerConfig.MovementStateConfig.YVelocity * Time.deltaTime);
         }
         
         private void Rotate()
         {
-            if (_movementStateConfig.IsPerformingAction)
+            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
             {
                 return;
             }
             
-            if (_movementStateConfig._movementDirection != Vector3.zero)
+            if (_playerConfig.MovementStateConfig._movementDirection != Vector3.zero)
             {
-                Quaternion newRotation = Quaternion.LookRotation(_movementStateConfig._movementDirection);
+                Quaternion newRotation = Quaternion.LookRotation(_playerConfig.MovementStateConfig._movementDirection);
                 
                 Quaternion targetRotation = Quaternion.Slerp(
                     PlayerView.transform.rotation,
                     newRotation,
-                    _movementStateConfig.RotationSpeed * Time.deltaTime);
+                    _playerConfig.MovementStateConfig.RotationSpeed * Time.deltaTime);
                 
                 PlayerView.transform.rotation = targetRotation;
             }
@@ -333,12 +331,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private void HandleCameraRotation()
         {
             Quaternion playerCameraPivotRotation = _playerCameraMovement.CameraPivotTransform.rotation;
-            _playerCameraMovement.PlayerCameraYRotation += Data.CameraHorizontalInput * _movementStateConfig.Sensitivity;
-            _playerCameraMovement.PlayerCameraXRotation -= Data.CameraVerticalInput * _movementStateConfig.Sensitivity;;
+            _playerCameraMovement.PlayerCameraYRotation += Data.CameraHorizontalInput * _playerConfig.MovementStateConfig.Sensitivity;
+            _playerCameraMovement.PlayerCameraXRotation -= Data.CameraVerticalInput * _playerConfig.MovementStateConfig.Sensitivity;;
             _playerCameraMovement.PlayerCameraXRotation = Mathf.Clamp(
                 _playerCameraMovement.PlayerCameraXRotation, 
-                _movementStateConfig.MinimumPivot, 
-                _movementStateConfig.MaximumPivot);
+                _playerConfig.MovementStateConfig.MinimumPivot, 
+                _playerConfig.MovementStateConfig.MaximumPivot);
             
             playerCameraPivotRotation = Quaternion.Euler(
                 _playerCameraMovement.PlayerCameraXRotation,

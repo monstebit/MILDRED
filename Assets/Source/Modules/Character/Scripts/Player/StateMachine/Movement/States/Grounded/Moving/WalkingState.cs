@@ -7,9 +7,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class WalkingState : MovingState
     {
-        private WalkingStateConfig _walkingStateConfig;
-        private SprintingStateConfig _sprintingStateConfig;
-        private MovementStateConfig _movementStateConfig;
+        private PlayerConfig _playerConfig;
 
         public WalkingState(
             IStateSwitcher stateSwitcher,
@@ -19,9 +17,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCompositionRoot,
             data)
         {
-            _walkingStateConfig = playerCompositionRoot.PlayerConfig.WalkingStateConfig;
-            _sprintingStateConfig = playerCompositionRoot.PlayerConfig.SprintingStateConfig;
-            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
+            _playerConfig = playerCompositionRoot.PlayerConfig;
         }
 
         #region IState METHODS
@@ -29,7 +25,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
 
-            Data.MovementSpeedModifier = _walkingStateConfig.SpeedModifier; ;
+            Data.MovementSpeedModifier = _playerConfig.WalkingStateConfig.SpeedModifier; ;
             
             PlayerView.StartWalking();
         }
@@ -38,12 +34,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
 
-            if (_movementStateConfig.ShouldSprint)
+            if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
             }
 
-            if (_movementStateConfig.ShouldWalk)
+            if (_playerConfig.MovementStateConfig.ShouldWalk)
             {
                 return;
             }

@@ -24,7 +24,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             PlayerView.StartStaticAction();
             
-            _playerConfig.MovementStateConfig.IsPerformiStaticAction = true;
+            _playerConfig.MovementStateConfig.IsPerformingStaticAction = true;
         }
 
         public override void Update()
@@ -38,7 +38,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StopStaticAction();
             
-            _playerConfig.MovementStateConfig.IsPerformiStaticAction = false;
+            _playerConfig.MovementStateConfig.IsPerformingStaticAction = false;
         }
         #endregion
     }

@@ -1,5 +1,4 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,10 +6,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class RunningState : MovingState
     {
+        private PlayerCompositionRoot _playerCompositionRoot;
         private PlayerConfig _playerConfig;
-        private RunningStateConfig _runningStateConfig;
-        private SprintingStateConfig _sprintingStateConfig;
-        
         private float _startTime;
         
         public RunningState(
@@ -21,14 +18,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCompositionRoot,
             data)
         {
+            _playerCompositionRoot = playerCompositionRoot;
             _playerConfig = playerCompositionRoot.PlayerConfig;
-            _runningStateConfig = playerCompositionRoot.PlayerConfig.RunningStateConfig;
-            _sprintingStateConfig = playerCompositionRoot.PlayerConfig.SprintingStateConfig;
         }
 
         public override void Enter()
         {
-            Data.MovementSpeedModifier = _runningStateConfig.SpeedModifier;
+            Data.MovementSpeedModifier = _playerConfig.RunningStateConfig.SpeedModifier;
             
             base.Enter();
 
@@ -36,14 +32,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             _startTime = Time.time;
         }
-
-        public override void Exit()
-        {
-            base.Exit();
-            
-            PlayerView.StopRunning();
-        }
-
+        
         public override void Update()
         {
             base.Update();
@@ -69,14 +58,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             //в течение определенного времени, прежде чем перейти в другое состояние
             //(например, бег или ходьбу). Это помогает управлять плавными переходами между
             //состояниями игрока и обеспечивает более естественное поведение персонажа в игре.
-            if (Time.time < _startTime + _sprintingStateConfig.RunToWalkTime)
+            if (Time.time < _startTime + _playerConfig.SprintingStateConfig.RunToWalkTime)
             {
                 return;
             }
-
+            
             StopRunning();
         }
-
+        
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopRunning();
+        }
+        
         private void StopRunning()
         {
             if (Data.MovementInput == Vector2.zero)
@@ -91,5 +87,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             StateSwitcher.SwitchState<WalkingState>();
         }
+
+        #region OnAmimationEvent Methods
+        public override void OnAnimationTransitionEvent()
+        {
+            base.OnAnimationTransitionEvent();
+            Debug.Log("OnAnimationTransitionEvent");
+        }
+        
+        private bool InAnimationTransition(int layerIndex = 0)
+        {
+            return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
+        }
+        #endregion
     }
 }

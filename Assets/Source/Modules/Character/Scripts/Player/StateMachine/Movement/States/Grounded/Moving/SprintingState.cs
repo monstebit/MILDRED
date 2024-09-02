@@ -1,15 +1,12 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving
 {
     public class SprintingState : MovingState
     {
-        private MovementStateConfig _movementStateConfig;
-        private SprintingStateConfig _sprintingStateConfig;
-        
+        private PlayerConfig _playerConfig;
+
         public SprintingState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
@@ -18,14 +15,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCompositionRoot,
             data)
         {
-            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
-            _sprintingStateConfig = playerCompositionRoot.PlayerConfig.SprintingStateConfig;
+            _playerConfig = playerCompositionRoot.PlayerConfig;
         }
 
         #region IState METHODS
         public override void Enter()
         {
-            Data.MovementSpeedModifier = _sprintingStateConfig.SpeedModifier;
+            Data.MovementSpeedModifier = _playerConfig.SprintingStateConfig.SpeedModifier;
             
             base.Enter();
 
@@ -43,7 +39,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
 
-            if (_movementStateConfig.ShouldSprint)
+            if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 return;
             }
@@ -61,7 +57,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            if (_movementStateConfig.ShouldWalk)
+            if (_playerConfig.MovementStateConfig.ShouldWalk)
             {
                 StateSwitcher.SwitchState<WalkingState>();
                 

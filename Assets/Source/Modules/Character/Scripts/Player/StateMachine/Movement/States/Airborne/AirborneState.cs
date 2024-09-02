@@ -1,5 +1,4 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,8 +7,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     public abstract class AirborneState : MovementState
     {
         private readonly PlayerCompositionRoot _playerCompositionRoot;
-        private readonly MovementStateConfig _movementStateConfig;
-        private readonly AirborneStateConfig _airborneStateConfig;
+        private PlayerConfig _playerConfig;
+
         private float _gravity = -9.81f;
 
         public AirborneState(
@@ -20,8 +19,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             playerCompositionRoot,
             data)
         {
-            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
             _playerCompositionRoot = playerCompositionRoot;
+            _playerConfig = playerCompositionRoot.PlayerConfig;
         }
         
         public override void Enter()
@@ -31,8 +30,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             PlayerView.StartAirborne();
             
             ResetPerformingAction();
-            
-            _movementStateConfig.IsAirborning = true;
+            _playerConfig.MovementStateConfig.IsAirborning = true;
         }
 
         public override void Exit()
@@ -41,7 +39,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             PlayerView.StopAirborne();
             
-            _movementStateConfig.IsAirborning = false;
+            _playerConfig.MovementStateConfig.IsAirborning = false;
         }
 
         public override void Update()
@@ -49,35 +47,32 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Update();
             
             ApplyGravity();
-
             AirborneMove();
         }
 
         private void ApplyGravity()
         {
-            _movementStateConfig.YVelocity.y += _gravity * Time.deltaTime;
+            _playerConfig.MovementStateConfig.YVelocity.y += _gravity * Time.deltaTime;
         }
         
         protected virtual void ResetSprintState()
         {
-            _movementStateConfig.ShouldSprint = false;
+            _playerConfig.MovementStateConfig.ShouldSprint = false;
         }
         
         protected virtual void ResetPerformingAction()
         {
-            _movementStateConfig.IsPerformingAction = false;
+            _playerConfig.MovementStateConfig.IsPerformingStaticAction = false;
         }
         
         public void AirborneMove()  //  ГОРИЗОНТАЛЬНОЕ ДВИЖЕНИЕ В ВОЗДУХЕ
         {
-            _movementStateConfig._movementDirection = GetMovementInputDirection();
+            _playerConfig.MovementStateConfig._movementDirection = GetMovementInputDirection();
             
             _playerCompositionRoot.CharacterController.Move(
-                // _movementStateConfig._movementDirection * Data.MovementSpeedModifier * Time.deltaTime);
-                _movementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
+                _playerConfig.MovementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
         }
         
-        //  TEST
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
         }

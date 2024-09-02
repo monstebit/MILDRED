@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs
 {
@@ -10,7 +11,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         [SerializeField] public float _holdTimeThreshold = 0.2f;  // Порог времени удержания для спринта
         [SerializeField] public float _timeButtonHeld = 0f;       // Время удержания кнопки
         [SerializeField] public bool _isButtonHeld = false;       // Флаг удержания кнопки
-        // [SerializeField] public bool ShouldDodge = true;
         
         [Header("INPUTS")]
         [SerializeField] public Vector2 MovementInput;
@@ -29,7 +29,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         [Header("MOVEMENT FLAGS")]
         [SerializeField] public bool ShouldWalk;
         [SerializeField] public bool ShouldSprint;
-        [SerializeField] public bool IsPerformingAction;
+        [SerializeField] public bool IsPerformingStaticAction;
         [SerializeField] public bool IsAirborning ;
         
         [Header("CAMERA")]

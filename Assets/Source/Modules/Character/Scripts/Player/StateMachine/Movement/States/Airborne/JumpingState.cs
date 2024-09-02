@@ -6,10 +6,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 {
     public class JumpingState : AirborneState
     {
-        private MovementStateConfig _movementStateConfig;
-        private AirborneStateConfig _airborneStateConfig;
+        private PlayerConfig _playerConfig;
         private JumpingStateConfig _jumpingStateConfig;
-        
         private Vector3 jumpDirection;
 
         public JumpingState(
@@ -20,9 +18,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             playerCompositionRoot,
             data)
         {
-            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
-            _airborneStateConfig = playerCompositionRoot.PlayerConfig.AirborneStateConfig;
-            _jumpingStateConfig = playerCompositionRoot.PlayerConfig.AirborneStateConfig.JumpingStateConfig;
+            _playerConfig = playerCompositionRoot.PlayerConfig;
+            _jumpingStateConfig = _playerConfig.AirborneStateConfig.JumpingStateConfig;
         }
 
         #region IState METHODS
@@ -33,13 +30,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             PlayerView.StartJumping();
 
             _jumpingStateConfig.SpeedModifier = GetSpeedModifier();
-            
             Data.MovementSpeedModifier = _jumpingStateConfig.SpeedModifier;
-            
             _jumpingStateConfig.IsJumping = true;
-            
-            Keyframe LastFrame = _jumpingStateConfig.JumpCurve[_airborneStateConfig.JumpingStateConfig.JumpCurve.length - 1];
-            
+            Keyframe LastFrame = _jumpingStateConfig.JumpCurve[_jumpingStateConfig.JumpCurve.length - 1];
             _jumpingStateConfig.JumpTimer = LastFrame.time;
         }
 
@@ -58,14 +51,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
                 
                 if (_jumpingStateConfig.Timer < _jumpingStateConfig.JumpTimer)
                 {
-                    _movementStateConfig.YVelocity.y = 
+                    _playerConfig.MovementStateConfig.YVelocity.y = 
                         _jumpingStateConfig.JumpCurve.Evaluate(_jumpingStateConfig.Timer);
                 }
             }
             else
             {
-                _jumpingStateConfig.Timer = 0;
-                _jumpingStateConfig.IsJumping = false;
+                Exit();
+                // _jumpingStateConfig.Timer = 0;
+                // _jumpingStateConfig.IsJumping = false;
             }
         }
         
@@ -80,12 +74,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         }
         #endregion
         
-        private void ApplyJumpForce()
-        {
-            _movementStateConfig.YVelocity.y = 
-                Mathf.Sqrt(_airborneStateConfig.JumpingStateConfig.JumpForce * -2f * _airborneStateConfig.Gravity);
-        }
-        
         private float GetSpeedModifier()
         {
             float speedModifier = 0.75f;
@@ -95,16 +83,22 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
                 speedModifier = 0.25f;
             }
             
-            if (_movementStateConfig.ShouldSprint)
+            if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 speedModifier = 1;
             }
-            else if (_movementStateConfig.ShouldWalk)
+            else if (_playerConfig.MovementStateConfig.ShouldWalk)
             {
                 speedModifier = 0.5f;
             }
 
             return speedModifier;
+        }
+        
+        private void ApplyJumpForce()   //  =ПРИГОДИТСЯ=
+        {
+            _playerConfig.MovementStateConfig.YVelocity.y = 
+                Mathf.Sqrt(_jumpingStateConfig.JumpForce * -2f * _playerConfig.AirborneStateConfig.Gravity);
         }
     }
 }

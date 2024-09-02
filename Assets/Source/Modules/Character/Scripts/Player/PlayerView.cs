@@ -12,7 +12,7 @@ namespace Source.Modules.Character.Scripts.Player
         private const string IsWalking = "IsWalking";
         private const string IsRunning = "IsRunning";
         private const string IsSprinting = "IsSprinting";
-        private const string IsPerformingAction = "IsPerformingAction";
+        private const string IsStaticAction = "IsStaticAction";
         private const string IsDodging = "IsDodging";
         private const string IsBackStepping = "IsBackStepping";
         private const string IsAirborne = "IsAirborne";
@@ -56,7 +56,7 @@ namespace Source.Modules.Character.Scripts.Player
         public void StartFalling() => Animator.SetBool(IsFalling, true);
         public void StopFalling() => Animator.SetBool(IsFalling, false);
         
-        public void StartPerformingAction() => Animator.SetBool(IsPerformingAction, true);
-        public void StopPerformingAction() => Animator.SetBool(IsPerformingAction, false);
+        public void StartStaticAction() => Animator.SetBool(IsStaticAction, true);
+        public void StopStaticAction() => Animator.SetBool(IsStaticAction, false);
     }
 }

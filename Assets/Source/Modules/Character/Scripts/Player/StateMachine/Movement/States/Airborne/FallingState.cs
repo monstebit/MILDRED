@@ -28,6 +28,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Enter();
 
             // Data.MovementSpeedModifier = 0;
+            Data.MovementSpeedModifier = 1;
             
             PlayerView.StartFalling();
         }
@@ -50,7 +51,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
                 if (Data.MovementInput == Vector2.zero)
                 {
                     StateSwitcher.SwitchState<IdlingState>();
-                    
                     return;
                 }
 
@@ -63,14 +63,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             if (_movementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
-                
                 return;
             }
             
             if (_movementStateConfig.ShouldWalk)
             {
                 StateSwitcher.SwitchState<WalkingState>();
-                
                 return;
             }
             
