@@ -1,13 +1,12 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.PerformingAction
 {
-    public class PerformingActionState : GroundedState
+    public class StaticActionState : GroundedState
     {
-        private MovementStateConfig _movementStateConfig;
+        private PlayerConfig _playerConfig;
         
-        public PerformingActionState(
+        public StaticActionState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
@@ -15,7 +14,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCompositionRoot,
             data)
         {
-            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
+            _playerConfig = playerCompositionRoot.PlayerConfig;
         }
         
         #region IState METHODS
@@ -23,9 +22,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
 
-            PlayerView.StartPerformingAction();
+            PlayerView.StartStaticAction();
             
-            _movementStateConfig.IsPerformingAction = true;
+            _playerConfig.MovementStateConfig.IsPerformiStaticAction = true;
         }
 
         public override void Update()
@@ -37,9 +36,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            PlayerView.StopPerformingAction();
+            PlayerView.StopStaticAction();
             
-            _movementStateConfig.IsPerformingAction = false;
+            _playerConfig.MovementStateConfig.IsPerformiStaticAction = false;
         }
         #endregion
     }

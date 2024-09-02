@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementStateConfig:
     _holdTimeThreshold: 0.2
-    _timeButtonHeld: 1.1355916
+    _timeButtonHeld: 0
     _isButtonHeld: 0
     MovementInput: {x: 0, y: 0}
     VerticalInput: 0
     HorizontalInput: 0
     MoveAmount: 0
-    _movementDirection: {x: 0.9988187, y: 0, z: 0.048592445}
+    _movementDirection: {x: -0.5877845, y: 0, z: 0.80901754}
     YVelocity: {x: 0, y: -2, z: 0}
     GroundedGravityForce: -2
     ShouldWalk: 0
     ShouldSprint: 0
-    IsPerformingAction: 0
+    IsPerformiStaticAction: 0
     IsAirborning: 0
     _sensitivity: 1.5
     _minimumPivot: -30
@@ -44,21 +44,21 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 10
-        inSlope: 33.333332
-        outSlope: 33.333332
+        value: 5
+        inSlope: 50
+        outSlope: 50
         tangentMode: 34
         weightedMode: 0
         inWeight: 0
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.15
+        time: 0.2
         value: 15
-        inSlope: -18.506945
-        outSlope: -18.506945
+        inSlope: -0.5948131
+        outSlope: -0.5948131
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
+        inWeight: 0.09542145
         outWeight: 0.044232983
       - serializedVersion: 3
         time: 0.7
@@ -74,8 +74,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     DodgeTimer: 0.7
     Timer: 0
-    IsDodging: 0
-    LastDodgeDirection: {x: -0.98461854, y: 0, z: 0.17471808}
+    LastDodgeDirection: {x: -0.49098116, y: 0, z: 0.8711702}
     _dodgingTimer: 16.702066
   _backSteppingStateConfig:
     BackStepCurve:
@@ -122,12 +121,11 @@ MonoBehaviour:
       m_RotationOrder: 4
     BackStepTimer: 0.75
     Timer: 0
-    IsBackStepping: 0
-    LastStepDirection: {x: -0.9957594, y: 0, z: -0.09199535}
+    LastStepDirection: {x: 0.9551402, y: 0, z: -0.296154}
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:
-      <SpeedModifier>k__BackingField: 1
+      <SpeedModifier>k__BackingField: 0.75
       JumpForce: 2
       JumpCurve:
         serializedVersion: 2
