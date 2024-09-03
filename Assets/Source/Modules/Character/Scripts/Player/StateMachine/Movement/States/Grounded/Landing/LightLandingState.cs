@@ -1,5 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing
 {
@@ -28,13 +29,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
             
-            if (Data.MovementInput == Vector2.zero)
+            // if (Data.MovementInput == Vector2.zero)
+            // {
+            //     StateSwitcher.SwitchState<IdlingState>();
+            //     {
+            //         return;
+            //     }
+            // }
+            //
+            // OnMove();
+            
+            if (Data.MovementInput != Vector2.zero)
             {
-                StateSwitcher.SwitchState<IdlingState>();
-                return;
+                OnMove();
             }
-
-            OnMove();
         }
 
         public override void Exit()
@@ -43,12 +51,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StopLanding();
         }
-
+        
         //  ON TESTING
-        public override void OnAnimationTransitionEvent()
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            StateSwitcher.SwitchState<IdlingState>();
-            Debug.Log("===OnAnimationTransitionEvent===");
+            base.OnMovementCanceled(context);
         }
+        
+        //  ON TESTING
+        // public override void OnAnimationTransitionEvent()
+        // {
+        //     StateSwitcher.SwitchState<IdlingState>();
+        //     Debug.Log("===OnAnimationTransitionEvent===");
+        // }
     }
 }

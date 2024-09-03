@@ -1,5 +1,4 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.PerformingAction;
 using UnityEngine;
@@ -49,7 +48,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         public virtual void Update()
         {
-            // if (!_playerInputHandler.IsOwner)
             if (!_playerCompositionRoot.CharacterNetworkManager.IsOwner)
             {
                 return;
@@ -59,7 +57,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             Rotate();
             HandleVerticalMovement();
             
-            //
+            
+            
+            //  ОТСЛЕЖОВАНИЕ УДЕРЖАНИЯ СПРИНТА
             if (_playerConfig.MovementStateConfig._isButtonHeld)
             {
                 _playerConfig.MovementStateConfig._timeButtonHeld += Time.deltaTime;
@@ -78,7 +78,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         public virtual void LateUpdate()
         {
-            // if (!_playerInputHandler.IsOwner)
             if (!_playerCompositionRoot.CharacterNetworkManager.IsOwner)
                 return;
             
@@ -87,13 +86,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         #endregion
         
         #region INPUT METHODS
+        //  TODO: ПЕРЕНЕСТИ В ОТДЕЛЬНЫЙ КЛАСС PlayerInputHandler
         public virtual void HandleAllInputs()
         {
             HandleMovementInput();
             HandleCameraInput();
         }
         
-        private void HandleMovementInput()
+        protected virtual void HandleMovementInput()
         {
             Data.MovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
             _playerConfig.MovementStateConfig.MovementInput = Data.MovementInput;    //  TEST MONITORING
@@ -118,7 +118,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             }
         }
 
-        private void HandleCameraInput()
+        protected virtual void HandleCameraInput()
         {
             Data.CameraInput = PlayerControls.Player.Look.ReadValue<Vector2>();
             Data.CameraVerticalInput = Data.CameraInput.y;
@@ -162,7 +162,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             PlayerControls.Player.WalkToggle.performed -= OnWalkToggleStarted;
             PlayerControls.Player.WalkToggle.canceled -= OnWalkToggleCanceled;
         }
-        
+
+        #region МОЖНО ЛИ ЗДЕСЬ ПЕРЕНЕСТИ ЛОГИКУ В КЛАССЫ СОСТОЯНИЙ?
         protected virtual void OnSprintPerformed(InputAction.CallbackContext context)
         {
             _playerConfig.MovementStateConfig._isButtonHeld = true;  // Устанавливаем флаг удержания кнопки
@@ -222,6 +223,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
     
             StateSwitcher.SwitchState<BackSteppingState>();
         }
+        #endregion
         
         protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
         {
@@ -239,11 +241,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)    //  ЗАПРЕТ РЕАГИРОВАТЬ НА ИНПУТ ВО ВРЕМЯ ДЕЙСТВИЯ
-            {
-                return;
-            }
-            
             StateSwitcher.SwitchState<IdlingState>();
         }
         #endregion
@@ -262,13 +259,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         }
         #endregion
         
-        private void Move()
+        protected virtual void Move()
         {
-            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
-            {
-                return;
-            }
-
             // if (Data.MovementInput == Vector2.zero)
             if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
             {
@@ -286,19 +278,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 _playerConfig.MovementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
         }
         
-        public void HandleVerticalMovement()
+        protected virtual void HandleVerticalMovement()
         {
             _playerCompositionRoot.CharacterController.Move(
                 _playerConfig.MovementStateConfig.YVelocity * Time.deltaTime);
         }
         
-        private void Rotate()
+        protected virtual void Rotate()
         {
-            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
-            {
-                return;
-            }
-            
             if (_playerConfig.MovementStateConfig._movementDirection != Vector3.zero)
             {
                 Quaternion newRotation = Quaternion.LookRotation(_playerConfig.MovementStateConfig._movementDirection);
@@ -312,13 +299,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             }
         }
 
-        private void HandleAllCameraActions()
+        protected virtual void HandleAllCameraActions()
         {
             HandleFollowTarget();
             HandleCameraRotation();
         }
         
-        private void HandleFollowTarget()
+        protected virtual void HandleFollowTarget()
         {
             _playerCameraMovement.FollowTarget(_playerCompositionRoot.PlayerView.transform);
             // _playerCameraMovement.transform.position = Vector3.SmoothDamp(
@@ -328,7 +315,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             //     _playerCameraMovement.CameraSmoothSpeed * Time.deltaTime);
         }
         
-        private void HandleCameraRotation()
+        protected virtual void HandleCameraRotation()
         {
             Quaternion playerCameraPivotRotation = _playerCameraMovement.CameraPivotTransform.rotation;
             _playerCameraMovement.PlayerCameraYRotation += Data.CameraHorizontalInput * _playerConfig.MovementStateConfig.Sensitivity;
@@ -347,7 +334,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         }
 
         #region REUSABLE METHODS
-        public Vector3 GetMovementInputDirection()
+        protected virtual Vector3 GetMovementInputDirection()
         {
             // Получаем правое и переднее направление из положения камеры
             Vector3 right = _playerCameraMovement.CameraPivotTransform.right;

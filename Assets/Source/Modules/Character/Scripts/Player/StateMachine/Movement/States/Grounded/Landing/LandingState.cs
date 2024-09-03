@@ -23,9 +23,5 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
         }
-
-        // protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        // {
-        // }
     }
 }

@@ -49,8 +49,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             {
                 StateSwitcher.SwitchState<LandingState>();  //  ON TESTING
                 
+                //  TODO: CHECK THIS BEFORE DELETE!!
                 // _movementStateConfig.YVelocity.y = _movementStateConfig.GroundedGravityForce;   //  "ПРИЛИПАНИЕ" К ЗЕМЛЕ
-                
                 // if (Data.MovementInput == Vector2.zero)
                 // {
                 //     StateSwitcher.SwitchState<IdlingState>();

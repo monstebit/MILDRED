@@ -61,6 +61,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             if (_playerCompositionRoot.GroundChecker.isTouches == false)
             {
+                //  ON TEST
+                if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
+                {
+                    return;
+                }
+                
                 StateSwitcher.SwitchState<FallingState>();
             }
         }
@@ -103,11 +109,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
         {
-            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
-            {
-                return;
-            }
-            
             StateSwitcher.SwitchState<JumpingState>();
         }
     }

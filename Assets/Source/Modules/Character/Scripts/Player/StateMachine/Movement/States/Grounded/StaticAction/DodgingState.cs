@@ -1,5 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.PerformingAction
@@ -47,20 +47,25 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 {
                     float speed = 
                         _playerConfig.DodgeStateConfig.DodgeCurve.Evaluate(_playerConfig.DodgeStateConfig.Timer);
-
+                    
                     _playerCompositionRoot.CharacterController.Move(
                         _playerConfig.DodgeStateConfig.LastDodgeDirection * speed * Time.deltaTime);
                 }
                 else
                 {
                     Exit();
-                    // _playerConfig.MovementStateConfig.IsPerformingStaticAction = false;
-                    // _playerConfig.DodgeStateConfig.Timer = 0f;
                 }
             }
                 
             if (_playerConfig.MovementStateConfig.IsPerformingStaticAction == false)
             {
+                //  ON TESTING
+                if (_playerCompositionRoot.GroundChecker.isTouches == false)
+                {
+                    StateSwitcher.SwitchState<FallingState>();
+                    return;
+                }
+                
                 if (Data.MovementInput == Vector2.zero)
                 {
                     StateSwitcher.SwitchState<IdlingState>();
