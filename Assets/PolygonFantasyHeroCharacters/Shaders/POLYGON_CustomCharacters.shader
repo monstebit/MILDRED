@@ -135,7 +135,6 @@ Shader "SyntyStudios/CustomCharacter"
 		ENDCG
 	}
 	Fallback "Diffuse"
-	CustomEditor "ASEMaterialInspector"
 }
 /*ASEBEGIN
 Version=16700
