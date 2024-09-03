@@ -1,9 +1,8 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.PerformingAction
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction
 {
     public class BackSteppingState : StaticActionState
     {

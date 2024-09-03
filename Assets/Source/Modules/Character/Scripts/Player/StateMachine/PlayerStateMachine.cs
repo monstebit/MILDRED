@@ -6,7 +6,7 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airbo
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.PerformingAction;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
 {

@@ -2,7 +2,7 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using UnityEngine;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.PerformingAction
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction
 {
     public class DodgingState : StaticActionState
     {

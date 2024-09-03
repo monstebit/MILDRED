@@ -1,7 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using UnityEngine.InputSystem;
 
-namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.PerformingAction
+namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction
 {
     public class StaticActionState : GroundedState
     {
