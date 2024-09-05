@@ -1,21 +1,19 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player
 {public class PlayerCameraMovement : MonoBehaviour
     {
         [SerializeField] private Transform _cameraPivotTransform;
-        [SerializeField] private Vector3 _cameraVelocity;
         [SerializeField] private float _playerCameraXRotation;
         [SerializeField] private float _playerCameraYRotation;
-        [SerializeField] private float _cameraSmoothSpeed = 0.125f;
+        
+        [Header("FOLLOW SETTINGS")]
+        [SerializeField] private float _smoothing = 10f;
+        [SerializeField] private Vector3 _offset;
 
         public Transform CameraPivotTransform => _cameraPivotTransform;
-        public Vector3 CameraVelocity
-        {
-            get => _cameraVelocity;
-            set => _cameraVelocity = value;
-        }
-
+        
         public float PlayerCameraXRotation
         {
             get => _playerCameraXRotation;
@@ -30,17 +28,18 @@ namespace Source.Modules.Character.Scripts.Player
 
         public float CameraSmoothSpeed
         {
-            get => _cameraSmoothSpeed;
-            set => _cameraSmoothSpeed = value;
+            get => _smoothing;
+            set => _smoothing = value;
         }
         
         public void FollowTarget(Transform target)
         {
-            transform.position = Vector3.SmoothDamp(
-                transform.position,
-                target.position,
-                ref _cameraVelocity,
-                CameraSmoothSpeed * Time.deltaTime);
+            var nextPosition = Vector3.Lerp(
+                transform.position, 
+                target.position + _offset, 
+                Time.deltaTime * _smoothing);
+            
+            transform.position = nextPosition;
         }
     }
 }
