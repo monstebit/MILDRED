@@ -33,6 +33,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             _startTime = Time.time;
         }
         
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopRunning();
+        }
+        
         public override void Update()
         {
             base.Update();
@@ -66,13 +73,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             StopRunning();
         }
         
-        public override void Exit()
-        {
-            base.Exit();
-            
-            PlayerView.StopRunning();
-        }
-        
         private void StopRunning()
         {
             if (Data.MovementInput == Vector2.zero)
@@ -100,5 +100,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
         #endregion
+        
+        //  TODO: MediumStoppingState
+        // protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        // {
+        //     stateMachine.ChangeState(stateMachine.MediumStoppingState);
+        //
+        //     base.OnMovementCanceled(context);
+        // }
     }
 }

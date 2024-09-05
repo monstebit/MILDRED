@@ -28,12 +28,22 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             Data.MovementSpeedModifier = _playerConfig.WalkingStateConfig.SpeedModifier; ;
             
             PlayerView.StartWalking();
+            
+            //  TODO: WeakForce
+            // stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.WeakForce;
         }
 
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopWalking();
+        }
+        
         public override void Update()
         {
             base.Update();
-
+            
             if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
@@ -44,27 +54,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            StopWalking();
-        }
-
-        public override void Exit()
-        {
-            base.Exit();
-            
-            PlayerView.StopWalking();
+            StateSwitcher.SwitchState<RunningState>();
         }
         #endregion
         
-        private void StopWalking()
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            if (Data.MovementInput == Vector2.zero)
-            {
-                StateSwitcher.SwitchState<IdlingState>();
-            }
-            else
-            {
-                StateSwitcher.SwitchState<RunningState>();
-            }
+            //  TODO: LightStoppingState
+            // StateSwitcher.SwitchState<LightStoppingState>();
+
+            base.OnMovementCanceled(context);
         }
     }
 }
