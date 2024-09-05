@@ -29,6 +29,12 @@ namespace Source.Modules.Character.Scripts
         {
             NetworkManager.Singleton.StartHost();
         }
+        
+        //  ON TESTING
+        public void StartNetworkAsClient()
+        {
+            NetworkManager.Singleton.StartClient();
+        }
 
         private void HandleLog(string logString, string stackTrace, LogType type)
         {

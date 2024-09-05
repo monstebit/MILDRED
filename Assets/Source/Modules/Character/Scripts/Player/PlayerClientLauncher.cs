@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -5,34 +6,43 @@ namespace Source.Modules.Character.Scripts.Player
 {
     public class PlayerClientLauncher : MonoBehaviour
     {
+        public static PlayerClientLauncher Instance;
+        
         [SerializeField] private bool _startGameAsClient;
-
-        private void Start()
+        
+        private void Awake()
         {
-            DontDestroyOnLoad(gameObject);
-            
-            if (_startGameAsClient)
+            if (Instance == null)
             {
-                StartGameAsClient();
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
             }
         }
         
+        private void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
+        private void Update()
+        {
+            StartGameAsClient();
+        }
+
         private void StartGameAsClient()
         {
-            if (NetworkManager.Singleton == null)
+            if (_startGameAsClient)
             {
-                Debug.LogError("NetworkManager.Singleton is null.");
-                return;
-            }
-
-            if (NetworkManager.Singleton.IsClient || 
-                NetworkManager.Singleton.IsHost ||
-                NetworkManager.Singleton.IsServer)
-            {
+                _startGameAsClient = false;
+                //  WE MUST FIRST SHUT DOWN, BECAUSE WE HAVE STARTED AS A HOST DURING THE TITLE SCREEN 
                 NetworkManager.Singleton.Shutdown();
-            }
 
-            NetworkManager.Singleton.StartClient();
+                //  WE MUST RESTART, AS A CLIENT
+                NetworkManager.Singleton.StartClient();
+            }
         }
     }
 }

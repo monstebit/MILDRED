@@ -1,12 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts
 {
-    public class Character : MonoBehaviour
+    public class CharacterCompositionRoot : NetworkBehaviour
     {
-        private void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
+
     }
 }

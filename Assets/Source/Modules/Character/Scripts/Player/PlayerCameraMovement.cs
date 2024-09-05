@@ -4,6 +4,7 @@ using UnityEngine.Serialization;
 namespace Source.Modules.Character.Scripts.Player
 {public class PlayerCameraMovement : MonoBehaviour
     {
+        [SerializeField] private Camera _camera;
         [SerializeField] private Transform _cameraPivotTransform;
         [SerializeField] private float _playerCameraXRotation;
         [SerializeField] private float _playerCameraYRotation;
@@ -12,6 +13,7 @@ namespace Source.Modules.Character.Scripts.Player
         [SerializeField] private float _smoothing = 10f;
         [SerializeField] private Vector3 _offset;
 
+        public Camera Camera => _camera;
         public Transform CameraPivotTransform => _cameraPivotTransform;
         
         public float PlayerCameraXRotation

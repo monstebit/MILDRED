@@ -7,6 +7,7 @@ namespace Source.Modules.UI.Scripts.View
     public class TitleScreenView : MonoBehaviour
     {
         [SerializeField] private Button _pressStartButton;
+        [SerializeField] private Button _pressStartAsClientButton;  //  ON TESTING
         [SerializeField] private Button _startNewGameButton;
 
         private TitleScreenPresenter _titleScreenPresenter;
@@ -15,6 +16,7 @@ namespace Source.Modules.UI.Scripts.View
         {
             _titleScreenPresenter = titleScreenPresenter;
             _pressStartButton.onClick.AddListener(_titleScreenPresenter.OnPressStartButtonPressed);
+            _pressStartAsClientButton.onClick.AddListener(_titleScreenPresenter.OnPressStartButtonAsClientPressed); //  ON TESTING
             _startNewGameButton.onClick.AddListener(_titleScreenPresenter.OnPressNewGameButtonPressed);
         }
 
@@ -23,6 +25,7 @@ namespace Source.Modules.UI.Scripts.View
             if (_titleScreenPresenter != null)
             {
                 _pressStartButton.onClick.RemoveListener(_titleScreenPresenter.OnPressStartButtonPressed);
+                _pressStartAsClientButton.onClick.RemoveListener(_titleScreenPresenter.OnPressStartButtonAsClientPressed);  //  ON TESTING
                 _startNewGameButton.onClick.RemoveListener(_titleScreenPresenter.OnPressNewGameButtonPressed);
             }
         }
@@ -30,6 +33,7 @@ namespace Source.Modules.UI.Scripts.View
         public void ShowStartNewGameButton()
         {
             HideButton(_pressStartButton);
+            HideButton(_pressStartAsClientButton);  //  ON TESTING
             ShowButton(_startNewGameButton);
         }
 

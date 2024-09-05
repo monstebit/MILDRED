@@ -393,10 +393,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraPivotTransform: {fileID: 1914071689693900990}
-  _cameraVelocity: {x: 0, y: 0, z: 0}
   _playerCameraXRotation: 0
   _playerCameraYRotation: 0
-  _cameraSmoothSpeed: 0.125
+  _smoothing: 10
+  _offset: {x: 0, y: 0, z: 0}
 --- !u!1 &1469515255428881270
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,9 +455,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4175553896352746951}
   - component: {fileID: 872145108965141418}
-  - component: {fileID: 6123789611473589101}
-  - component: {fileID: 1861307780936638204}
   - component: {fileID: 613380661302881207}
+  - component: {fileID: 1861307780936638204}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -503,35 +502,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &6123789611473589101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1780999330563793708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 767fde62dfe28c44e97f9c7bddbcebea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1861307780936638204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1780999330563793708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f61a782e373bd439800e4db7078a48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _characterNetworkManager: {fileID: 613380661302881207}
-  _playerCameraMovement: {fileID: 5624563302191773171}
-  _playerView: {fileID: 5985968876740594145}
-  _playerConfig: {fileID: 11400000, guid: a0f151924a2d23c428c0ef7e8c12708b, type: 2}
-  _groundChecker: {fileID: 4083188193081805519}
 --- !u!114 &613380661302881207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -551,6 +521,23 @@ MonoBehaviour:
   NetworkPositionVelocity: {x: 0, y: 0, z: 0}
   NetworkPositionSmoothTime: 0.1
   NetworkRotationSmoothTime: 0.1
+--- !u!114 &1861307780936638204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780999330563793708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15f61a782e373bd439800e4db7078a48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterNetworkSynchronizer: {fileID: 613380661302881207}
+  _playerCameraMovement: {fileID: 5624563302191773171}
+  _playerView: {fileID: 5985968876740594145}
+  _playerConfig: {fileID: 11400000, guid: a0f151924a2d23c428c0ef7e8c12708b, type: 2}
+  _groundChecker: {fileID: 4083188193081805519}
 --- !u!1 &2109200014847870042
 GameObject:
   m_ObjectHideFlags: 0
