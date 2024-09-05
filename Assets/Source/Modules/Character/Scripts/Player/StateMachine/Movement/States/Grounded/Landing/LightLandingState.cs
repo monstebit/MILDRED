@@ -22,7 +22,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             Data.MovementSpeedModifier = 0f;
             
-            PlayerView.StartLanding();
+            PlayerView.StartLightLanding();
         }
 
         public override void Update()
@@ -42,14 +42,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             if (Data.MovementInput != Vector2.zero)
             {
                 OnMove();
+                
+                return;
             }
+            
+            StateSwitcher.SwitchState<IdlingState>();
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopLanding();
+            PlayerView.StopLightLanding();
         }
         
         //  ON TESTING

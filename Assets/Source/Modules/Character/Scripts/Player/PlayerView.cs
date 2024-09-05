@@ -24,6 +24,9 @@ namespace Source.Modules.Character.Scripts.Player
         private const string IsDodging = "IsDodging";
         private const string IsBackStepping = "IsBackStepping";
         
+        [Header("Landing Parameter Names")]
+        private const string IsLightLanding = "IsLightLanding";
+        
         [Header("Airborne Parameter Names")]
         private const string IsJumping = "IsJumping";
         private const string IsFalling = "IsFalling";
@@ -68,6 +71,8 @@ namespace Source.Modules.Character.Scripts.Player
         public void StartBackStepping() => Animator.SetBool(IsBackStepping, true);
         public void StopBackStepping() => Animator.SetBool(IsBackStepping, false);
 
+        public void StartLightLanding() => Animator.SetBool(IsLightLanding, true);
+        public void StopLightLanding() => Animator.SetBool(IsLightLanding, false);
         
         public void StartJumping() => Animator.SetBool(IsJumping, true);
         public void StopJumping() => Animator.SetBool(IsJumping, false);
