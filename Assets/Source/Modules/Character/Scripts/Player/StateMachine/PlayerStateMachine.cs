@@ -14,10 +14,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     {
         private List<IState> _states;
         private IState _currentState;
+        
+        private PlayerCompositionRoot _playerCompositionRoot; // Добавляем поле
 
-        public PlayerStateMachine(
-            PlayerCompositionRoot playerCompositionRoot)
+        public PlayerStateMachine(PlayerCompositionRoot playerCompositionRoot)
         {
+            _playerCompositionRoot = playerCompositionRoot; // Сохраняем переданное значение
+            
             StateMachineData data = new StateMachineData();
             
             _states = new List<IState>()
@@ -39,31 +42,62 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
         public void SwitchState<State>() where State : IState
         {
+            if (!IsOwner()) return;
+            
             IState state = _states.FirstOrDefault(state => state is State);
             _currentState.Exit();
             _currentState = state;
             _currentState.Enter();
         }
         
-        public void HandleInput() => _currentState.HandleAllInputs();
+        // public void HandleInput() => _currentState.HandleAllInputs();
+        public void HandleInput()
+        {
+            if (!IsOwner()) return;
+            
+            _currentState.HandleAllInputs();
+        }
         
-        public void Update() => _currentState.Update();
+        // public void Update() => _currentState.Update();
+        public void Update()
+        {
+            if (!IsOwner()) return;
+            
+            _currentState.Update();
+        }
 
-        public void LateUpdate() => _currentState.LateUpdate();
+        // public void LateUpdate() => _currentState.LateUpdate();
+        public void LateUpdate()
+        {
+            if (!IsOwner()) return;
+            
+            _currentState.LateUpdate();
+        }
 
         public void OnAnimationEnterEvent()
         {
+            if (!IsOwner()) return;
+            
             _currentState?.OnAnimationEnterEvent();
         }
         
         public void OnAnimationExitEvent()
         {
+            if (!IsOwner()) return;
+            
             _currentState?.OnAnimationExitEvent();
         }
         
         public void OnAnimationTransitionEvent()
         {
+            if (!IsOwner()) return;
+            
             _currentState?.OnAnimationTransitionEvent();
+        }
+        
+        private bool IsOwner()
+        {
+            return _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner;
         }
     } 
 }

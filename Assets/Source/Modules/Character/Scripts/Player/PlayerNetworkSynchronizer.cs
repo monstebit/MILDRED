@@ -1,11 +1,13 @@
-using Unity.Netcode;
 using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player
 {
     public class PlayerNetworkSynchronizer : NetworkBehaviour
     {
+        [SerializeField] private PlayerCompositionRoot _playerCompositionRoot;
+
         [Header("Player Name")] 
         public NetworkVariable<FixedString64Bytes> characterName = 
             new NetworkVariable<FixedString64Bytes>(
@@ -28,7 +30,7 @@ namespace Source.Modules.Character.Scripts.Player
         public float NetworkPositionSmoothTime = 0.1f;
         public float NetworkRotationSmoothTime = 0.1f;
         
-        [Header("Movement")]
+        [Header("Animator")]
         public NetworkVariable<float> HorizontalMovement = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
@@ -41,5 +43,36 @@ namespace Source.Modules.Character.Scripts.Player
         
         public NetworkVariable<float> CameraVerticalMovement = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        private void Awake()
+        {
+            if (_playerCompositionRoot == null)
+            {
+                Debug.LogError("PlayerCompositionRoot is null");
+            }
+        }
+        
+        [ServerRpc]
+        public void NotifyTheServerOfActionAnimationServerRpc(ulong clientID, string animationID)
+        {
+            if (IsServer)
+            {
+                PlayActionAnimationForAllClientsClientRpc(clientID, animationID);
+            }
+        }
+
+        [ClientRpc]
+        public void PlayActionAnimationForAllClientsClientRpc(ulong clientID, string animationID)
+        {
+            if (clientID != NetworkManager.Singleton.LocalClientId)
+            {
+                PerformActionAnimationFromServer(animationID);
+            }
+        }
+
+        private void PerformActionAnimationFromServer(string animationID)
+        {
+            _playerCompositionRoot.PlayerView.Animator.CrossFade(animationID, 0.2f);
+        }
     }
 }

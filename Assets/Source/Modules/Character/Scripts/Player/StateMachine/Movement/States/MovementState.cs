@@ -1,6 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -36,20 +37,30 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             // Debug.Log($"State: {GetType().Name}");
             // Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
             
+            // if (_playerCompositionRoot.IsOwner == false)
+            // {
+            //     return;
+            // }
+            
             AddInputActionsCallbacks();
         }
 
         public virtual void Exit()
         {
+            // if (_playerCompositionRoot.IsOwner == false)
+            // {
+            //     return;
+            // }
+            
             RemoveInputActionsCallbacks();
         }
         
         public virtual void Update()
         {
-            if (_playerCompositionRoot.IsOwner == false)
-            {
-                return;
-            }
+            // if (_playerCompositionRoot.IsOwner == false)
+            // {
+            //     return;
+            // }
             
             Move();
             Rotate();
@@ -75,10 +86,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         public virtual void LateUpdate()
         {
-            if (_playerCompositionRoot.IsOwner == false)
-            {
-                return;
-            }
+            // if (_playerCompositionRoot.IsOwner == false)
+            // {
+            //     return;
+            // }
             
             HandleAllCameraActions();
         }
