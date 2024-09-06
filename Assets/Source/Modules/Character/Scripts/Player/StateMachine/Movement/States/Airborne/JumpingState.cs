@@ -95,10 +95,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             return speedModifier;
         }
         
-        private void ApplyJumpForce()   //  =ПРИГОДИТСЯ=
-        {
-            _playerConfig.MovementStateConfig.YVelocity.y = 
-                Mathf.Sqrt(_jumpingStateConfig.JumpForce * -2f * _playerConfig.AirborneStateConfig.Gravity);
-        }
+        // private void ApplyJumpForce()
+        // {
+        //     _playerConfig.MovementStateConfig.YVelocity.y = 
+        //         Mathf.Sqrt(_jumpingStateConfig.JumpForce * -2f * _playerConfig.AirborneStateConfig.Gravity);
+        // }
     }
 }

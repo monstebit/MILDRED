@@ -8,9 +8,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     {
         private readonly PlayerCompositionRoot _playerCompositionRoot;
         private PlayerConfig _playerConfig;
-
-        private float _gravity = -9.81f;
-
+        
         public AirborneState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
@@ -40,6 +38,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             PlayerView.StopAirborne();
             
             _playerConfig.MovementStateConfig.IsAirborning = false;
+            
+            //  ON TESTING
+            _playerConfig.AirborneStateConfig.InAirTime = 0f;
         }
 
         public override void Update()
@@ -52,7 +53,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 
         private void ApplyGravity()
         {
-            _playerConfig.MovementStateConfig.YVelocity.y += _gravity * Time.deltaTime;
+            _playerConfig.MovementStateConfig.YVelocity.y += _playerConfig.AirborneStateConfig.Gravity * Time.deltaTime;
         }
         
         protected virtual void ResetSprintState()
