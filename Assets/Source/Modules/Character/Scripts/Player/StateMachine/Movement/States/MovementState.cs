@@ -64,7 +64,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             
             Move();
             Rotate();
+            
             HandleVerticalMovement();
+            
+            //  NETCODE
+            //  LOCO WITH TARGET
+            // UpdateAnimatorMovementParameters(Data.HorizontalInput, Data.VerticalInput);
+            //  LOCO WITHOUT TARGET
+            // UpdateAnimatorMovementParameters(0, Data.MoveAmount);
+            // UpdateAnimatorMovementParameters(0, Data.MoveAmount);
+
+            
+            
             
             
             //  ОТСЛЕЖОВАНИЕ УДЕРЖАНИЯ СПРИНТА
@@ -100,123 +111,83 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         public virtual void HandleAllInputs()
         {
             HandleMovementInput();
+            
+            //  LOCO WITHOUT TARGET
+            UpdateAnimatorMovementParameters(0, Data.MoveAmount);
+            
             HandleCameraInput();
         }
         
-        // protected virtual void HandleMovementInput()
-        // {
-        //     Data.MovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
-        //     _playerConfig.MovementStateConfig.MovementInput = Data.MovementInput;    //  TEST MONITORING
-        //     
-        //     Data.VerticalInput = Data.MovementInput.y;
-        //     _playerConfig.MovementStateConfig.VerticalInput = Data.VerticalInput;    //  TEST MONITORING
-        //     
-        //     Data.HorizontalInput = Data.MovementInput.x;
-        //     _playerConfig.MovementStateConfig.HorizontalInput = Data.HorizontalInput;    //  TEST MONITORING
-        //
-        //     Data.MoveAmount = Mathf.Clamp01(
-        //         Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
-        //     _playerConfig.MovementStateConfig.MoveAmount = Data.MoveAmount;  //  TEST MONITORING
-        //
-        //     if (Data.MoveAmount <= 0.5 && Data.MoveAmount > 0)
-        //     {
-        //         Data.MoveAmount = 0.5f;
-        //     }
-        //     else if (Data.MoveAmount > 0.5 && Data.MoveAmount <= 1)
-        //     {
-        //         Data.MoveAmount = 1;
-        //     }
-        //     
-        //     //  ON TESTING
-        //     if (_playerCompositionRoot.CharacterNetworkSynchronizer.IsOwner)
-        //     {
-        //         _playerCompositionRoot.CharacterNetworkSynchronizer.VerticalMovement.Value = Data.VerticalInput;
-        //         _playerCompositionRoot.CharacterNetworkSynchronizer.HorizontalMovement.Value = Data.HorizontalInput;
-        //     }
-        //     else
-        //     {
-        //         Data.VerticalInput = _playerCompositionRoot.CharacterNetworkSynchronizer.VerticalMovement.Value;
-        //         Data.HorizontalInput = _playerCompositionRoot.CharacterNetworkSynchronizer.HorizontalMovement.Value;
-        //     }
-        // }
-        
-        // protected virtual void HandleMovementInput()
-        // {
-        //     // Получение входных данных движения от контроллера
-        //     Data.MovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
-        //
-        //     // Разделение входных данных на вертикальные и горизонтальные составляющие
-        //     Data.VerticalInput = Data.MovementInput.y;
-        //     Data.HorizontalInput = Data.MovementInput.x;
-        //
-        //     // Синхронизация данных движения через сеть
-        //     if (_playerCompositionRoot.IsOwner == false)
-        //     {
-        //         _playerCompositionRoot.PlayerNetworkSynchronizer.VerticalMovement.Value = Data.VerticalInput;
-        //         _playerCompositionRoot.PlayerNetworkSynchronizer.HorizontalMovement.Value = Data.HorizontalInput;
-        //     }
-        //     else
-        //     {
-        //         // Если персонаж не принадлежит игроку, данные получаем через сетевой синхронизатор
-        //         Data.VerticalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.VerticalMovement.Value;
-        //         Data.HorizontalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.HorizontalMovement.Value;
-        //     }
-        // }
         protected virtual void HandleMovementInput()
         {
+            // Если персонаж принадлежит игроку, ввод считывается с контроллера
+            Data.MovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
+
+            // Разделение входных данных на вертикальные и горизонтальные составляющие
+            Data.VerticalInput = Data.MovementInput.y;
+            Data.HorizontalInput = Data.MovementInput.x;
+
+            //  ON TESTING
+            Data.MoveAmount = Mathf.Clamp01(
+                Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
+            _playerConfig.MovementStateConfig.MoveAmount = Data.MoveAmount;  //  TEST MONITORING
+            
+            if (Data.MoveAmount <= 0.5 && Data.MoveAmount > 0)
+            {
+                Data.MoveAmount = 0.5f;
+            }
+            else if (Data.MoveAmount > 0.5 && Data.MoveAmount <= 1)
+            {
+                Data.MoveAmount = 1;
+            }
+            
             if (_playerCompositionRoot.IsOwner)
             {
-                // Если персонаж принадлежит игроку, ввод считывается с контроллера
-                Data.MovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
-
-                // Разделение входных данных на вертикальные и горизонтальные составляющие
-                Data.VerticalInput = Data.MovementInput.y;
-                Data.HorizontalInput = Data.MovementInput.x;
-
                 // Обновляем значения в сетевом синхронизаторе для передачи другим игрокам
                 _playerCompositionRoot.PlayerNetworkSynchronizer.VerticalMovement.Value = Data.VerticalInput;
                 _playerCompositionRoot.PlayerNetworkSynchronizer.HorizontalMovement.Value = Data.HorizontalInput;
+                _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = Data.MoveAmount;
             }
             else
             {
                 // Если персонаж не принадлежит игроку, данные получаем через сетевой синхронизатор
                 Data.VerticalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.VerticalMovement.Value;
                 Data.HorizontalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.HorizontalMovement.Value;
+                Data.MoveAmount = _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value;
+
+                //  LOCO WITHOUT TARGET
+                // UpdateAnimatorMovementParameters(0, _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value);
+                UpdateAnimatorMovementParameters(0, Data.MoveAmount);
             }
         }
 
-        
-        // protected virtual void HandleCameraInput()
-        // {
-        //     Data.CameraInput = PlayerControls.Player.Look.ReadValue<Vector2>();
-        //     
-        //     Data.CameraVerticalInput = Data.CameraInput.y;
-        //     Data.CameraHorizontalInput = Data.CameraInput.x;
-        //     
-        //     if (_playerCompositionRoot.IsOwner == false)
-        //     {
-        //         // Если персонаж не принадлежит игроку, данные отправляем через сетевой синхронизатор
-        //         _playerCompositionRoot.PlayerNetworkSynchronizer.CameraVerticalMovement.Value = Data.CameraVerticalInput;
-        //         _playerCompositionRoot.PlayerNetworkSynchronizer.CameraHorizontalMovement.Value = Data.CameraHorizontalInput;
-        //     }
-        //     else
-        //     {
-        //         // Если персонаж не принадлежит игроку, данные получаем через сетевой синхронизатор
-        //         Data.CameraVerticalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.CameraVerticalMovement.Value;
-        //         Data.CameraHorizontalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.CameraHorizontalMovement.Value;
-        //     }
-        // }
+        public void UpdateAnimatorMovementParameters(float horizontalMovementData, float verticalMovementData)
+        {
+            int vertical = Animator.StringToHash("Vertical");
+            int horizontal = Animator.StringToHash("Horizontal");
+            
+            float horizontalAmount = horizontalMovementData;
+            float verticalAmount = verticalMovementData;
+
+            if (_playerConfig.MovementStateConfig.ShouldSprint)
+            {
+                verticalAmount = 2;
+            }
+
+            PlayerView.Animator.SetFloat(horizontal, horizontalMovementData, 0.1f, Time.deltaTime);
+            PlayerView.Animator.SetFloat(vertical, verticalAmount, 0.1f, Time.deltaTime);
+        }
 
         protected virtual void HandleCameraInput()
         {
+            // Если персонаж принадлежит игроку, ввод считывается локально
+            Data.CameraInput = PlayerControls.Player.Look.ReadValue<Vector2>();
+
+            Data.CameraVerticalInput = Data.CameraInput.y;
+            Data.CameraHorizontalInput = Data.CameraInput.x;
+                        
             if (_playerCompositionRoot.IsOwner)
             {
-                // Если персонаж принадлежит игроку, ввод считывается локально
-                Data.CameraInput = PlayerControls.Player.Look.ReadValue<Vector2>();
-
-                Data.CameraVerticalInput = Data.CameraInput.y;
-                Data.CameraHorizontalInput = Data.CameraInput.x;
-
                 // Обновляем значения в сетевом синхронизаторе для передачи другим игрокам
                 _playerCompositionRoot.PlayerNetworkSynchronizer.CameraVerticalMovement.Value = Data.CameraVerticalInput;
                 _playerCompositionRoot.PlayerNetworkSynchronizer.CameraHorizontalMovement.Value = Data.CameraHorizontalInput;

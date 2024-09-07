@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using PlasticGui.Configuration.CloudEdition.Welcome;
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
@@ -7,6 +8,7 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Groun
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
+using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
@@ -53,7 +55,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         // public void HandleInput() => _currentState.HandleAllInputs();
         public void HandleInput()
         {
-            if (!IsOwner()) return;
+            // if (!IsOwner()) return;
             
             _currentState.HandleAllInputs();
         }
@@ -76,22 +78,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
         public void OnAnimationEnterEvent()
         {
-            if (!IsOwner()) return;
-            
             _currentState?.OnAnimationEnterEvent();
         }
         
         public void OnAnimationExitEvent()
         {
-            if (!IsOwner()) return;
-            
             _currentState?.OnAnimationExitEvent();
         }
         
         public void OnAnimationTransitionEvent()
         {
-            if (!IsOwner()) return;
-            
             _currentState?.OnAnimationTransitionEvent();
         }
         

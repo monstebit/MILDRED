@@ -10,7 +10,6 @@ namespace Source.Modules.Character.Scripts.Player
     public class PlayerCompositionRoot : NetworkBehaviour
     {
         [SerializeField] private PlayerNetworkSynchronizer _playerNetworkSynchronizer;
-        
         [SerializeField] private PlayerCameraMovement _playerCameraMovement;
         [SerializeField] private PlayerView _playerView;
         [SerializeField] private PlayerConfig _playerConfig;
@@ -33,17 +32,18 @@ namespace Source.Modules.Character.Scripts.Player
             DontDestroyOnLoad(this);
             
             PlayerView.Initialize();
+            
             _characterController = PlayerView.GetComponent<CharacterController>();
+            
             _playerControls = new PlayerControls();
             _playerStateMachine = new PlayerStateMachine(this);
             
-            //  ON TESTING
             _playerNetworkSynchronizer = GetComponent<PlayerNetworkSynchronizer>();
         }
 
         private void Update()
         {
-            //  ON TESTING
+            //  POSITION FOR EACH PLAYER
             if (IsOwner)
             {
                 _playerNetworkSynchronizer.NetworkPosition.Value = _playerView.transform.position;
@@ -63,16 +63,18 @@ namespace Source.Modules.Character.Scripts.Player
                     _playerNetworkSynchronizer.NetworkRotationSmoothTime);
             }
             
-            if(IsLocalPlayer == false)
+            //  CAMERA FOR EACH PLAYER
+            if (IsLocalPlayer == false)
             {
                 PlayerCameraMovement.Camera.enabled = false;
-                return;
+                
+                // return;
             }
 
             //  IF WE DO NOT OWN THIS GAMEOBJECT, WE NO NOT CONTROL OR EDIT IT
             if (IsOwner == false)
             {
-                return;
+                // return;
             }
             
             _playerStateMachine.HandleInput();
@@ -84,7 +86,7 @@ namespace Source.Modules.Character.Scripts.Player
             //  IF WE DO NOT OWN THIS GAMEOBJECT, WE NO NOT CONTROL OR EDIT IT
             if (IsOwner == false)
             {
-                return;
+                // return;
             }
             
             _playerStateMachine.LateUpdate();
@@ -93,27 +95,8 @@ namespace Source.Modules.Character.Scripts.Player
         private void OnEnable() => _playerControls.Enable();
 
         private void OnDisable() => _playerControls.Disable();
-
-        /// <summary>
-        /// Этот код полезен, когда нужно временно отключить какое-либо действие ввода, например,
-        /// чтобы предотвратить нежелательные повторные действия или для реализации задержек в игре.
-        /// </summary>
-        /// <param name="action"></param>
-        /// <param name="seconds"></param>
-        public void DisableActionFor(InputAction action, float seconds)
-        {
-            StartCoroutine(DisableAction(action, seconds));
-        }
-
-        private IEnumerator DisableAction(InputAction action, float seconds)
-        {
-            action.Disable();
-
-            yield return new WaitForSeconds(seconds);
-
-            action.Enable();
-        }
-
+        
+        #region OnMovementStateAnimatio
         public void OnMovementStateAnimationEnterEvent()
         {
             _playerStateMachine.OnAnimationEnterEvent();
@@ -128,5 +111,22 @@ namespace Source.Modules.Character.Scripts.Player
         {
             _playerStateMachine.OnAnimationTransitionEvent();
         }
+        #endregion
+        
+        #region DisableActionFor
+        public void DisableActionFor(InputAction action, float seconds)
+        {
+            StartCoroutine(DisableAction(action, seconds));
+        }
+
+        private IEnumerator DisableAction(InputAction action, float seconds)
+        {
+            action.Disable();
+
+            yield return new WaitForSeconds(seconds);
+
+            action.Enable();
+        }
+        #endregion
     }
 }

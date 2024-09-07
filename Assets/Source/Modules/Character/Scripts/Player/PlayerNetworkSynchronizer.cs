@@ -37,6 +37,9 @@ namespace Source.Modules.Character.Scripts.Player
         public NetworkVariable<float> VerticalMovement = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
+        public NetworkVariable<float> MoveAmount = 
+            new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         [Header("Camera")]
         public NetworkVariable<float> CameraHorizontalMovement = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
