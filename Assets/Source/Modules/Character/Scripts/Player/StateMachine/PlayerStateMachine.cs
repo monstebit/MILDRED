@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using PlasticGui.Configuration.CloudEdition.Welcome;
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
@@ -8,7 +7,6 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Groun
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
-using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
@@ -52,26 +50,24 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             _currentState.Enter();
         }
         
-        // public void HandleInput() => _currentState.HandleAllInputs();
-        public void HandleInput()
-        {
-            // if (!IsOwner()) return;
-            
-            _currentState.HandleAllInputs();
-        }
+        public void HandleInput() => _currentState.HandleAllInputs();
         
-        // public void Update() => _currentState.Update();
         public void Update()
         {
-            if (!IsOwner()) return;
+            if (IsOwner() == false)
+            {
+                return;
+            }
             
             _currentState.Update();
         }
 
-        // public void LateUpdate() => _currentState.LateUpdate();
         public void LateUpdate()
         {
-            if (!IsOwner()) return;
+            if (IsOwner() == false)
+            {
+                return;
+            }
             
             _currentState.LateUpdate();
         }

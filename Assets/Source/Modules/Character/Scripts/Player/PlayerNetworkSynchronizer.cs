@@ -47,6 +47,13 @@ namespace Source.Modules.Character.Scripts.Player
         public NetworkVariable<float> CameraVerticalMovement = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+        [Header("Flags")]
+        public NetworkVariable<bool> IsSprinting = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
+        public NetworkVariable<bool> IsJumping = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         private void Awake()
         {
             if (_playerCompositionRoot == null)

@@ -43,7 +43,15 @@ namespace Source.Modules.Character.Scripts.Player
 
         private void Update()
         {
-            //  POSITION FOR EACH PLAYER
+            UpdateNetworkTransform();
+            DisableNonLocalPlayerCamera();
+            
+            _playerStateMachine.HandleInput();
+            _playerStateMachine.Update();
+        }
+
+        private void UpdateNetworkTransform()
+        {
             if (IsOwner)
             {
                 _playerNetworkSynchronizer.NetworkPosition.Value = _playerView.transform.position;
@@ -62,33 +70,18 @@ namespace Source.Modules.Character.Scripts.Player
                     _playerNetworkSynchronizer.NetworkRotation.Value,
                     _playerNetworkSynchronizer.NetworkRotationSmoothTime);
             }
-            
-            //  CAMERA FOR EACH PLAYER
+        }
+
+        private void DisableNonLocalPlayerCamera()
+        {
             if (IsLocalPlayer == false)
             {
                 PlayerCameraMovement.Camera.enabled = false;
-                
-                // return;
             }
-
-            //  IF WE DO NOT OWN THIS GAMEOBJECT, WE NO NOT CONTROL OR EDIT IT
-            if (IsOwner == false)
-            {
-                // return;
-            }
-            
-            _playerStateMachine.HandleInput();
-            _playerStateMachine.Update();
         }
 
         private void LateUpdate()
         {
-            //  IF WE DO NOT OWN THIS GAMEOBJECT, WE NO NOT CONTROL OR EDIT IT
-            if (IsOwner == false)
-            {
-                // return;
-            }
-            
             _playerStateMachine.LateUpdate();
         }
 
