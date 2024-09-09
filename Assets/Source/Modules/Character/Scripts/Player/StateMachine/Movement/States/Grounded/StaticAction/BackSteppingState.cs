@@ -1,5 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction
@@ -22,14 +23,76 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         }
     
         #region IState METHODS
+        // public override void Enter()
+        // {
+        //     _playerConfig.BackSteppingStateConfig.Timer = 0f;
+        //     
+        //     base.Enter();
+        //     
+        //     PlayerView.StartBackStepping();
+        //     
+        //     Keyframe LastFrame = _playerConfig.BackSteppingStateConfig.BackStepCurve[_playerConfig.BackSteppingStateConfig.BackStepCurve.length - 1];
+        //     _playerConfig.BackSteppingStateConfig.BackStepTimer = LastFrame.time;
+        //     _playerConfig.BackSteppingStateConfig.LastStepDirection = PlayerView.transform.forward;
+        //     _playerConfig.BackSteppingStateConfig.LastStepDirection.y = 0;
+        //     _playerConfig.BackSteppingStateConfig.LastStepDirection.Normalize();
+        // }
+        //
+        // public override void Update()
+        // {
+        //     base.Update();
+        //     
+        //     if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
+        //     {
+        //         _playerConfig.BackSteppingStateConfig.Timer += Time.deltaTime;
+        //
+        //         if (_playerConfig.BackSteppingStateConfig.Timer < _playerConfig.BackSteppingStateConfig.BackStepTimer)
+        //         {
+        //             float speed = 
+        //                 _playerConfig.BackSteppingStateConfig.BackStepCurve.Evaluate(_playerConfig.BackSteppingStateConfig.Timer);
+        //
+        //             _playerCompositionRoot.CharacterController.Move(
+        //                 -_playerConfig.BackSteppingStateConfig.LastStepDirection * speed * Time.deltaTime);
+        //         }
+        //         else
+        //         {
+        //             if (_playerConfig.BackSteppingStateConfig.Timer 
+        //                 < _playerConfig.BackSteppingStateConfig.BackStepTimer + _playerConfig.BackSteppingStateConfig.BackStepToStateTimer)
+        //             {
+        //                 return;
+        //             }
+        //             
+        //             Exit();
+        //         }
+        //     }
+        //     
+        //     if (_playerConfig.MovementStateConfig.IsPerformingStaticAction == false) 
+        //     {
+        //         if (_playerCompositionRoot.GroundChecker.isTouches == false)
+        //         {
+        //             StateSwitcher.SwitchState<FallingState>();
+        //             return;
+        //         }
+        //         
+        //         if (Data.MovementInput == Vector2.zero)
+        //         {
+        //             StateSwitcher.SwitchState<IdlingState>();
+        //             return;
+        //         }
+        //         
+        //         OnMove();
+        //     }
+        // }
         public override void Enter()
         {
+            _playerConfig.BackSteppingStateConfig.Timer = 0f;
+            
             base.Enter();
             
             PlayerView.StartBackStepping();
             
-            Keyframe LastFrame = _playerConfig.BackSteppingStateConfig.BackStepCurve[_playerConfig.BackSteppingStateConfig.BackStepCurve.length - 1];
-            _playerConfig.BackSteppingStateConfig.BackStepTimer = LastFrame.time;
+            Keyframe lastFrame = _playerConfig.BackSteppingStateConfig.BackStepCurve[_playerConfig.BackSteppingStateConfig.BackStepCurve.length - 1];
+            _playerConfig.BackSteppingStateConfig.BackStepTimer = lastFrame.time;
             _playerConfig.BackSteppingStateConfig.LastStepDirection = PlayerView.transform.forward;
             _playerConfig.BackSteppingStateConfig.LastStepDirection.y = 0;
             _playerConfig.BackSteppingStateConfig.LastStepDirection.Normalize();
@@ -39,52 +102,72 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
             
+            // Логика для статического действия
             if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
             {
                 _playerConfig.BackSteppingStateConfig.Timer += Time.deltaTime;
 
                 if (_playerConfig.BackSteppingStateConfig.Timer < _playerConfig.BackSteppingStateConfig.BackStepTimer)
                 {
-                    float speed = 
-                        _playerConfig.BackSteppingStateConfig.BackStepCurve.Evaluate(_playerConfig.BackSteppingStateConfig.Timer);
+                    float speed = _playerConfig.BackSteppingStateConfig.BackStepCurve.Evaluate(_playerConfig.BackSteppingStateConfig.Timer);
 
                     _playerCompositionRoot.CharacterController.Move(
                         -_playerConfig.BackSteppingStateConfig.LastStepDirection * speed * Time.deltaTime);
                 }
                 else
                 {
+                    if (_playerConfig.BackSteppingStateConfig.Timer 
+                        < _playerConfig.BackSteppingStateConfig.BackStepTimer + _playerConfig.BackSteppingStateConfig.BackStepToStateTimer)
+                    {
+                        return;  // Завершаем метод, если таймер не завершен
+                    }
+                    
                     Exit();
-                    // _playerConfig.MovementStateConfig.IsPerformingStaticAction = false;
-                    // _playerConfig.BackSteppingStateConfig.Timer = 0;
+                    return;  // Выход из метода после выхода из состояния
                 }
             }
             
-            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction == false) 
+            // Логика для активного действия (не статического)
+            if (!_playerConfig.MovementStateConfig.IsPerformingStaticAction) 
             {
-                //  ON TESTING
-                if (_playerCompositionRoot.GroundChecker.isTouches == false)
+                // Проверка на нахождение на земле
+                if (!_playerCompositionRoot.GroundChecker.isTouches)
                 {
                     StateSwitcher.SwitchState<FallingState>();
                     return;
                 }
                 
+                // Переход в состояние покоя, если отсутствует ввод
                 if (Data.MovementInput == Vector2.zero)
                 {
                     StateSwitcher.SwitchState<IdlingState>();
                     return;
                 }
                 
-                OnMove();
+                // Состояние спринта
+                if (_playerConfig.MovementStateConfig.ShouldSprint)
+                {
+                    StateSwitcher.SwitchState<SprintingState>();
+                    return;
+                }
+            
+                // Состояние ходьбы
+                if (_playerConfig.MovementStateConfig.ShouldWalk)
+                {
+                    StateSwitcher.SwitchState<WalkingState>();
+                    return;
+                }
+            
+                // Состояние бега
+                StateSwitcher.SwitchState<RunningState>();
             }
         }
-
+        
         public override void Exit()
         {
             base.Exit();
             
             PlayerView.StopBackStepping();
-
-            _playerConfig.BackSteppingStateConfig.Timer = 0f;
         }
         #endregion
         
