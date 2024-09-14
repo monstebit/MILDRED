@@ -1,5 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving
 {
@@ -9,7 +9,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
         public SprintingState(
             IStateSwitcher stateSwitcher,
-            PlayerCompositionRoot playerCompositionRoot, 
+            PlayerCompositionRoot playerCompositionRoot,
             StateMachineData data) : base(
             stateSwitcher,
             playerCompositionRoot,
@@ -19,10 +19,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         }
 
         #region IState METHODS
+
         public override void Enter()
         {
             Data.MovementSpeedModifier = _playerConfig.SprintingStateConfig.SpeedModifier;
-            
+
             base.Enter();
 
             PlayerView.StartSprinting();
@@ -31,7 +32,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Exit()
         {
             base.Exit();
-            
+
             PlayerView.StopSprinting();
         }
 
@@ -43,36 +44,26 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             {
                 return;
             }
-            
+
             StopSprinting();
         }
+
         #endregion
 
         private void StopSprinting()
         {
-            if (Data.MovementInput == Vector2.zero)
-            {
-                StateSwitcher.SwitchState<IdlingState>();
-                
-                return;
-            }
-            
             if (_playerConfig.MovementStateConfig.ShouldWalk)
             {
                 StateSwitcher.SwitchState<WalkingState>();
-                
                 return;
             }
-            
+
             StateSwitcher.SwitchState<RunningState>();
         }
-        
-        //  TODO:
-        // protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        // {
-        //     stateMachine.ChangeState(stateMachine.HardStoppingState);
-        //
-        //     base.OnMovementCanceled(context);
-        // }
+
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        {
+            base.OnMovementCanceled(context);
+        }
     }
 }

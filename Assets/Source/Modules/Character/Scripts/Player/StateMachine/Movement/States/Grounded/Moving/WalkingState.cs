@@ -28,41 +28,41 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             Data.MovementSpeedModifier = _playerConfig.WalkingStateConfig.SpeedModifier; ;
             
             PlayerView.StartWalking();
-            
-            //  TODO: WeakForce
-            // stateMachine.ReusableData.CurrentJumpForce = airborneData.JumpData.WeakForce;
         }
 
         public override void Exit()
         {
             base.Exit();
             
+            _playerConfig.MovementStateConfig.ShouldWalk = false;
+            
             PlayerView.StopWalking();
         }
-        
+
         public override void Update()
         {
             base.Update();
             
+            OnMove();
+        }
+        
+        protected override void OnMove()
+        {
             if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
-            }
-
-            if (_playerConfig.MovementStateConfig.ShouldWalk)
-            {
                 return;
             }
-            
-            StateSwitcher.SwitchState<RunningState>();
+
+            if (_playerConfig.MovementStateConfig.ShouldWalk == false)
+            {
+                StateSwitcher.SwitchState<RunningState>();
+            }
         }
         #endregion
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            //  TODO: LightStoppingState
-            // StateSwitcher.SwitchState<LightStoppingState>();
-
             base.OnMovementCanceled(context);
         }
     }

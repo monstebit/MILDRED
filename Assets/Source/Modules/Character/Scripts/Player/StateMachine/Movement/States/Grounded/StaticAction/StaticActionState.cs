@@ -22,10 +22,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Enter()
         {
             base.Enter();
-
-            PlayerView.StartStaticAction();
             
             _playerConfig.MovementStateConfig.IsPerformingStaticAction = true;
+            
+            PlayerView.StartStaticAction();
         }
 
         public override void Update()
@@ -37,9 +37,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            PlayerView.StopStaticAction();
-            
             _playerConfig.MovementStateConfig.IsPerformingStaticAction = false;
+            
+            PlayerView.StopStaticAction();
         }
         #endregion
         

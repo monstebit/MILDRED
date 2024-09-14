@@ -44,43 +44,29 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
 
-            if (_playerConfig.MovementStateConfig.ShouldSprint)
-            {
-                StateSwitcher.SwitchState<SprintingState>();
-                
-                return;
-            }
-            
-            //Этот текст объясняет, что существует определенная логика перехода между состояниями
-            //в зависимости от текущих флагов и предыдущих состояний игрока.
-            //В данном случае, если игрок был в состоянии ускорения и затем перестал ускоряться,
-            //он перейдет в состояние бега, даже если флаг shouldWalk установлен в true.
-            //В противном случае, если бы игрок не был в состоянии ускорения, он бы перешел в состояние ходьбы.
-            if (_playerConfig.MovementStateConfig.ShouldWalk == false)
-            {
-                return;
-            }
-
-            //Этот код позволяет убедиться, что игрок находится в состоянии ускорения
-            //в течение определенного времени, прежде чем перейти в другое состояние
-            //(например, бег или ходьбу). Это помогает управлять плавными переходами между
-            //состояниями игрока и обеспечивает более естественное поведение персонажа в игре.
             if (Time.time < _startTime + _playerConfig.SprintingStateConfig.RunToWalkTime)
             {
                 return;
             }
             
-            StopRunning();
+            OnMove();
         }
         
-        private void StopRunning()
+        protected override void OnMove()
         {
-            if (Data.MovementInput == Vector2.zero)
+            if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
-                StateSwitcher.SwitchState<IdlingState>();
+                StateSwitcher.SwitchState<SprintingState>();
+                return;
+            }
+
+            if (_playerConfig.MovementStateConfig.ShouldWalk)
+            {
+                StateSwitcher.SwitchState<WalkingState>();
             }
         }
         
+        //  PC CONTROL
         protected override void OnWalkToggleStarted(InputAction.CallbackContext context)
         {
             base.OnWalkToggleStarted(context);
@@ -88,11 +74,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             StateSwitcher.SwitchState<WalkingState>();
         }
 
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        {
+            base.OnMovementCanceled(context);
+        }
+        
         #region OnAmimationEvent Methods
         public override void OnAnimationTransitionEvent()
         {
             base.OnAnimationTransitionEvent();
-            Debug.Log("OnAnimationTransitionEvent");
         }
         
         private bool InAnimationTransition(int layerIndex = 0)
@@ -100,13 +90,5 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
         #endregion
-        
-        //  TODO: MediumStoppingState
-        // protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        // {
-        //     stateMachine.ChangeState(stateMachine.MediumStoppingState);
-        //
-        //     base.OnMovementCanceled(context);
-        // }
     }
 }

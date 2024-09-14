@@ -1,7 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -37,59 +36,30 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             // Debug.Log($"State: {GetType().Name}");
             // Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
             
-            // if (_playerCompositionRoot.IsOwner == false)
-            // {
-            //     return;
-            // }
-            
             AddInputActionsCallbacks();
         }
 
         public virtual void Exit()
         {
-            // if (_playerCompositionRoot.IsOwner == false)
-            // {
-            //     return;
-            // }
-            
             RemoveInputActionsCallbacks();
         }
         
         public virtual void Update()
         {
-            // if (_playerCompositionRoot.IsOwner == false)
-            // {
-            //     return;
-            // }
-            
             Move();
             Rotate();
             
             HandleVerticalMovement();
             
-            //  NETCODE
-            //  LOCO WITH TARGET
-            // UpdateAnimatorMovementParameters(Data.HorizontalInput, Data.VerticalInput);
-            //  LOCO WITHOUT TARGET
-            // UpdateAnimatorMovementParameters(0, Data.MoveAmount);
-            // UpdateAnimatorMovementParameters(0, Data.MoveAmount);
-
-            
-            
-            
-            
-            //  ОТСЛЕЖОВАНИЕ УДЕРЖАНИЯ СПРИНТА
             if (_playerConfig.MovementStateConfig._isButtonHeld)
             {
                 _playerConfig.MovementStateConfig._timeButtonHeld += Time.deltaTime;
 
                 if (_playerConfig.MovementStateConfig._timeButtonHeld >= _playerConfig.MovementStateConfig._holdTimeThreshold)
                 {
-                    if (!_playerConfig.MovementStateConfig.ShouldSprint)
+                    if (_playerConfig.MovementStateConfig.ShouldSprint == false)
                     {
-                        // Запуск спринта после достижения порога времени удержания
                         _playerConfig.MovementStateConfig.ShouldSprint = true;
-                        // Debug.Log("Начат спринт");
                     }
                 }
             }
@@ -97,11 +67,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         public virtual void LateUpdate()
         {
-            // if (_playerCompositionRoot.IsOwner == false)
-            // {
-            //     return;
-            // }
-            
             HandleAllCameraActions();
         }
         #endregion
@@ -111,10 +76,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         public virtual void HandleAllInputs()
         {
             HandleMovementInput();
-            
-            //  LOCO WITHOUT TARGET
-            UpdateAnimatorMovementParameters(0, Data.MoveAmount);
-            
+            UpdateAnimatorMovementParameters(0, Data.MoveAmount);   //  LOCOMOTION MOVEMENT WITHOUT TARGET
+            // UpdateAnimatorMovementParameters(0, _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value);
             HandleCameraInput();
         }
         
@@ -127,7 +90,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             Data.VerticalInput = Data.MovementInput.y;
             Data.HorizontalInput = Data.MovementInput.x;
 
-            //  ON TESTING
             Data.MoveAmount = Mathf.Clamp01(
                 Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
             _playerConfig.MovementStateConfig.MoveAmount = Data.MoveAmount;  //  TEST MONITORING
@@ -135,10 +97,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             if (Data.MoveAmount <= 0.5 && Data.MoveAmount > 0)
             {
                 Data.MoveAmount = 0.5f;
+                
+                _playerConfig.MovementStateConfig.ShouldWalk = true;
             }
             else if (Data.MoveAmount > 0.5 && Data.MoveAmount <= 1)
             {
                 Data.MoveAmount = 1;
+                
+                _playerConfig.MovementStateConfig.ShouldWalk = false;
             }
             
             if (_playerCompositionRoot.IsOwner)
@@ -154,10 +120,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 Data.VerticalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.VerticalMovement.Value;
                 Data.HorizontalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.HorizontalMovement.Value;
                 Data.MoveAmount = _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value;
-
-                //  LOCO WITHOUT TARGET
+                
                 // UpdateAnimatorMovementParameters(0, _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value);
-                UpdateAnimatorMovementParameters(0, Data.MoveAmount);
+                // UpdateAnimatorMovementParameters(0, Data.MoveAmount);
             }
         }
 
@@ -169,7 +134,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             float horizontalAmount = horizontalMovementData;
             float verticalAmount = verticalMovementData;
 
-            if (_playerConfig.MovementStateConfig.ShouldSprint)
+            if (_playerConfig.MovementStateConfig.ShouldSprint && Data.MovementInput != Vector2.zero)
             {
                 verticalAmount = 2;
             }
@@ -240,17 +205,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             {
                 // Завершаем спринт, если он был активирован
                 _playerConfig.MovementStateConfig.ShouldSprint = false;
-                // Debug.Log("Спринт завершён");
+                return;
             }
-            else
+
+            if (_playerConfig.MovementStateConfig.IsAirborning == false)  // Если не в воздухе
             {
-                if (_playerConfig.MovementStateConfig.IsAirborning) //  =СТРАННО=
-                {
-                    return;
-                }
-                
-                // Выполняем кувырок, если кнопка была нажата кратковременно
-                OnDodgeStarted(context);
+                OnDodgeStarted(context);  // Выполняем кувырок
             }
         }
         
@@ -263,7 +223,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             }
     
             StateSwitcher.SwitchState<DodgingState>();
-            // Debug.Log("Выполнен кувырок");
         }
         
         protected virtual void OnBackStepped(InputAction.CallbackContext context)
@@ -273,7 +232,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 return;
             }
     
-            if (Data.MovementInput != Vector2.zero)
+            if (Data.MovementInput != Vector2.zero && Data.MovementSpeedModifier != 0)
             {
                 return;
             }
@@ -318,7 +277,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         protected virtual void Move()
         {
-            // if (Data.MovementInput == Vector2.zero)
             if (Data.MovementInput == Vector2.zero || Data.MovementSpeedModifier == 0f)
             {
                 return;
@@ -365,11 +323,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         protected virtual void HandleFollowTarget()
         {
             _playerCameraMovement.FollowTarget(_playerCompositionRoot.PlayerView.transform);
-            // _playerCameraMovement.transform.position = Vector3.SmoothDamp(
-            //     _playerCameraMovement.transform.position,
-            //     _playerCompositionRoot.PlayerView.transform.position,
-            //     ref _playerCameraMovement.CameraVelocity,
-            //     _playerCameraMovement.CameraSmoothSpeed * Time.deltaTime);
         }
         
         protected virtual void HandleCameraRotation()

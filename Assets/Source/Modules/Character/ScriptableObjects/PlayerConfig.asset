@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   _movementStateConfig:
-    _holdTimeThreshold: 0.2
+    _holdTimeThreshold: 0.1
     _timeButtonHeld: 0
     _isButtonHeld: 0
     MovementInput: {x: 0, y: 0}
     VerticalInput: 0
     HorizontalInput: 0
     MoveAmount: 0
-    _movementDirection: {x: -0.8389011, y: 0, z: 0.544284}
-    YVelocity: {x: 0, y: -8.726458, z: 0}
+    _movementDirection: {x: 0, y: 0, z: 0}
+    YVelocity: {x: 0, y: -5.117956, z: 0}
     GroundedGravityForce: -2
     ShouldWalk: 0
     ShouldSprint: 0
@@ -44,9 +44,9 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 5
-        inSlope: 50
-        outSlope: 50
+        value: 1
+        inSlope: 70
+        outSlope: 70
         tangentMode: 34
         weightedMode: 0
         inWeight: 0
@@ -74,7 +74,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     DodgeTimer: 0.7
     Timer: 0
-    LastDodgeDirection: {x: -0.9065226, y: 0, z: -0.4221573}
+    LastDodgeDirection: {x: 0.88823295, y: 0, z: 0.45939332}
     _dodgingTimer: 16.702066
   _backSteppingStateConfig:
     BackStepCurve:
@@ -108,7 +108,7 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.75
+        time: 0.5
         value: 0
         inSlope: -1.620743
         outSlope: -1.620743
@@ -119,10 +119,9 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    BackStepTimer: 0.75
-    Timer: 0
+    BackStepTimer: 0.5
+    Timer: 0.5014014
     BackStepToStateTimer: 0
-    LastStepDirection: {x: -0.9710433, y: 0, z: 0.23890358}
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:

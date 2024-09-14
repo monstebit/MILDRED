@@ -5,8 +5,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class IdlingState : GroundedState
     {
-        private float _startTime;
-        
         public IdlingState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
@@ -25,8 +23,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Enter();
             
             PlayerView.StartIdling();
-            
-            _startTime = Time.time;
+
+            ResetShouldWalk();
         }
 
         public override void Exit()
@@ -48,5 +46,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             OnMove();
         }
         #endregion
+        
+        private void ResetShouldWalk()
+        {
+            _playerConfig.MovementStateConfig.ShouldWalk = false;
+        }
     }
 }

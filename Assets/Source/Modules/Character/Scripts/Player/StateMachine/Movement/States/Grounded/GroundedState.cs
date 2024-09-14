@@ -61,10 +61,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             if (_playerCompositionRoot.GroundChecker.isTouches == false)
             {
-                //  ON TESTING
+                //  ЗАПРЕЩАЕМ ОТМЕНЯТЬ ПЕРЕКАТ ИЛИ БЭКСТЕП ВО ВРЕМЯ ПАДЕНИЯ
                 if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
                 {
-                    return;
+                    return; 
                 }
                 
                 StateSwitcher.SwitchState<FallingState>();
@@ -72,19 +72,17 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         }
         #endregion
         
-        protected void OnMove()
+        protected virtual void OnMove()
         {
             if (_playerConfig.MovementStateConfig.ShouldSprint)
             {
                 StateSwitcher.SwitchState<SprintingState>();
-                
                 return;
             }
             
             if (_playerConfig.MovementStateConfig.ShouldWalk)
             {
                 StateSwitcher.SwitchState<WalkingState>();
-                
                 return;
             }
             
@@ -110,6 +108,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
         {
             StateSwitcher.SwitchState<JumpingState>();
+        }
+        
+        private bool InAnimationTransition(int layerIndex = 0)
+        {
+            return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
     }
 }

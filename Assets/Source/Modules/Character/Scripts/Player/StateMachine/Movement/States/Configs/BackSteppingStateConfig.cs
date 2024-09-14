@@ -12,6 +12,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         [SerializeField] public float BackStepTimer;
         [SerializeField] public float Timer;
         [SerializeField] public float BackStepToStateTimer;
-        [SerializeField] public Vector3 LastStepDirection; // Направление последнего шага назад
+        // [SerializeField] public Vector3 LastStepDirection; // Направление последнего шага назад
     }
 }

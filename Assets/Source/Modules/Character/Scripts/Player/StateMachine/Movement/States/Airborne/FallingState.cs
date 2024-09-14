@@ -3,12 +3,12 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Confi
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
-using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
     public class FallingState : AirborneState
     {
+        private readonly PlayerCompositionRoot _playerCompositionRoot;
         private readonly GroundChecker _groundChecker;
         private readonly MovementStateConfig _movementStateConfig;
 
@@ -20,6 +20,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             playerCompositionRoot,
             data)
         {
+            _playerCompositionRoot = playerCompositionRoot;
             _groundChecker = playerCompositionRoot.GroundChecker;
             _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
         }
@@ -28,8 +29,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Enter();
 
-            // Data.MovementSpeedModifier = 0;
-            Data.MovementSpeedModifier = 1;
+            Data.MovementSpeedModifier = 1; //  ON TESTING
             
             PlayerView.StartFalling();
         }
@@ -45,19 +45,24 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
             
+            //  ЭТОТ МЕТОД ИСПОЛЬЗУЕТСЯ ДЛЯ ОТМЕНЫ ПРЕРЫВАНИЯ ПРЕЗЕМЛЕНИЯ
+            if (InAnimationTransition())
+            {
+                return;
+            }
+            
             if (_groundChecker.isTouches)
             {
-                StateSwitcher.SwitchState<LandingState>();  //  ON TESTING
-                
-                //  TODO: CHECK THIS BEFORE DELETE!!
+                #region ВАРИАНТ БЕЗ ПРИЗЕМЛЕНИЯ
                 // _movementStateConfig.YVelocity.y = _movementStateConfig.GroundedGravityForce;   //  "ПРИЛИПАНИЕ" К ЗЕМЛЕ
                 // if (Data.MovementInput == Vector2.zero)
                 // {
                 //     StateSwitcher.SwitchState<IdlingState>();
                 //     return;
                 // }
-                //
                 // OnMove();
+                #endregion
+                StateSwitcher.SwitchState<LandingState>();
             }
         }
 
@@ -82,5 +87,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.ResetPerformingAction();
         }
+        
+        #region OnAmimationEvent Methods
+        private bool InAnimationTransition(int layerIndex = 0)
+        {
+            return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
+        }
+        #endregion
     }
 }

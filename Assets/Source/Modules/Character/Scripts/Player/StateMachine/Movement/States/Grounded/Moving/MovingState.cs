@@ -27,5 +27,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StopMoving();
         }
+
+        public override void Update()
+        {
+            base.Update();
+        }
     }
 }
