@@ -392,6 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca3a819a83aeaca449abb62bb6f94c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
   _cameraPivotTransform: {fileID: 1914071689693900990}
   _playerCameraXRotation: 0
   _playerCameraYRotation: 0
@@ -444,7 +445,7 @@ MonoBehaviour:
   _ground:
     serializedVersion: 2
     m_Bits: 65
-  _distanceToCheck: 0.3
+  _distanceToCheck: 0.2
 --- !u!1 &1780999330563793708
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,6 +522,12 @@ MonoBehaviour:
   NetworkPositionVelocity: {x: 0, y: 0, z: 0}
   NetworkPositionSmoothTime: 0.1
   NetworkRotationSmoothTime: 0.1
+  HorizontalMovement:
+    m_InternalValue: 0
+  VerticalMovement:
+    m_InternalValue: 0
+  MoveAmount:
+    m_InternalValue: 0
 --- !u!114 &1861307780936638204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -533,7 +540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15f61a782e373bd439800e4db7078a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterNetworkSynchronizer: {fileID: 613380661302881207}
+  _playerNetworkSynchronizer: {fileID: 0}
   _playerCameraMovement: {fileID: 5624563302191773171}
   _playerView: {fileID: 5985968876740594145}
   _playerConfig: {fileID: 11400000, guid: a0f151924a2d23c428c0ef7e8c12708b, type: 2}
@@ -1915,6 +1922,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32fa52f244b4c434687e79bf9c2fa31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerCompositionRoot: {fileID: 0}
   Animator: {fileID: 0}
 --- !u!114 &6724067212064225470
 MonoBehaviour:
