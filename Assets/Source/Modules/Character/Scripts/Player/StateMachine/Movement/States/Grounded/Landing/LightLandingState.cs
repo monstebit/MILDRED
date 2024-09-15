@@ -6,6 +6,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class LightLandingState : LandingState
     {
+        private PlayerCompositionRoot _playerCompositionRoot;
+        
         public LightLandingState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
@@ -14,6 +16,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCompositionRoot,
             data)
         {
+            _playerCompositionRoot = playerCompositionRoot;
         }
 
         public override void Enter()
@@ -29,18 +32,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
             
-            // if (Data.MovementInput == Vector2.zero)
-            // {
-            //     StateSwitcher.SwitchState<IdlingState>();
-            //     {
-            //         return;
-            //     }
-            // }
-            //
-            // OnMove();
-            
             if (Data.MovementInput != Vector2.zero)
             {
+                //  ОСТАНОВКА ИГРОКА ПОСЛЕ ПРЕЗЕМЛЕНИЯ
+                // if (InAnimationTransition())
+                // {
+                //     return;
+                // }
+                
                 OnMove();
                 
                 return;
@@ -62,11 +61,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.OnMovementCanceled(context);
         }
         
-        //  ON TESTING
-        // public override void OnAnimationTransitionEvent()
-        // {
-        //     StateSwitcher.SwitchState<IdlingState>();
-        //     Debug.Log("===OnAnimationTransitionEvent===");
-        // }
+        #region OnAmimationEvent Methods
+        private bool InAnimationTransition(int layerIndex = 0)
+        {
+            return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
+        }
+        #endregion
     }
 }

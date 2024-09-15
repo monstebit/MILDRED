@@ -1,8 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
@@ -10,7 +8,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     {
         private readonly PlayerCompositionRoot _playerCompositionRoot;
         private readonly GroundChecker _groundChecker;
-        private readonly MovementStateConfig _movementStateConfig;
 
         public FallingState(
             IStateSwitcher stateSwitcher,
@@ -22,7 +19,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             _playerCompositionRoot = playerCompositionRoot;
             _groundChecker = playerCompositionRoot.GroundChecker;
-            _movementStateConfig = playerCompositionRoot.PlayerConfig.MovementStateConfig;
         }
 
         public override void Enter()
@@ -45,42 +41,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Update();
             
-            //  ЭТОТ МЕТОД ИСПОЛЬЗУЕТСЯ ДЛЯ ОТМЕНЫ ПРЕРЫВАНИЯ ПРЕЗЕМЛЕНИЯ
-            if (InAnimationTransition())
-            {
-                return;
-            }
-            
             if (_groundChecker.isTouches)
             {
-                #region ВАРИАНТ БЕЗ ПРИЗЕМЛЕНИЯ
-                // _movementStateConfig.YVelocity.y = _movementStateConfig.GroundedGravityForce;   //  "ПРИЛИПАНИЕ" К ЗЕМЛЕ
-                // if (Data.MovementInput == Vector2.zero)
-                // {
-                //     StateSwitcher.SwitchState<IdlingState>();
-                //     return;
-                // }
-                // OnMove();
-                #endregion
-                StateSwitcher.SwitchState<LandingState>();
+                if (InAnimationTransition())
+                {
+                    return;
+                }
+                
+                StateSwitcher.SwitchState<LightLandingState>();
             }
-        }
-
-        public void OnMove()
-        {
-            if (_movementStateConfig.ShouldSprint)
-            {
-                StateSwitcher.SwitchState<SprintingState>();
-                return;
-            }
-            
-            if (_movementStateConfig.ShouldWalk)
-            {
-                StateSwitcher.SwitchState<WalkingState>();
-                return;
-            }
-            
-            StateSwitcher.SwitchState<RunningState>();
         }
         
         protected override void ResetPerformingAction()

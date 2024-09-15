@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs
 {

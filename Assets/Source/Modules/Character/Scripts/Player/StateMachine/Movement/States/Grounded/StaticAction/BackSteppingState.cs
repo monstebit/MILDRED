@@ -8,6 +8,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     {
         private PlayerCompositionRoot _playerCompositionRoot;
         private PlayerConfig _playerConfig;
+        private float _startTime;
         
         public BackSteppingState(
             IStateSwitcher stateSwitcher,
@@ -31,9 +32,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            _playerConfig.BackSteppingStateConfig.Timer = 0f;
-            
             PlayerView.StartBackStepping();
+            
+            _startTime = Time.time;
+            _playerConfig.BackSteppingStateConfig.Timer = 0f;
             
             Keyframe lastFrame = _playerConfig.BackSteppingStateConfig.BackStepCurve[_playerConfig.BackSteppingStateConfig.BackStepCurve.length - 1];
             _playerConfig.BackSteppingStateConfig.BackStepTimer = lastFrame.time;
@@ -51,7 +53,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
-
+            
             // Обновляем таймер для backstep
             _playerConfig.BackSteppingStateConfig.Timer += Time.deltaTime;
 
@@ -70,6 +72,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
 
+            if (Time.time < _startTime + _playerConfig.BackSteppingStateConfig.BackStepToMoveTime)
+            {
+                return;
+            }
+            
             OnMove();
         }
         #endregion

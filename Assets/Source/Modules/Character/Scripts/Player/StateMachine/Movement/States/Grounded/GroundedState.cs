@@ -35,7 +35,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         private void UpdateShouldSprintState()
         {
-            if (!_playerConfig.MovementStateConfig.ShouldSprint)
+            if (_playerConfig.MovementStateConfig.ShouldSprint == false)
             {
                 return;
             }
@@ -65,6 +65,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
                 {
                     return; 
+                }
+                
+                if (InAnimationTransition())
+                {
+                    return;
                 }
                 
                 StateSwitcher.SwitchState<FallingState>();

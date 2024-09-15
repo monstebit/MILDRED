@@ -26,63 +26,48 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
             
+            _playerConfig.DodgeStateConfig.Timer = 0f;
+            
             PlayerView.StartDodging();
             
             Keyframe LastFrame = _playerConfig.DodgeStateConfig.DodgeCurve[_playerConfig.DodgeStateConfig.DodgeCurve.length - 1];
             _playerConfig.DodgeStateConfig.DodgeTimer = LastFrame.time;
-            _playerConfig.DodgeStateConfig.LastDodgeDirection = PlayerView.transform.forward;
-            _playerConfig.DodgeStateConfig.LastDodgeDirection.y = 0;
-            _playerConfig.DodgeStateConfig.LastDodgeDirection.Normalize();
         }
-
-        public override void Update()
-        {
-            base.Update();
-            
-            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
-            {
-                _playerConfig.DodgeStateConfig.Timer += Time.deltaTime;
-
-                if (_playerConfig.DodgeStateConfig.Timer < _playerConfig.DodgeStateConfig.DodgeTimer)
-                {
-                    float speed = 
-                        _playerConfig.DodgeStateConfig.DodgeCurve.Evaluate(_playerConfig.DodgeStateConfig.Timer);
-                    
-                    _playerCompositionRoot.CharacterController.Move(
-                        _playerConfig.DodgeStateConfig.LastDodgeDirection * speed * Time.deltaTime);
-                }
-                else
-                {
-                    Exit();
-                }
-            }
-                
-            if (_playerConfig.MovementStateConfig.IsPerformingStaticAction == false)
-            {
-                //  ON TESTING
-                if (_playerCompositionRoot.GroundChecker.isTouches == false)
-                {
-                    StateSwitcher.SwitchState<FallingState>();
-                    return;
-                }
-                
-                if (Data.MovementInput == Vector2.zero)
-                {
-                    StateSwitcher.SwitchState<IdlingState>();
-                    return;
-                }
-
-                OnMove();
-            }
-        }
-
+        
         public override void Exit()
         {
             base.Exit();
             
             PlayerView.StopDodging();
+        }
+        
+        public override void Update()
+        {
+            base.Update();
+
+            _playerConfig.DodgeStateConfig.Timer += Time.deltaTime;
+
+            if (_playerConfig.DodgeStateConfig.Timer < _playerConfig.DodgeStateConfig.DodgeTimer)
+            {
+                float speed = _playerConfig.DodgeStateConfig.DodgeCurve.Evaluate(_playerConfig.DodgeStateConfig.Timer);
+                _playerCompositionRoot.CharacterController.Move(PlayerView.transform.forward * speed * Time.deltaTime);
+                return;
+            }
             
-            _playerConfig.DodgeStateConfig.Timer = 0f;
+            if (Data.MovementInput == Vector2.zero)
+            {
+                StateSwitcher.SwitchState<IdlingState>();
+                return;
+            }
+
+            OnMove();
+        }
+        #endregion
+        
+        #region OnAmimationEvent Methods
+        private bool InAnimationTransition(int layerIndex = 0)
+        {
+            return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
         #endregion
     }
