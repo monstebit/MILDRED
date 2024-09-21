@@ -11456,9 +11456,33 @@ MonoBehaviour:
     m_InternalValue: 0
   CameraVerticalMovement:
     m_InternalValue: 0
+  IsGrounded:
+    m_InternalValue: 0
+  IsMoving:
+    m_InternalValue: 0
+  IsStaticAction:
+    m_InternalValue: 0
+  IsAirborne:
+    m_InternalValue: 0
+  IsLanding:
+    m_InternalValue: 0
+  IsIdling:
+    m_InternalValue: 0
+  IsWalking:
+    m_InternalValue: 0
+  IsRunning:
+    m_InternalValue: 0
   IsSprinting:
     m_InternalValue: 0
+  IsDodging:
+    m_InternalValue: 0
+  IsBackStepping:
+    m_InternalValue: 0
+  IsLightLanding:
+    m_InternalValue: 0
   IsJumping:
+    m_InternalValue: 0
+  IsFalling:
     m_InternalValue: 0
 --- !u!1 &1490208136286268023
 GameObject:
@@ -46415,7 +46439,7 @@ MonoBehaviour:
   _ground:
     serializedVersion: 2
     m_Bits: 65
-  _distanceToCheck: 0.3
+  _distanceToCheck: 0.2
 --- !u!1 &5988831986494965426
 GameObject:
   m_ObjectHideFlags: 0
