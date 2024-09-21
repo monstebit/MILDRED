@@ -23,8 +23,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 
         public override void Enter()
         {
-            // _playerCompositionRoot.PlayerView.StartActionAnimation("core_main_jump_01_lift");
-            
             base.Enter();
 
             Data.MovementSpeedModifier = 1; //  ON TESTING
@@ -54,16 +52,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             }
         }
         
-        protected override void ResetPerformingAction()
-        {
-            base.ResetPerformingAction();
-        }
-        
-        #region OnAmimationEvent Methods
         private bool InAnimationTransition(int layerIndex = 0)
         {
             return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
-        #endregion
     }
 }

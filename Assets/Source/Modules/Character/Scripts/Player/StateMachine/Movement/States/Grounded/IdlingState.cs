@@ -49,7 +49,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         private void ResetShouldWalk()
         {
-            _playerConfig.MovementStateConfig.ShouldWalk = false;
+            PlayerConfig.MovementStateConfig.ShouldWalk = false;
         }
     }
 }

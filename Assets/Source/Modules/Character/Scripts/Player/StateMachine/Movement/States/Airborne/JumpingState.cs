@@ -24,11 +24,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _jumpingStateConfig = _playerConfig.AirborneStateConfig.JumpingStateConfig;
         }
 
-        #region IState METHODS
         public override void Enter()
         {
-            // _playerCompositionRoot.PlayerView.StartActionAnimation("core_main_jump_slow_01_start");
-            
             base.Enter();
             
             PlayerView.StartJumping();
@@ -40,6 +37,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _jumpingStateConfig.JumpTimer = LastFrame.time;
         }
 
+        public override void Exit()
+        {
+            base.Exit();
+            
+            PlayerView.StopJumping();
+            
+            _jumpingStateConfig.Timer = 0;
+            _jumpingStateConfig.IsJumping = false;
+        }
+        
         public override void Update()
         {
             base.Update();
@@ -65,17 +72,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             }
         }
         
-        public override void Exit()
-        {
-            base.Exit();
-            
-            PlayerView.StopJumping();
-            
-            _jumpingStateConfig.Timer = 0;
-            _jumpingStateConfig.IsJumping = false;
-        }
-        #endregion
-        
         private float GetSpeedModifier()
         {
             float speedModifier = 0.75f;
@@ -96,11 +92,5 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 
             return speedModifier;
         }
-        
-        // private void ApplyJumpForce()
-        // {
-        //     _playerConfig.MovementStateConfig.YVelocity.y = 
-        //         Mathf.Sqrt(_jumpingStateConfig.JumpForce * -2f * _playerConfig.AirborneStateConfig.Gravity);
-        // }
     }
 }

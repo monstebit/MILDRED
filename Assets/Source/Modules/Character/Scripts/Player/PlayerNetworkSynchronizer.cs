@@ -88,28 +88,5 @@ namespace Source.Modules.Character.Scripts.Player
                 Debug.LogError("PlayerCompositionRoot is null");
             }
         }
-        
-        [ServerRpc]
-        public void NotifyTheServerOfActionAnimationServerRpc(ulong clientID, string animationID)
-        {
-            if (IsServer)
-            {
-                PlayActionAnimationForAllClientsClientRpc(clientID, animationID);
-            }
-        }
-        
-        [ClientRpc]
-        private void PlayActionAnimationForAllClientsClientRpc(ulong clientID, string animationID)
-        {
-            if (clientID != NetworkManager.Singleton.LocalClientId)
-            {
-                PerformActionAnimationFromServer(animationID);
-            }
-        }
-
-        private void PerformActionAnimationFromServer(string animationID)
-        {
-            _playerCompositionRoot.PlayerView.Animator.CrossFade(animationID, 0.2f);
-        }
     }
 }

@@ -8,10 +8,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public abstract class GroundedState : MovementState
     {
-        private PlayerCompositionRoot _playerCompositionRoot;
-        private PlayerConfig _playerConfig;
-        
-        public GroundedState(
+        private readonly PlayerCompositionRoot _playerCompositionRoot;
+        private readonly PlayerConfig _playerConfig;
+
+        protected GroundedState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
@@ -23,13 +23,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             _playerConfig = playerCompositionRoot.PlayerConfig;
         }
         
-        #region IState METHODS
         public override void Enter()
         {
             base.Enter();
 
             PlayerView.StartGrounded();
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.Value = true;
             
             UpdateShouldSprintState();
         }
@@ -54,7 +52,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Exit();
             
             PlayerView.StopGrounded();
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.Value = false;
         }
 
         public override void Update()
@@ -63,7 +60,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             if (_playerCompositionRoot.GroundChecker.isTouches == false)
             {
-                //  ЗАПРЕЩАЕМ ОТМЕНЯТЬ ПЕРЕКАТ ИЛИ БЭКСТЕП ВО ВРЕМЯ ПАДЕНИЯ
+                //  DO NOT GO OUT OF ACTION WHEN YOU FALL
                 if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
                 {
                     return; 
@@ -77,7 +74,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 StateSwitcher.SwitchState<FallingState>();
             }
         }
-        #endregion
         
         protected virtual void OnMove()
         {
@@ -96,7 +92,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             StateSwitcher.SwitchState<RunningState>();
         }
         
-        #region REUSABLE METHODS
         protected override void AddInputActionsCallbacks()
         {
             base.AddInputActionsCallbacks();
@@ -110,7 +105,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerControls.Player.Jump.performed -= OnJumpStarted;
         }
-        #endregion
         
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
         {

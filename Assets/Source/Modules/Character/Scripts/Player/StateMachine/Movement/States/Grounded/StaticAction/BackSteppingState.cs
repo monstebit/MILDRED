@@ -67,15 +67,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
+            if (Time.time < _startTime + _playerConfig.BackSteppingStateConfig.BackStepToMoveTime)
+            {
+                return;
+            }
+            
             // Проверка на ввод движения перед выходом из состояния
             if (Data.MovementInput == Vector2.zero)
             {
                 StateSwitcher.SwitchState<IdlingState>();
-                return;
-            }
-
-            if (Time.time < _startTime + _playerConfig.BackSteppingStateConfig.BackStepToMoveTime)
-            {
                 return;
             }
             

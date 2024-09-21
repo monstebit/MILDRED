@@ -29,7 +29,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         [SerializeField] public bool ShouldWalk;
         [SerializeField] public bool ShouldSprint;
         [SerializeField] public bool IsPerformingStaticAction;
-        [SerializeField] public bool IsAirborning ;
+        // [SerializeField] public bool IsAirborning ;
         
         [Header("CAMERA")]
         [SerializeField, Range(0.1f, 10f)] private float _sensitivity = 1.5f;

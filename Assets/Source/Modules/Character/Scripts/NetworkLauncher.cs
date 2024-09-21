@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
@@ -9,8 +8,8 @@ namespace Source.Modules.Character.Scripts
     public class NetworkLauncher : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI logsText;
-        [SerializeField] private float fadeDuration; // Длительность анимации скрытия и показа
-        [SerializeField] private float delayDuration; // Задержка перед показом следующего лога
+        [SerializeField] private float fadeDuration;
+        [SerializeField] private float delayDuration;
 
         private Queue<string> logQueue = new Queue<string>();
         private Coroutine logUpdateCoroutine;

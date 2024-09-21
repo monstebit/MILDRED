@@ -7,9 +7,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     public abstract class AirborneState : MovementState
     {
         private readonly PlayerCompositionRoot _playerCompositionRoot;
-        private PlayerConfig _playerConfig;
+        private readonly PlayerConfig _playerConfig;
         
-        public AirborneState(
+        protected AirborneState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
@@ -28,7 +28,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             PlayerView.StartAirborne();
             
             ResetPerformingAction();
-            _playerConfig.MovementStateConfig.IsAirborning = true;
         }
 
         public override void Exit()
@@ -37,9 +36,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             PlayerView.StopAirborne();
             
-            _playerConfig.MovementStateConfig.IsAirborning = false;
-            
-            //  ON TESTING
             _playerConfig.AirborneStateConfig.InAirTime = 0f;
         }
 
@@ -56,36 +52,36 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _playerConfig.MovementStateConfig.YVelocity.y += _playerConfig.AirborneStateConfig.Gravity * Time.deltaTime;
         }
         
-        protected virtual void ResetSprintState()
+        private void ResetPerformingAction()
         {
-            _playerConfig.MovementStateConfig.ShouldSprint = false;
+            // _playerConfig.MovementStateConfig.IsPerformingStaticAction = false;
         }
         
-        protected virtual void ResetPerformingAction()
-        {
-            _playerConfig.MovementStateConfig.IsPerformingStaticAction = false;
-        }
-        
-        public void AirborneMove()  //  ГОРИЗОНТАЛЬНОЕ ДВИЖЕНИЕ В ВОЗДУХЕ
+        private void AirborneMove()  //  HORIZONTAL MOVEMENT IN AIR
         {
             _playerConfig.MovementStateConfig._movementDirection = GetMovementInputDirection();
             
             _playerCompositionRoot.CharacterController.Move(
-                _playerConfig.MovementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
+                _playerConfig.MovementStateConfig._movementDirection * (Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime));
         }
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
         }
 
-        protected override void AddInputActionsCallbacks()
+        protected override void OnSprintCanceled(InputAction.CallbackContext context)
         {
-            base.AddInputActionsCallbacks();
-        }
-        
-        protected override void RemoveInputActionsCallbacks()
-        {
-            base.RemoveInputActionsCallbacks();
+            if (PlayerConfig.MovementStateConfig._isButtonHeld == false)
+            {
+                return;
+            }
+
+            PlayerConfig.MovementStateConfig._isButtonHeld = false;
+
+            if (PlayerConfig.MovementStateConfig.ShouldSprint)
+            {
+                PlayerConfig.MovementStateConfig.ShouldSprint = false;
+            }
         }
     }
 }

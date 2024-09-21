@@ -89,7 +89,6 @@ namespace Source.Modules.Character.Scripts.Player
 
         private void OnDisable() => _playerControls.Disable();
         
-        #region OnMovementStateAnimatio
         public void OnMovementStateAnimationEnterEvent()
         {
             _playerStateMachine.OnAnimationEnterEvent();
@@ -104,7 +103,6 @@ namespace Source.Modules.Character.Scripts.Player
         {
             _playerStateMachine.OnAnimationTransitionEvent();
         }
-        #endregion
         
         #region DisableActionFor
         public void DisableActionFor(InputAction action, float seconds)

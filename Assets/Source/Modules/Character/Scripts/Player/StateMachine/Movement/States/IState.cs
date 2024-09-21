@@ -9,6 +9,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         void LateUpdate();
         void OnAnimationEnterEvent();
         void OnAnimationExitEvent();
-        void OnAnimationTransitionEvent();  //  ПЕРЕХОД МЕЖДУ АНИМАЦИЯМИ
+        void OnAnimationTransitionEvent();
     }
 }

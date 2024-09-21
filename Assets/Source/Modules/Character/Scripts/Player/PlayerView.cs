@@ -35,6 +35,14 @@ namespace Source.Modules.Character.Scripts.Player
         
         public void Initialize() => Animator = GetComponent<Animator>();
 
+        private void Awake()
+        {
+            if (_playerCompositionRoot == null)
+            {
+                Debug.LogError("PlayerView: No player composition root");
+            }
+        }
+        
         private void OnEnable()
         {
             _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.OnValueChanged += OnIsGroundedChanged;
@@ -71,19 +79,16 @@ namespace Source.Modules.Character.Scripts.Player
             _playerCompositionRoot.PlayerNetworkSynchronizer.IsFalling.OnValueChanged -= OnIsFallingChanged;
         }
 
-        private void Awake()
-        {
-            if (_playerCompositionRoot == null)
-            {
-                Debug.LogError("PlayerView: No player composition root");
-            }
-        }
-
         public void StartGrounded()
         {
+            // Animator.SetBool(IsGrounded, true);
             if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.Value = true;
+            }
+            else
+            {
+                Animator.SetBool(IsGrounded, true); // ENABLE PLAYER START STATE
             }
         }
         public void StopGrounded()
@@ -242,7 +247,7 @@ namespace Source.Modules.Character.Scripts.Player
             if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsBackStepping.Value = true;
-            } ;
+            }
         }
         public void StopBackStepping()
         {
