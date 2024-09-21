@@ -11450,9 +11450,15 @@ MonoBehaviour:
     m_InternalValue: 0
   VerticalMovement:
     m_InternalValue: 0
+  MoveAmount:
+    m_InternalValue: 0
   CameraHorizontalMovement:
     m_InternalValue: 0
   CameraVerticalMovement:
+    m_InternalValue: 0
+  IsSprinting:
+    m_InternalValue: 0
+  IsJumping:
     m_InternalValue: 0
 --- !u!1 &1490208136286268023
 GameObject:
@@ -18446,7 +18452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerCompositionRoot: {fileID: 1299038019869553046}
-  Animator: {fileID: 0}
+  Animator: {fileID: 1555457626910836205}
 --- !u!114 &8235258558802954092
 MonoBehaviour:
   m_ObjectHideFlags: 0

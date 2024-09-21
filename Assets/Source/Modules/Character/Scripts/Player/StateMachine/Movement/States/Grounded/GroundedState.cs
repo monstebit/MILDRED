@@ -29,6 +29,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Enter();
 
             PlayerView.StartGrounded();
+            // _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.Value = true;
             
             UpdateShouldSprintState();
         }
@@ -53,6 +54,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Exit();
             
             PlayerView.StopGrounded();
+            // _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.Value = false;
         }
 
         public override void Update()

@@ -42,7 +42,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
 
         public void SwitchState<State>() where State : IState
         {
-            if (!IsOwner()) return;
+            if (IsOwner() == false)
+            {
+                return;
+            }
             
             IState state = _states.FirstOrDefault(state => state is State);
             _currentState.Exit();

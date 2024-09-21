@@ -1,5 +1,3 @@
-using System;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player
@@ -13,7 +11,6 @@ namespace Source.Modules.Character.Scripts.Player
         private const string IsGrounded = "IsGrounded";
         private const string IsMoving = "IsMoving";
         private const string IsStaticAction = "IsStaticAction";
-        //  IsStopping
         private const string IsLanding = "IsLanding";
         private const string IsAirborne = "IsAirborne";
         
@@ -35,6 +32,44 @@ namespace Source.Modules.Character.Scripts.Player
         private const string IsFalling = "IsFalling";
         
         public Animator Animator;
+        
+        public void Initialize() => Animator = GetComponent<Animator>();
+
+        private void OnEnable()
+        {
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.OnValueChanged += OnIsGroundedChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsMoving.OnValueChanged += OnIsMovingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsStaticAction.OnValueChanged += OnIsStaticActionChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsLanding.OnValueChanged += OnIsLandingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsAirborne.OnValueChanged += OnIsAirborneChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsIdling.OnValueChanged += OnIsIdlingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsWalking.OnValueChanged += OnIsWalkingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsRunning.OnValueChanged += OnIsRunningChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.OnValueChanged += OnIsSprintingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsDodging.OnValueChanged += OnIsDodgingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsBackStepping.OnValueChanged += OnIsBackSteppingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsLightLanding.OnValueChanged += OnIsLightLandingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsJumping.OnValueChanged += OnIsJumpingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsFalling.OnValueChanged += OnIsFallingChanged;
+        }
+
+        private void OnDisable()
+        {
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.OnValueChanged -= OnIsGroundedChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsMoving.OnValueChanged -= OnIsMovingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsStaticAction.OnValueChanged -= OnIsStaticActionChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsLanding.OnValueChanged -= OnIsLandingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsAirborne.OnValueChanged -= OnIsAirborneChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsIdling.OnValueChanged -= OnIsIdlingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsWalking.OnValueChanged -= OnIsWalkingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsRunning.OnValueChanged -= OnIsRunningChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.OnValueChanged -= OnIsSprintingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsDodging.OnValueChanged -= OnIsDodgingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsBackStepping.OnValueChanged -= OnIsBackSteppingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsLightLanding.OnValueChanged -= OnIsLightLandingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsJumping.OnValueChanged -= OnIsJumpingChanged;
+            _playerCompositionRoot.PlayerNetworkSynchronizer.IsFalling.OnValueChanged -= OnIsFallingChanged;
+        }
 
         private void Awake()
         {
@@ -44,103 +79,294 @@ namespace Source.Modules.Character.Scripts.Player
             }
         }
 
-        public void Initialize() => Animator = GetComponent<Animator>();
+        public void StartGrounded()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.Value = true;
+            }
+        }
+        public void StopGrounded()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.Value = false;
+            }
+        }
+
+        public void StartMoving()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsMoving.Value = true;
+            }
+        }
+
+        public void StopMoving()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsMoving.Value = false;
+            }
+        }
         
-        public void StartGrounded() => Animator.SetBool(IsGrounded, true);
-        public void StopGrounded() => Animator.SetBool(IsGrounded, false);
-        
-        public void StartMoving() => Animator.SetBool(IsMoving, true);
-        public void StopMoving() => Animator.SetBool(IsMoving, false);
-        
-        public void StartStaticAction() => Animator.SetBool(IsStaticAction, true);
-        public void StopStaticAction() => Animator.SetBool(IsStaticAction, false);
-        
-        public void StartLanding() => Animator.SetBool(IsLanding, true);
-        public void StopLanding() => Animator.SetBool(IsLanding, false);
-        
-        public void StartAirborne() => Animator.SetBool(IsAirborne, true);
-        public void StopAirborne() => Animator.SetBool(IsAirborne, false);
+        public void StartStaticAction()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsStaticAction.Value = true;
+            }
+        }
+        public void StopStaticAction()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsStaticAction.Value = false;
+            }
+        }
+
+        public void StartLanding()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsLanding.Value = true;
+            }
+        }
+
+        public void StopLanding()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsLanding.Value = false;
+            }
+        }
+
+        public void StartAirborne()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsAirborne.Value = true;
+            }
+        }
+
+        public void StopAirborne()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsAirborne.Value = false;
+            }
+        }
 
         public void StartIdling()
         {
-            Animator.SetBool(IsIdling, true);
-            
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "unarmed_main_idle_01");
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsIdling.Value = true;
+            }
         }
-        public void StopIdling() => Animator.SetBool(IsIdling, false);
+
+        public void StopIdling()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsIdling.Value = false;
+            }
+        }
 
         public void StartWalking()
         {
-            Animator.SetBool(IsWalking, true);
-            
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-                // NetworkManager.Singleton.LocalClientId, "core_oh_walk_F_01");
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsWalking.Value = true;
+            }
         }
-        public void StopWalking() => Animator.SetBool(IsWalking, false);
+
+        public void StopWalking()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsWalking.Value = false;
+            }
+        }
 
         public void StartRunning()
         {
-            Animator.SetBool(IsRunning, true);
-            
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "core_oh_run_F_01");
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsRunning.Value = true;
+            }
         }
-        public void StopRunning() => Animator.SetBool(IsRunning, false);
+
+        public void StopRunning()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsRunning.Value = false;
+            }
+        }
 
         public void StartSprinting()
         {
-            Animator.SetBool(IsSprinting, true);
-            
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "core_oh_sprint_F_01");
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.Value = true;
+            }
         }
-        public void StopSprinting() => Animator.SetBool(IsSprinting, false);
+
+        public void StopSprinting()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.Value = false;
+            }
+        }
 
         public void StartDodging()
         {
-            Animator.SetBool(IsDodging, true);
-            
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "core_main_roll_to_idle_F_01");
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsDodging.Value = true;
+            }
         }
-        public void StopDodging() => Animator.SetBool(IsDodging, false);
+
+        public void StopDodging()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsDodging.Value = false;
+            }
+        }
 
         public void StartBackStepping()
         {
-            Animator.SetBool(IsBackStepping, true);
-            
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "core_main_back_step_medium_01");
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsBackStepping.Value = true;
+            } ;
         }
-        public void StopBackStepping() => Animator.SetBool(IsBackStepping, false);
+        public void StopBackStepping()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsBackStepping.Value = false;
+            }
+        }
 
         public void StartLightLanding()
         {
-            Animator.SetBool(IsLightLanding, true);
-            
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "core_main_jump_01_end");
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsLightLanding.Value = true;
+            }
         }
-        public void StopLightLanding() => Animator.SetBool(IsLightLanding, false);
+
+        public void StopLightLanding()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsLightLanding.Value = false;
+            }
+        }
         
         public void StartJumping()
         {
-            Animator.SetBool(IsJumping, true);
-
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "core_main_jump_slow_01_start");
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsJumping.Value = true;
+            }
         }
-        
-        public void StopJumping() => Animator.SetBool(IsJumping, false);
+
+        public void StopJumping()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsJumping.Value = false;
+            }
+        }
         
         public void StartFalling()
         {
-            Animator.SetBool(IsFalling, true);
-
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "core_main_jump_01_lift");
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsFalling.Value = true;
+            }
         }
-        public void StopFalling() => Animator.SetBool(IsFalling, false);
+
+        public void StopFalling()
+        {
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.IsFalling.Value = false;
+            }
+        }
+        
+        private void OnIsGroundedChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsGrounded, newValue);
+        }
+        private void OnIsMovingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsMoving, newValue);
+        }
+
+        private void OnIsStaticActionChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsStaticAction, newValue);
+        }
+
+        private void OnIsLandingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsLanding, newValue);
+        }
+
+        private void OnIsAirborneChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsAirborne, newValue);
+        }
+
+        private void OnIsIdlingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsIdling, newValue);
+        }
+
+        private void OnIsWalkingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsWalking, newValue);
+        }
+
+        private void OnIsRunningChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsRunning, newValue);
+        }
+
+        private void OnIsSprintingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsSprinting, newValue);
+        }
+
+        private void OnIsDodgingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsDodging, newValue);
+        }
+
+        private void OnIsBackSteppingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsBackStepping, newValue);
+        }
+
+        private void OnIsLightLandingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsLightLanding, newValue);
+        }
+
+        private void OnIsJumpingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsJumping, newValue);
+        }
+
+        private void OnIsFallingChanged(bool previousValue, bool newValue)
+        {
+            Animator.SetBool(IsFalling, newValue);
+        }
     }
 }

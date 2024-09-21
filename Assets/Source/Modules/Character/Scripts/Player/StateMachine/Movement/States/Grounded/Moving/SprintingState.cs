@@ -5,6 +5,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class SprintingState : MovingState
     {
+        private readonly PlayerCompositionRoot _playerCompositionRoot;
         private PlayerConfig _playerConfig;
 
         public SprintingState(
@@ -15,6 +16,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCompositionRoot,
             data)
         {
+            _playerCompositionRoot = playerCompositionRoot;
             _playerConfig = playerCompositionRoot.PlayerConfig;
         }
 
@@ -27,6 +29,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Enter();
 
             PlayerView.StartSprinting();
+            
+            // _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.Value = true;
         }
 
         public override void Exit()
@@ -34,6 +38,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Exit();
 
             PlayerView.StopSprinting();
+            
+            // _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.Value = false;
         }
 
         public override void Update()

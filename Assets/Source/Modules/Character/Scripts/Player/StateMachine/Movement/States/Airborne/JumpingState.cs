@@ -8,6 +8,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     {
         private PlayerConfig _playerConfig;
         private JumpingStateConfig _jumpingStateConfig;
+        private PlayerCompositionRoot _playerCompositionRoot;
         private Vector3 jumpDirection;
 
         public JumpingState(
@@ -18,6 +19,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             playerCompositionRoot,
             data)
         {
+            _playerCompositionRoot = playerCompositionRoot;
             _playerConfig = playerCompositionRoot.PlayerConfig;
             _jumpingStateConfig = _playerConfig.AirborneStateConfig.JumpingStateConfig;
         }
@@ -25,6 +27,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         #region IState METHODS
         public override void Enter()
         {
+            // _playerCompositionRoot.PlayerView.StartActionAnimation("core_main_jump_slow_01_start");
+            
             base.Enter();
             
             PlayerView.StartJumping();
@@ -58,8 +62,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             else
             {
                 Exit();
-                // _jumpingStateConfig.Timer = 0;
-                // _jumpingStateConfig.IsJumping = false;
             }
         }
         

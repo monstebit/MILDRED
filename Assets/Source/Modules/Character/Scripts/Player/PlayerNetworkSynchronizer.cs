@@ -48,10 +48,37 @@ namespace Source.Modules.Character.Scripts.Player
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Flags")]
+        public NetworkVariable<bool> IsGrounded = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsMoving = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsStaticAction = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsAirborne = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsLanding = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
+        public NetworkVariable<bool> IsIdling = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsWalking = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); 
+        public NetworkVariable<bool> IsRunning = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); 
         public NetworkVariable<bool> IsSprinting = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); 
+        
+        public NetworkVariable<bool> IsDodging = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsBackStepping = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
+        public NetworkVariable<bool> IsLightLanding = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
         public NetworkVariable<bool> IsJumping = 
+            new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> IsFalling = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
         private void Awake()
@@ -70,9 +97,9 @@ namespace Source.Modules.Character.Scripts.Player
                 PlayActionAnimationForAllClientsClientRpc(clientID, animationID);
             }
         }
-
+        
         [ClientRpc]
-        public void PlayActionAnimationForAllClientsClientRpc(ulong clientID, string animationID)
+        private void PlayActionAnimationForAllClientsClientRpc(ulong clientID, string animationID)
         {
             if (clientID != NetworkManager.Singleton.LocalClientId)
             {

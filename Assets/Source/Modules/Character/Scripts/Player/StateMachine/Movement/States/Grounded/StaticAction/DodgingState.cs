@@ -24,6 +24,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         #region IState METHODS
         public override void Enter()
         {
+            // _playerCompositionRoot.PlayerView.StartActionAnimation("core_main_roll_to_idle_F_01");
+            
             base.Enter();
             
             _playerConfig.DodgeStateConfig.Timer = 0f;
@@ -44,7 +46,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
-
+            
             _playerConfig.DodgeStateConfig.Timer += Time.deltaTime;
 
             if (_playerConfig.DodgeStateConfig.Timer < _playerConfig.DodgeStateConfig.DodgeTimer)

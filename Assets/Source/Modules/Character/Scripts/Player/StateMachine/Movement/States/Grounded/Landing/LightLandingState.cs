@@ -21,6 +21,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
         public override void Enter()
         {
+            // _playerCompositionRoot.PlayerView.StartActionAnimation("core_main_jump_01_end");
+            
             base.Enter();
 
             Data.MovementSpeedModifier = 0f;

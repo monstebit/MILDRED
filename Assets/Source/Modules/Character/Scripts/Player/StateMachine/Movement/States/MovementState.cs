@@ -33,7 +33,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         #region IState METHODS
         public virtual void Enter()
         {
-            Debug.Log($"State: {GetType().Name}");
+            // Debug.Log($"State: {GetType().Name}");
             // Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
             
             AddInputActionsCallbacks();
@@ -72,13 +72,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         #endregion
         
         #region INPUT METHODS
-        //  TODO: ПЕРЕНЕСТИ В ОТДЕЛЬНЫЙ КЛАСС PlayerInputHandler
         public virtual void HandleAllInputs()
         {
-            HandleMovementInput();
-            UpdateAnimatorMovementParameters(0, Data.MoveAmount);   //  LOCOMOTION MOVEMENT WITHOUT TARGET
-            // UpdateAnimatorMovementParameters(0, _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value);
-            HandleCameraInput();
+            // if (_playerCompositionRoot.IsOwner)
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            {
+                HandleMovementInput();
+                HandleCameraInput();
+                
+                UpdateAnimatorMovementParameters(0, Data.MoveAmount);   //  LOCOMOTION MOVEMENT WITHOUT TARGET
+            }
+            // Используем синхронизированные данные для анимаций
+            else
+            {
+                UpdateAnimatorMovementParameters(0, _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value);
+            }
         }
         
         protected virtual void HandleMovementInput()
@@ -92,7 +100,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
             Data.MoveAmount = Mathf.Clamp01(
                 Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
-            _playerConfig.MovementStateConfig.MoveAmount = Data.MoveAmount;  //  TEST MONITORING
             
             if (Data.MoveAmount <= 0.5 && Data.MoveAmount > 0)
             {
@@ -107,7 +114,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 _playerConfig.MovementStateConfig.ShouldWalk = false;
             }
             
-            if (_playerCompositionRoot.IsOwner)
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            // if (_playerCompositionRoot.IsOwner)
             {
                 // Обновляем значения в сетевом синхронизаторе для передачи другим игрокам
                 _playerCompositionRoot.PlayerNetworkSynchronizer.VerticalMovement.Value = Data.VerticalInput;
@@ -120,9 +128,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 Data.VerticalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.VerticalMovement.Value;
                 Data.HorizontalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.HorizontalMovement.Value;
                 Data.MoveAmount = _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value;
-                
-                // UpdateAnimatorMovementParameters(0, _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value);
-                // UpdateAnimatorMovementParameters(0, Data.MoveAmount);
             }
         }
 
@@ -130,19 +135,25 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         {
             int vertical = Animator.StringToHash("Vertical");
             int horizontal = Animator.StringToHash("Horizontal");
-            
-            float horizontalAmount = horizontalMovementData;
-            float verticalAmount = verticalMovementData;
 
             if (_playerConfig.MovementStateConfig.ShouldSprint && Data.MovementInput != Vector2.zero)
             {
-                verticalAmount = 2;
+                if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+                // if (_playerCompositionRoot.IsOwner)
+                {
+                    verticalMovementData = 2;
+                    _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = verticalMovementData;
+                }
+                else
+                {
+                    Data.MoveAmount = verticalMovementData;
+                }
             }
-
+            
             PlayerView.Animator.SetFloat(horizontal, horizontalMovementData, 0.1f, Time.deltaTime);
-            PlayerView.Animator.SetFloat(vertical, verticalAmount, 0.1f, Time.deltaTime);
+            PlayerView.Animator.SetFloat(vertical, verticalMovementData, 0.1f, Time.deltaTime);
         }
-
+        
         protected virtual void HandleCameraInput()
         {
             // Если персонаж принадлежит игроку, ввод считывается локально
@@ -150,8 +161,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
             Data.CameraVerticalInput = Data.CameraInput.y;
             Data.CameraHorizontalInput = Data.CameraInput.x;
-                        
-            if (_playerCompositionRoot.IsOwner)
+                       
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            // if (_playerCompositionRoot.IsOwner)
             {
                 // Обновляем значения в сетевом синхронизаторе для передачи другим игрокам
                 _playerCompositionRoot.PlayerNetworkSynchronizer.CameraVerticalMovement.Value = Data.CameraVerticalInput;
