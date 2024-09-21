@@ -1,6 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction
 {
@@ -66,11 +67,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         }
         #endregion
         
-        #region OnAmimationEvent Methods
         private bool InAnimationTransition(int layerIndex = 0)
         {
             return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
-        #endregion
     }
 }

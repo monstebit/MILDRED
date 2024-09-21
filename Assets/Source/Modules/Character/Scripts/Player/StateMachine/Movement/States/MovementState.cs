@@ -222,9 +222,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             OnDodgeStarted(context);
         }
         
-        private void OnDodgeStarted(InputAction.CallbackContext context)
+        protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
         {
-            if (Data.MovementInput == Vector2.zero || PlayerConfig.MovementStateConfig.IsPerformingStaticAction)
+            if (Data.MovementInput == Vector2.zero)
             {
                 OnBackStepped(context);
                 return;
@@ -233,13 +233,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             StateSwitcher.SwitchState<DodgingState>();
         }
         
-        private void OnBackStepped(InputAction.CallbackContext context)
+        protected virtual void OnBackStepped(InputAction.CallbackContext context)
         {
-            if (PlayerConfig.MovementStateConfig.IsPerformingStaticAction)
-            {
-                return;
-            }
-    
             if (Data.MovementInput != Vector2.zero && Data.MovementSpeedModifier != 0)
             {
                 return;
@@ -294,7 +289,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             PlayerConfig.MovementStateConfig._movementDirection = GetMovementInputDirection();
             
             _playerCompositionRoot.CharacterController.Move(
-                // PlayerConfig.MovementStateConfig._movementDirection * Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime);
                 PlayerConfig.MovementStateConfig._movementDirection * (Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime));
         }
         

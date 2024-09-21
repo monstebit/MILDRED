@@ -28,7 +28,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         [Header("MOVEMENT FLAGS")]
         [SerializeField] public bool ShouldWalk;
         [SerializeField] public bool ShouldSprint;
-        [SerializeField] public bool IsPerformingStaticAction;
+        // [SerializeField] public bool IsPerformingStaticAction;
         // [SerializeField] public bool IsAirborning ;
         
         [Header("CAMERA")]

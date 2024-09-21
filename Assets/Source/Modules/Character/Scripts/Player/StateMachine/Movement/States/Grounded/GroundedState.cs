@@ -57,20 +57,22 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
-            
+
+            CheckGroundAndSwitchToFalling();
+        }
+        
+        protected virtual void CheckGroundAndSwitchToFalling()
+        {
+            // Проверка, касаемся ли земли
             if (_playerCompositionRoot.GroundChecker.isTouches == false)
             {
-                //  DO NOT GO OUT OF ACTION WHEN YOU FALL
-                if (_playerConfig.MovementStateConfig.IsPerformingStaticAction)
-                {
-                    return; 
-                }
-                
+                // Если идёт анимационный переход, выходим из метода
                 if (InAnimationTransition())
                 {
                     return;
                 }
-                
+
+                // Переход в состояние падения
                 StateSwitcher.SwitchState<FallingState>();
             }
         }

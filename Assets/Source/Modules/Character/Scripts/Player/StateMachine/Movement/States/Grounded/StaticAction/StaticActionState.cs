@@ -5,9 +5,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class StaticActionState : GroundedState
     {
-        private PlayerConfig _playerConfig;
-        
-        public StaticActionState(
+        protected StaticActionState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
@@ -15,52 +13,53 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCompositionRoot,
             data)
         {
-            _playerConfig = playerCompositionRoot.PlayerConfig;
         }
         
-        #region IState METHODS
         public override void Enter()
         {
             base.Enter();
             
-            _playerConfig.MovementStateConfig.IsPerformingStaticAction = true;
-            
             PlayerView.StartStaticAction();
         }
-
-        public override void Update()
-        {
-            base.Update();
-        }
-
+        
         public override void Exit()
         {
             base.Exit();
             
-            _playerConfig.MovementStateConfig.IsPerformingStaticAction = false;
-            
             PlayerView.StopStaticAction();
         }
-        #endregion
+        
+        public override void Update()
+        {
+            base.Update();
+        }
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            // Не реагируем на отмену движения, пока выполняется статическое действие
         }
 
         protected override void Move()
         {
-            // Не реагируем...
         }
         
         protected override void Rotate()
         {
-            // Не реагируем...
         }
 
         protected override void OnJumpStarted(InputAction.CallbackContext context)
         {
-            // Не реагируем...
+        }
+        
+        protected override void OnBackStepped(InputAction.CallbackContext context)
+        {
+        }
+        
+        protected override void OnDodgeStarted(InputAction.CallbackContext context)
+        {
+        }
+
+        protected override void CheckGroundAndSwitchToFalling()
+        {
         }
     }
 }

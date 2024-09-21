@@ -25,8 +25,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         #region IState METHODS
         public override void Enter()
         {
-            // _playerCompositionRoot.PlayerView.StartActionAnimation("core_main_back_step_medium_01");
-            
             base.Enter();
             
             if (InAnimationTransition())
@@ -85,14 +83,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            // base.OnMovementCanceled(context);
         }
         
-        #region OnAmimationEvent Methods
         private bool InAnimationTransition(int layerIndex = 0)
         {
             return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
-        #endregion
     }
 }
