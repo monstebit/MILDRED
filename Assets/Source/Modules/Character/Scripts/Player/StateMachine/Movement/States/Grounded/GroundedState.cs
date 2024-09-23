@@ -113,7 +113,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             StateSwitcher.SwitchState<JumpingState>();
         }
         
-        private bool InAnimationTransition(int layerIndex = 0)
+        protected virtual bool InAnimationTransition(int layerIndex = 0)
         {
             return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }

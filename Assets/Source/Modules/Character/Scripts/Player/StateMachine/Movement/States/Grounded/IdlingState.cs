@@ -19,6 +19,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Enter()
         {
             Data.MovementSpeedModifier = 0;
+            Data.JumpModifier = 0f;
 
             base.Enter();
             

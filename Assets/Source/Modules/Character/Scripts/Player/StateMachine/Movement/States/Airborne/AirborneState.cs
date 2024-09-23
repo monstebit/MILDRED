@@ -26,17 +26,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Enter();
             
             PlayerView.StartAirborne();
-            
-            ResetPerformingAction();
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopAirborne();
+            _playerConfig.MovementStateConfig.YVelocity.x = 0;
             
-            _playerConfig.AirborneStateConfig.InAirTime = 0f;
+            PlayerView.StopAirborne();
         }
 
         public override void Update()
@@ -52,24 +50,36 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _playerConfig.MovementStateConfig.YVelocity.y += _playerConfig.AirborneStateConfig.Gravity * Time.deltaTime;
         }
         
-        private void ResetPerformingAction()
-        {
-            // _playerConfig.MovementStateConfig.IsPerformingStaticAction = false;
-        }
-        
-        private void AirborneMove()  //  HORIZONTAL MOVEMENT IN AIR
+        private void AirborneMove()
         {
             _playerConfig.MovementStateConfig._movementDirection = GetMovementInputDirection();
             
             _playerCompositionRoot.CharacterController.Move(
-                _playerConfig.MovementStateConfig._movementDirection * (Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime));
+                PlayerView.transform.forward * (Data.JumpModifier * PlayerConfig.AirborneStateConfig.JumpingStateConfig.ForwardSpeed * Time.deltaTime));
+        }
+        
+        protected override void Move()
+        {
+            // if (_playerCompositionRoot.GroundChecker.isTouches == false && Data.JumppeedModifier == 0f)
+            if (_playerCompositionRoot.GroundChecker.isTouches == false)
+            {
+                PlayerConfig.MovementStateConfig._movementDirection = GetMovementInputDirection();
+            
+                _playerCompositionRoot.CharacterController.Move(
+                    // PlayerConfig.MovementStateConfig._movementDirection * (Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime));
+                    PlayerConfig.MovementStateConfig._movementDirection * (_playerConfig.AirborneStateConfig.JumpingStateConfig.IdleJumpingSpeed * Time.deltaTime));
+            }
+        }
+
+        protected override void Rotate()
+        {
         }
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
         }
 
-        protected override void OnSprintCanceled(InputAction.CallbackContext context)
+        protected override void OnStaticActionCanceled(InputAction.CallbackContext context)
         {
             if (PlayerConfig.MovementStateConfig._isButtonHeld == false)
             {

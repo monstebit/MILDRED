@@ -1,5 +1,4 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving
 {
@@ -19,18 +18,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             _playerCompositionRoot = playerCompositionRoot;
             _playerConfig = playerCompositionRoot.PlayerConfig;
         }
-
-        #region IState METHODS
-
+        
         public override void Enter()
         {
             Data.MovementSpeedModifier = _playerConfig.SprintingStateConfig.SpeedModifier;
+            Data.JumpModifier = 1.75f;
 
             base.Enter();
 
             PlayerView.StartSprinting();
-            
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.Value = true;
         }
 
         public override void Exit()
@@ -38,8 +34,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Exit();
 
             PlayerView.StopSprinting();
-            
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.Value = false;
         }
 
         public override void Update()
@@ -53,9 +47,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             StopSprinting();
         }
-
-        #endregion
-
+        
         private void StopSprinting()
         {
             if (_playerConfig.MovementStateConfig.ShouldWalk)
@@ -65,11 +57,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             }
 
             StateSwitcher.SwitchState<RunningState>();
-        }
-
-        protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        {
-            base.OnMovementCanceled(context);
         }
     }
 }

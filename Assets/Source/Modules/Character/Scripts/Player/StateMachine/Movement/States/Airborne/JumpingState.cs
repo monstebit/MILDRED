@@ -29,9 +29,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Enter();
             
             PlayerView.StartJumping();
-
-            _jumpingStateConfig.SpeedModifier = GetSpeedModifier();
+            
             Data.MovementSpeedModifier = _jumpingStateConfig.SpeedModifier;
+
             _jumpingStateConfig.IsJumping = true;
             Keyframe LastFrame = _jumpingStateConfig.JumpCurve[_jumpingStateConfig.JumpCurve.length - 1];
             _jumpingStateConfig.JumpTimer = LastFrame.time;
@@ -50,18 +50,24 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Update()
         {
             base.Update();
-            
+
+            HandleJump();
+        }
+        
+        private void HandleJump()
+        {
             if (_jumpingStateConfig.IsJumping)
             {
                 _jumpingStateConfig.Timer += Time.deltaTime;
-            
+
                 if (_jumpingStateConfig.Timer > 0.5f)
                 {
                     StateSwitcher.SwitchState<FallingState>();
                 }
-                
+
                 if (_jumpingStateConfig.Timer < _jumpingStateConfig.JumpTimer)
                 {
+                    // Обновляем вертикальную скорость (вверх-вниз)
                     _playerConfig.MovementStateConfig.YVelocity.y = 
                         _jumpingStateConfig.JumpCurve.Evaluate(_jumpingStateConfig.Timer);
                 }
@@ -70,27 +76,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             {
                 Exit();
             }
-        }
-        
-        private float GetSpeedModifier()
-        {
-            float speedModifier = 0.75f;
-
-            if (Data.MovementInput == Vector2.zero)
-            {
-                speedModifier = 0.25f;
-            }
-            
-            if (_playerConfig.MovementStateConfig.ShouldSprint)
-            {
-                speedModifier = 1;
-            }
-            else if (_playerConfig.MovementStateConfig.ShouldWalk)
-            {
-                speedModifier = 0.5f;
-            }
-
-            return speedModifier;
         }
     }
 }

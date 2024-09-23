@@ -25,6 +25,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Enter()
         {
             Data.MovementSpeedModifier = _playerConfig.RunningStateConfig.SpeedModifier;
+            Data.JumpModifier = 1f;
             
             base.Enter();
 
@@ -73,13 +74,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             StateSwitcher.SwitchState<WalkingState>();
         }
-
-        protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        {
-            base.OnMovementCanceled(context);
-        }
         
-        #region OnAmimationEvent Methods
         public override void OnAnimationTransitionEvent()
         {
             base.OnAnimationTransitionEvent();
@@ -89,6 +84,5 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
-        #endregion
     }
 }

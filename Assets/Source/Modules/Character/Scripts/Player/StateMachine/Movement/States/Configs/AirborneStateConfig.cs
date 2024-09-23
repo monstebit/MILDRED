@@ -10,7 +10,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
         [SerializeField] private JumpingStateConfig _jumpingStateConfig;
         [SerializeField] private FallingStateConfig _fallingStateConfig;
         [SerializeField] public float Gravity = -9.81f;
-        [SerializeField] public float InAirTime;
         
         public JumpingStateConfig JumpingStateConfig => _jumpingStateConfig;
     }

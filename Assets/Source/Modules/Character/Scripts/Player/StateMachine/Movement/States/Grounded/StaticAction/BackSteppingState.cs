@@ -22,7 +22,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             _playerConfig = playerCompositionRoot.PlayerConfig;
         }
     
-        #region IState METHODS
         public override void Enter()
         {
             base.Enter();
@@ -53,7 +52,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
-            
+
+            HandleBackStep();
+        }
+        
+        private void HandleBackStep()
+        {
             // Обновляем таймер для backstep
             _playerConfig.BackSteppingStateConfig.Timer += Time.deltaTime;
 
@@ -64,22 +68,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 _playerCompositionRoot.CharacterController.Move(-PlayerView.transform.forward * speed * Time.deltaTime);
                 return;
             }
-            
+
             if (Time.time < _startTime + _playerConfig.BackSteppingStateConfig.BackStepToMoveTime)
             {
                 return;
             }
-            
+
             // Проверка на ввод движения перед выходом из состояния
             if (Data.MovementInput == Vector2.zero)
             {
                 StateSwitcher.SwitchState<IdlingState>();
                 return;
             }
-            
+
             OnMove();
         }
-        #endregion
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {

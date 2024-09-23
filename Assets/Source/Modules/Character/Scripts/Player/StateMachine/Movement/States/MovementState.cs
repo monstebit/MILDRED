@@ -33,7 +33,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         public virtual void Enter()
         {
-            Debug.Log($"State: {GetType().Name}");
+            // Debug.Log($"State: {GetType().Name}");
             // Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
             AddInputActionsCallbacks();
         }
@@ -176,102 +176,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 Data.CameraHorizontalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.CameraHorizontalMovement.Value;
             }
         }
-
-        protected virtual void AddInputActionsCallbacks()
-        {
-            PlayerControls.Player.Sprint.performed += OnSprintPerformed;
-            PlayerControls.Player.Sprint.canceled += OnSprintCanceled;
-            PlayerControls.Player.Move.performed += OnMovementPerformed;
-            PlayerControls.Player.Move.canceled += OnMovementCanceled;
-            PlayerControls.Player.WalkToggle.performed += OnWalkToggleStarted;
-            PlayerControls.Player.WalkToggle.canceled += OnWalkToggleCanceled;
-        }
-
-        protected virtual void RemoveInputActionsCallbacks()
-        {
-            PlayerControls.Player.Sprint.performed -= OnSprintPerformed;
-            PlayerControls.Player.Sprint.canceled -= OnSprintCanceled;
-            PlayerControls.Player.Move.performed -= OnMovementPerformed;
-            PlayerControls.Player.Move.canceled -= OnMovementCanceled;
-            PlayerControls.Player.WalkToggle.performed -= OnWalkToggleStarted;
-            PlayerControls.Player.WalkToggle.canceled -= OnWalkToggleCanceled;
-        }
-
-        private void OnSprintPerformed(InputAction.CallbackContext context)
-        {
-            PlayerConfig.MovementStateConfig._isButtonHeld = true;
-            PlayerConfig.MovementStateConfig._timeButtonHeld = 0f;
-        }
         
-        protected virtual void OnSprintCanceled(InputAction.CallbackContext context)
+        protected Vector3 GetMovementInputDirection()
         {
-            if (PlayerConfig.MovementStateConfig._isButtonHeld == false)
-            {
-                return;
-            }
-
-            PlayerConfig.MovementStateConfig._isButtonHeld = false;
-
-            if (PlayerConfig.MovementStateConfig.ShouldSprint)
-            {
-                // End the sprint if it was activated
-                PlayerConfig.MovementStateConfig.ShouldSprint = false;
-                return;
-            }
-
-            OnDodgeStarted(context);
-        }
-        
-        protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
-        {
-            if (Data.MovementInput == Vector2.zero)
-            {
-                OnBackStepped(context);
-                return;
-            }
-    
-            StateSwitcher.SwitchState<DodgingState>();
-        }
-        
-        protected virtual void OnBackStepped(InputAction.CallbackContext context)
-        {
-            if (Data.MovementInput != Vector2.zero && Data.MovementSpeedModifier != 0)
-            {
-                return;
-            }
-    
-            StateSwitcher.SwitchState<BackSteppingState>();
-        }
-        
-        protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
-        {
-            PlayerConfig.MovementStateConfig.ShouldWalk = true;
-        }
-        
-        private void OnWalkToggleCanceled(InputAction.CallbackContext context)
-        {
-            PlayerConfig.MovementStateConfig.ShouldWalk = false;
-        }
-        
-        private void OnMovementPerformed(InputAction.CallbackContext context)
-        {
-        }
-
-        protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
-        {
-            StateSwitcher.SwitchState<IdlingState>();
-        }
-
-        public virtual void OnAnimationEnterEvent()
-        {
-        }
-
-        public virtual void OnAnimationExitEvent()
-        {
-        }
-
-        public virtual void OnAnimationTransitionEvent()
-        {
+            // Получаем правое и переднее направление из положения камеры
+            Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
+            Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
+            
+            // Вычисляем направление движения на основе ввода пользователя
+            Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
+            
+            movementDirection.y = 0;
+            
+            movementDirection.Normalize();
+            
+            return movementDirection;
         }
         
         protected virtual void Move()
@@ -341,21 +260,102 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             
             _playerCameraMovement.CameraPivotTransform.localRotation = playerCameraPivotRotation;
         }
-
-        protected Vector3 GetMovementInputDirection()
+        
+        public virtual void OnAnimationEnterEvent()
         {
-            // Получаем правое и переднее направление из положения камеры
-            Vector3 right = _playerCameraMovement.CameraPivotTransform.right;
-            Vector3 forward = _playerCameraMovement.CameraPivotTransform.forward;
-            
-            // Вычисляем направление движения на основе ввода пользователя
-            Vector3 movementDirection = forward * Data.MovementInput.y + right * Data.MovementInput.x;
-            
-            movementDirection.y = 0;
-            
-            movementDirection.Normalize();
-            
-            return movementDirection;
+        }
+
+        public virtual void OnAnimationExitEvent()
+        {
+        }
+
+        public virtual void OnAnimationTransitionEvent()
+        {
+        }
+        
+        protected virtual void AddInputActionsCallbacks()
+        {
+            PlayerControls.Player.StaticAction.performed += OnStaticActionPerformed;
+            PlayerControls.Player.StaticAction.canceled += OnStaticActionCanceled;
+            PlayerControls.Player.Move.performed += OnMovementPerformed;
+            PlayerControls.Player.Move.canceled += OnMovementCanceled;
+            PlayerControls.Player.WalkToggle.performed += OnWalkToggleStarted;
+            PlayerControls.Player.WalkToggle.canceled += OnWalkToggleCanceled;
+        }
+
+        protected virtual void RemoveInputActionsCallbacks()
+        {
+            PlayerControls.Player.StaticAction.performed -= OnStaticActionPerformed;
+            PlayerControls.Player.StaticAction.canceled -= OnStaticActionCanceled;
+            PlayerControls.Player.Move.performed -= OnMovementPerformed;
+            PlayerControls.Player.Move.canceled -= OnMovementCanceled;
+            PlayerControls.Player.WalkToggle.performed -= OnWalkToggleStarted;
+            PlayerControls.Player.WalkToggle.canceled -= OnWalkToggleCanceled;
+        }
+
+        private void OnStaticActionPerformed(InputAction.CallbackContext context)
+        {
+            PlayerConfig.MovementStateConfig._isButtonHeld = true;
+            PlayerConfig.MovementStateConfig._timeButtonHeld = 0f;
+        }
+        
+        protected virtual void OnStaticActionCanceled(InputAction.CallbackContext context)
+        {
+            if (PlayerConfig.MovementStateConfig._isButtonHeld == false)
+            {
+                return;
+            }
+
+            PlayerConfig.MovementStateConfig._isButtonHeld = false;
+
+            if (PlayerConfig.MovementStateConfig.ShouldSprint)
+            {
+                // End the sprint if it was activated
+                PlayerConfig.MovementStateConfig.ShouldSprint = false;
+                return;
+            }
+
+            OnDodgeStarted(context);
+        }
+        
+        protected virtual void OnDodgeStarted(InputAction.CallbackContext context)
+        {
+            if (Data.MovementInput == Vector2.zero)
+            {
+                OnBackStepped(context);
+                return;
+            }
+    
+            StateSwitcher.SwitchState<DodgingState>();
+        }
+        
+        protected virtual void OnBackStepped(InputAction.CallbackContext context)
+        {
+            if (Data.MovementInput != Vector2.zero && Data.MovementSpeedModifier != 0)
+            {
+                return;
+            }
+    
+            StateSwitcher.SwitchState<BackSteppingState>();
+        }
+        
+        protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
+        {
+            PlayerConfig.MovementStateConfig.ShouldWalk = true;
+        }
+        
+        private void OnWalkToggleCanceled(InputAction.CallbackContext context)
+        {
+            PlayerConfig.MovementStateConfig.ShouldWalk = false;
+        }
+        
+        private void OnMovementPerformed(InputAction.CallbackContext context)
+        {
+        }
+
+        protected virtual void OnMovementCanceled(InputAction.CallbackContext context)
+        {
+            StateSwitcher.SwitchState<IdlingState>();
         }
     }
 }

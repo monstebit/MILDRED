@@ -9,6 +9,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         public Vector2 MovementInput { get; set; }
         public float BaseSpeed { get; set; } = 5f;
         public float MovementSpeedModifier { get; set; } = 1f;
+        public float JumpModifier { get; set; } = 1f;
 
         private Vector3 _currentTargetRotation;
 

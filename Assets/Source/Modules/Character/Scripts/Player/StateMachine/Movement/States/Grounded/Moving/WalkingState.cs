@@ -1,7 +1,4 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
-using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving
 {
@@ -20,12 +17,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             _playerConfig = playerCompositionRoot.PlayerConfig;
         }
 
-        #region IState METHODS
         public override void Enter()
         {
             base.Enter();
-
+            
             Data.MovementSpeedModifier = _playerConfig.WalkingStateConfig.SpeedModifier; ;
+            Data.JumpModifier = 0.5f;
             
             PlayerView.StartWalking();
         }
@@ -58,12 +55,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             {
                 StateSwitcher.SwitchState<RunningState>();
             }
-        }
-        #endregion
-        
-        protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        {
-            base.OnMovementCanceled(context);
         }
     }
 }

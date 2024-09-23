@@ -1,4 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving
 {
@@ -31,6 +32,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
+        }
+        
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        {
+            base.OnMovementCanceled(context);
         }
     }
 }

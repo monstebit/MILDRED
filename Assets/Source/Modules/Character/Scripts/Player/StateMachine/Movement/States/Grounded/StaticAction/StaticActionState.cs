@@ -34,10 +34,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Update();
         }
         
-        protected override void OnMovementCanceled(InputAction.CallbackContext context)
-        {
-        }
-
         protected override void Move()
         {
         }
@@ -45,7 +41,15 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         protected override void Rotate()
         {
         }
-
+        
+        protected override void CheckGroundAndSwitchToFalling()
+        {
+        }
+        
+        protected override void OnMovementCanceled(InputAction.CallbackContext context)
+        {
+        }
+        
         protected override void OnJumpStarted(InputAction.CallbackContext context)
         {
         }
@@ -55,10 +59,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         }
         
         protected override void OnDodgeStarted(InputAction.CallbackContext context)
-        {
-        }
-
-        protected override void CheckGroundAndSwitchToFalling()
         {
         }
     }

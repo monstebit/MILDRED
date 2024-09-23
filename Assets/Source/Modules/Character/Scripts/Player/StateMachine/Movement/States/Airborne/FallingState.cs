@@ -25,7 +25,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Enter();
 
-            Data.MovementSpeedModifier = 1; //  ON TESTING
+            //  TODO: SMOOTH SPEED REDUCTION
+            Data.MovementSpeedModifier = 1;
             
             PlayerView.StartFalling();
         }
@@ -40,14 +41,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Update()
         {
             base.Update();
-            
+
+            CheckGroundedAndSwitchState();
+        }
+        
+        private void CheckGroundedAndSwitchState()
+        {
             if (_groundChecker.isTouches)
             {
                 if (InAnimationTransition())
                 {
                     return;
                 }
-                
+        
                 StateSwitcher.SwitchState<LightLandingState>();
             }
         }
