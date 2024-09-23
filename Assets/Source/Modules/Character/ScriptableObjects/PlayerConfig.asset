@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementStateConfig:
     _holdTimeThreshold: 0.1
-    _timeButtonHeld: 0.49645415
+    _timeButtonHeld: 0
     _isButtonHeld: 0
     MovementInput: {x: 0, y: 0}
     VerticalInput: 0
     HorizontalInput: 0
     MoveAmount: 2
-    _movementDirection: {x: -0.9945219, y: 0, z: -0.10452828}
-    YVelocity: {x: 0, y: -11.559108, z: 0}
+    _movementDirection: {x: 0.026177255, y: 0, z: -0.99965733}
+    YVelocity: {x: 0, y: -4854.3086, z: 0}
     GroundedGravityForce: 0
     ShouldWalk: 0
     ShouldSprint: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
         inWeight: 0.09542145
         outWeight: 0.044232983
       - serializedVersion: 3
-        time: 0.7
+        time: 0.5
         value: 5
         inSlope: -1.620743
         outSlope: -1.620743
@@ -70,10 +70,8 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    DodgeTimer: 0.7
-    Timer: 0.70116615
-    LastDodgeDirection: {x: -0.9650405, y: 0, z: 0.2621006}
-    _dodgingTimer: 16.702066
+    DodgeTimer: 0.5
+    Timer: 0.5000373
   _backSteppingStateConfig:
     <BackStepToMoveTime>k__BackingField: 0.7
     BackStepCurve:
@@ -119,7 +117,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     BackStepTimer: 0.5
-    Timer: 0.70551485
+    Timer: 0.70666754
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:
