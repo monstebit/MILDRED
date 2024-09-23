@@ -24,10 +24,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
             
-            _playerConfig.DodgeStateConfig.Timer = 0f;
+            if (InAnimationTransition())
+            {
+                // return;
+            }
             
             PlayerView.StartDodging();
             
+            _playerConfig.DodgeStateConfig.Timer = 0f;
             Keyframe LastFrame = _playerConfig.DodgeStateConfig.DodgeCurve[_playerConfig.DodgeStateConfig.DodgeCurve.length - 1];
             _playerConfig.DodgeStateConfig.DodgeTimer = LastFrame.time;
         }

@@ -28,14 +28,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             if (InAnimationTransition())
             {
-                return;
+                // return;
             }
             
             PlayerView.StartBackStepping();
             
             _startTime = Time.time;
             _playerConfig.BackSteppingStateConfig.Timer = 0f;
-            
             Keyframe lastFrame = _playerConfig.BackSteppingStateConfig.BackStepCurve[_playerConfig.BackSteppingStateConfig.BackStepCurve.length - 1];
             _playerConfig.BackSteppingStateConfig.BackStepTimer = lastFrame.time;
         }

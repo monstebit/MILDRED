@@ -25,7 +25,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Enter();
 
-            //  TODO: SMOOTH SPEED REDUCTION
             Data.MovementSpeedModifier = 1;
             
             PlayerView.StartFalling();

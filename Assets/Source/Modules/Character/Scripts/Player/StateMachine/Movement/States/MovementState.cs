@@ -33,7 +33,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         public virtual void Enter()
         {
-            // Debug.Log($"State: {GetType().Name}");
+            Debug.Log($"State: {GetType().Name}");
             // Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
             AddInputActionsCallbacks();
         }

@@ -8,6 +8,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     {
         private readonly PlayerCompositionRoot _playerCompositionRoot;
         private readonly PlayerConfig _playerConfig;
+
+        private float _aiborneRotationSpeed;
         
         protected AirborneState(
             IStateSwitcher stateSwitcher,
@@ -73,6 +75,19 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 
         protected override void Rotate()
         {
+            _aiborneRotationSpeed = 1f;
+            
+            if (PlayerConfig.MovementStateConfig._movementDirection != Vector3.zero)
+            {
+                Quaternion newRotation = Quaternion.LookRotation(PlayerConfig.MovementStateConfig._movementDirection);
+
+                Quaternion targetRotation = Quaternion.Slerp(
+                    PlayerView.transform.rotation,
+                    newRotation,
+                    _aiborneRotationSpeed * Time.deltaTime);
+
+                PlayerView.transform.rotation = targetRotation;
+            }
         }
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
