@@ -46,7 +46,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Walk Toggle"",
+                    ""name"": ""WalkToggle"",
                     ""type"": ""Button"",
                     ""id"": ""7a77dad1-fd1a-4629-886b-f3d305783461"",
                     ""expectedControlType"": ""Button"",
@@ -64,7 +64,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Sprint"",
+                    ""name"": ""StaticAction"",
                     ""type"": ""Value"",
                     ""id"": ""c4726b0c-1152-471c-9f9a-9df663090e2f"",
                     ""expectedControlType"": ""Axis"",
@@ -242,7 +242,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Walk Toggle"",
+                    ""action"": ""WalkToggle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -253,7 +253,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Sprint"",
+                    ""action"": ""StaticAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -264,7 +264,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Sprint"",
+                    ""action"": ""StaticAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -376,9 +376,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-        m_Player_WalkToggle = m_Player.FindAction("Walk Toggle", throwIfNotFound: true);
+        m_Player_WalkToggle = m_Player.FindAction("WalkToggle", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-        m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        m_Player_StaticAction = m_Player.FindAction("StaticAction", throwIfNotFound: true);
         m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
         m_Player_BackStep = m_Player.FindAction("BackStep", throwIfNotFound: true);
     }
@@ -446,7 +446,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_WalkToggle;
     private readonly InputAction m_Player_Jump;
-    private readonly InputAction m_Player_Sprint;
+    private readonly InputAction m_Player_StaticAction;
     private readonly InputAction m_Player_Dodge;
     private readonly InputAction m_Player_BackStep;
     public struct PlayerActions
@@ -457,7 +457,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @WalkToggle => m_Wrapper.m_Player_WalkToggle;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
-        public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+        public InputAction @StaticAction => m_Wrapper.m_Player_StaticAction;
         public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
         public InputAction @BackStep => m_Wrapper.m_Player_BackStep;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -481,9 +481,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
-            @Sprint.started += instance.OnSprint;
-            @Sprint.performed += instance.OnSprint;
-            @Sprint.canceled += instance.OnSprint;
+            @StaticAction.started += instance.OnStaticAction;
+            @StaticAction.performed += instance.OnStaticAction;
+            @StaticAction.canceled += instance.OnStaticAction;
             @Dodge.started += instance.OnDodge;
             @Dodge.performed += instance.OnDodge;
             @Dodge.canceled += instance.OnDodge;
@@ -506,9 +506,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
-            @Sprint.started -= instance.OnSprint;
-            @Sprint.performed -= instance.OnSprint;
-            @Sprint.canceled -= instance.OnSprint;
+            @StaticAction.started -= instance.OnStaticAction;
+            @StaticAction.performed -= instance.OnStaticAction;
+            @StaticAction.canceled -= instance.OnStaticAction;
             @Dodge.started -= instance.OnDodge;
             @Dodge.performed -= instance.OnDodge;
             @Dodge.canceled -= instance.OnDodge;
@@ -538,7 +538,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnWalkToggle(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnSprint(InputAction.CallbackContext context);
+        void OnStaticAction(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
         void OnBackStep(InputAction.CallbackContext context);
     }

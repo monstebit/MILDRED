@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Walk Toggle",
+                    "name": "WalkToggle",
                     "type": "Button",
                     "id": "7a77dad1-fd1a-4629-886b-f3d305783461",
                     "expectedControlType": "Button",
@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Sprint",
+                    "name": "StaticAction",
                     "type": "Value",
                     "id": "c4726b0c-1152-471c-9f9a-9df663090e2f",
                     "expectedControlType": "Axis",
@@ -220,7 +220,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Walk Toggle",
+                    "action": "WalkToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -231,7 +231,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Sprint",
+                    "action": "StaticAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -242,7 +242,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Sprint",
+                    "action": "StaticAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
