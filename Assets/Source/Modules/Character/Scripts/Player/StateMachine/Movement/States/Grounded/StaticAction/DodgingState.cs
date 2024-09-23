@@ -27,7 +27,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             if (InAnimationTransition())
             {
-                // return;
+                return;
             }
             
             PlayerView.StartDodging();
