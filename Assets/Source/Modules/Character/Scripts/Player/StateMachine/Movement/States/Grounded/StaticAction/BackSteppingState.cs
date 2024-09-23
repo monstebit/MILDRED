@@ -1,4 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -72,6 +73,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             {
                 return;
             }
+            
+            if (_playerCompositionRoot.GroundChecker.isTouches == false)
+            {
+                StateSwitcher.SwitchState<FallingState>();
+                return;
+            }
 
             // Проверка на ввод движения перед выходом из состояния
             if (Data.MovementInput == Vector2.zero)
@@ -79,7 +86,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 StateSwitcher.SwitchState<IdlingState>();
                 return;
             }
-
+            
             OnMove();
         }
         

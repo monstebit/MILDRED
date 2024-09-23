@@ -30,7 +30,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             PlayerView.StartJumping();
             
-            Data.MovementSpeedModifier = _jumpingStateConfig.SpeedModifier;
+            // Data.MovementSpeedModifier = _jumpingStateConfig.SpeedModifier;
+            Data.MovementSpeedModifier = 0f;
 
             _jumpingStateConfig.IsJumping = true;
             Keyframe LastFrame = _jumpingStateConfig.JumpCurve[_jumpingStateConfig.JumpCurve.length - 1];

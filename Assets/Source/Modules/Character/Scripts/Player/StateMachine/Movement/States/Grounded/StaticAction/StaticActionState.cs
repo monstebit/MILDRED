@@ -1,10 +1,13 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction
 {
     public class StaticActionState : GroundedState
     {
+        private PlayerConfig _playerConfig;
+        
         protected StaticActionState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
@@ -13,6 +16,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCompositionRoot,
             data)
         {
+            _playerConfig = playerCompositionRoot.PlayerConfig;
         }
         
         public override void Enter()
@@ -32,6 +36,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         public override void Update()
         {
             base.Update();
+
+            ApplyGravity();
+        }
+        
+        private void ApplyGravity()
+        {
+            _playerConfig.MovementStateConfig.YVelocity.y += _playerConfig.AirborneStateConfig.Gravity * Time.deltaTime;
         }
         
         protected override void Move()

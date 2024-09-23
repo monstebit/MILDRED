@@ -1,4 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction
@@ -61,12 +62,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
+            if (_playerCompositionRoot.GroundChecker.isTouches == false)
+            {
+                StateSwitcher.SwitchState<FallingState>();
+                return;
+            }
+            
             if (Data.MovementInput == Vector2.zero)
             {
                 StateSwitcher.SwitchState<IdlingState>();
                 return;
             }
-
+            
             OnMove();
         }
         
