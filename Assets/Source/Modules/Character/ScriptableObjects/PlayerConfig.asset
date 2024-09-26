@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   _movementStateConfig:
-    _holdTimeThreshold: 0.1
+    _holdTimeThreshold: 0.2
     _timeButtonHeld: 0
     _isButtonHeld: 0
     MovementInput: {x: 0, y: 0}
     VerticalInput: 0
     HorizontalInput: 0
     MoveAmount: 2
-    _movementDirection: {x: 0.026177255, y: 0, z: -0.99965733}
-    YVelocity: {x: 0, y: -4854.3086, z: 0}
+    _movementDirection: {x: 0.18223564, y: 0, z: 0.9832549}
+    YVelocity: {x: 0, y: -14.552908, z: 0}
     GroundedGravityForce: 0
     ShouldWalk: 0
     ShouldSprint: 0
@@ -71,7 +71,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     DodgeTimer: 0.5
-    Timer: 0.5000373
+    Timer: 0.50211644
   _backSteppingStateConfig:
     <BackStepToMoveTime>k__BackingField: 0.7
     BackStepCurve:
@@ -117,7 +117,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     BackStepTimer: 0.5
-    Timer: 0.70666754
+    Timer: 0.7062103
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:
@@ -128,7 +128,7 @@ MonoBehaviour:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0
+          value: -2
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -137,7 +137,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 0.15
-          value: 0
+          value: -2
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -145,7 +145,7 @@ MonoBehaviour:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.5
+          time: 0.25
           value: 10
           inSlope: -0.15687089
           outSlope: -0.15687089
@@ -154,8 +154,8 @@ MonoBehaviour:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 1.5
-          value: 0
+          time: 0.5
+          value: -2
           inSlope: -1.620743
           outSlope: -1.620743
           tangentMode: 0
@@ -165,10 +165,10 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      JumpTimer: 1.5
+      JumpTimer: 0.5
       Timer: 0
       ForwardSpeed: 5
       IsJumping: 0
     _fallingStateConfig:
       <SpeedModifier>k__BackingField: 1
-    Gravity: -40
+    Gravity: -25
