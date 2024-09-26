@@ -33,11 +33,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         public virtual void Enter()
         {
-            Debug.Log($"State: {GetType().Name}");
+            // Debug.Log($"State: {GetType().Name}");
             // Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
             AddInputActionsCallbacks();
         }
-
+        
         public virtual void Exit()
         {
             RemoveInputActionsCallbacks();
@@ -66,7 +66,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 
                 UpdateAnimatorMovementParameters(0, Data.MoveAmount);   //  LOCOMOTION MOVEMENT WITHOUT TARGET
             }
-            // Используем синхронизированные данные для анимаций
             else
             {
                 UpdateAnimatorMovementParameters(0, _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value);
@@ -81,9 +80,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
                 if (PlayerConfig.MovementStateConfig._timeButtonHeld >= PlayerConfig.MovementStateConfig._holdTimeThreshold)
                 {
-                    if (!PlayerConfig.MovementStateConfig.ShouldSprint)
+                    if (PlayerConfig.MovementStateConfig.ShouldSprint == false)
                     {
                         PlayerConfig.MovementStateConfig.ShouldSprint = true;
+                        //  ON TESTING
+                        // PlayerConfig.MovementStateConfig._timeButtonHeld = 0f;
                     }
                 }
             }
@@ -136,7 +137,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             int vertical = Animator.StringToHash("Vertical");
             int horizontal = Animator.StringToHash("Horizontal");
 
-            if (PlayerConfig.MovementStateConfig.ShouldSprint && Data.MovementInput != Vector2.zero)
+            if (PlayerConfig.MovementStateConfig.ShouldSprint && 
+                PlayerConfig.MovementStateConfig._timeButtonHeld >= PlayerConfig.MovementStateConfig._holdTimeThreshold
+                && Data.MovementInput != Vector2.zero)
             {
                 if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
                 // if (_playerCompositionRoot.IsOwner)
@@ -296,7 +299,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         private void OnStaticActionPerformed(InputAction.CallbackContext context)
         {
             PlayerConfig.MovementStateConfig._isButtonHeld = true;
-            PlayerConfig.MovementStateConfig._timeButtonHeld = 0f;
+
+            OnBackStepped(context);
         }
         
         protected virtual void OnStaticActionCanceled(InputAction.CallbackContext context)
@@ -312,6 +316,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             {
                 // End the sprint if it was activated
                 PlayerConfig.MovementStateConfig.ShouldSprint = false;
+                //  ON TESTING
+                PlayerConfig.MovementStateConfig._timeButtonHeld = 0f;
+                // PlayerConfig.MovementStateConfig._isButtonHeld = false;
                 return;
             }
 

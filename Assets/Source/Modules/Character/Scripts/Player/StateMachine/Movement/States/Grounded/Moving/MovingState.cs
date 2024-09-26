@@ -1,4 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving
@@ -21,7 +22,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StartMoving();
         }
-
+        
         public override void Exit()
         {
             base.Exit();
@@ -37,6 +38,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
             base.OnMovementCanceled(context);
+        }
+        
+        private void ResetShouldSprint()
+        {
+            // PlayerConfig.MovementStateConfig.ShouldSprint = false;
         }
     }
 }
