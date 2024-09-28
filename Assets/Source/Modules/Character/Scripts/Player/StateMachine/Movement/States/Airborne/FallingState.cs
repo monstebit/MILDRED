@@ -1,6 +1,7 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
+using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
@@ -25,7 +26,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Enter();
 
-            Data.MovementSpeedModifier = 1;
+            Data.MovementSpeedModifier = 0f;
+            Data.JumpModifier = 0f;
             
             PlayerView.StartFalling();
         }
@@ -35,6 +37,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Exit();
             
             PlayerView.StopFalling();
+
+            ResetSprintState();
+        }
+        
+        private void ResetSprintState()
+        {
+            PlayerConfig.MovementStateConfig._timeButtonHeld = 0f;
+            PlayerConfig.MovementStateConfig.ShouldSprint = false;
         }
         
         public override void Update()

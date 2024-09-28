@@ -1,4 +1,5 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -37,6 +38,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _playerConfig.MovementStateConfig.YVelocity.x = 0;
             
             PlayerView.StopAirborne();
+
+            ResetSprintState();
         }
 
         public override void Update()
@@ -75,7 +78,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
 
         protected override void Rotate()
         {
-            _aiborneRotationSpeed = 1f;
+            _aiborneRotationSpeed = 1f; //  ON TESTING
             
             if (PlayerConfig.MovementStateConfig._movementDirection != Vector3.zero)
             {
@@ -90,23 +93,36 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             }
         }
         
+        private void ResetSprintState()
+        {
+            PlayerConfig.MovementStateConfig._timeButtonHeld = 0f;
+            PlayerConfig.MovementStateConfig.ShouldSprint = false;
+        }
+        
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
         }
-
-        protected override void OnStaticActionCanceled(InputAction.CallbackContext context)
+        
+        protected override void OnBackStepped(InputAction.CallbackContext context)
         {
-            if (PlayerConfig.MovementStateConfig._isButtonHeld == false)
-            {
-                return;
-            }
-
-            PlayerConfig.MovementStateConfig._isButtonHeld = false;
-
-            if (PlayerConfig.MovementStateConfig.ShouldSprint)
-            {
-                PlayerConfig.MovementStateConfig.ShouldSprint = false;
-            }
         }
+        
+        protected override void OnDodgeStarted(InputAction.CallbackContext context)
+        {
+        }        
+        // protected override void OnStaticActionCanceled(InputAction.CallbackContext context)
+        // {
+        //     if (PlayerConfig.MovementStateConfig._isButtonHeld == false)
+        //     {
+        //         return;
+        //     }
+        //
+        //     PlayerConfig.MovementStateConfig._isButtonHeld = false;
+        //
+        //     if (PlayerConfig.MovementStateConfig.ShouldSprint)
+        //     {
+        //         PlayerConfig.MovementStateConfig.ShouldSprint = false;
+        //     }
+        // }
     }
 }

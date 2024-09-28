@@ -1,6 +1,9 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne
 {
@@ -9,6 +12,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         private PlayerConfig _playerConfig;
         private JumpingStateConfig _jumpingStateConfig;
         private PlayerCompositionRoot _playerCompositionRoot;
+        private readonly GroundChecker _groundChecker;
         private Vector3 jumpDirection;
 
         public JumpingState(
@@ -20,6 +24,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             data)
         {
             _playerCompositionRoot = playerCompositionRoot;
+            _groundChecker = playerCompositionRoot.GroundChecker;
             _playerConfig = playerCompositionRoot.PlayerConfig;
             _jumpingStateConfig = _playerConfig.AirborneStateConfig.JumpingStateConfig;
         }
@@ -32,7 +37,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             
             // Data.MovementSpeedModifier = _jumpingStateConfig.SpeedModifier;
             Data.MovementSpeedModifier = 0f;
-
+            
             _jumpingStateConfig.IsJumping = true;
             Keyframe LastFrame = _jumpingStateConfig.JumpCurve[_jumpingStateConfig.JumpCurve.length - 1];
             _jumpingStateConfig.JumpTimer = LastFrame.time;
@@ -42,16 +47,21 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Exit();
             
-            PlayerView.StopJumping();
-            
             _jumpingStateConfig.Timer = 0;
             _jumpingStateConfig.IsJumping = false;
+            
+            if (InAnimationTransition())
+            {
+                return;
+            }
+            
+            PlayerView.StopJumping();
         }
         
         public override void Update()
         {
             base.Update();
-
+            
             HandleJump();
         }
         
@@ -61,9 +71,23 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             {
                 _jumpingStateConfig.Timer += Time.deltaTime;
 
-                if (_jumpingStateConfig.Timer > 0.5f)
+                // if (_jumpingStateConfig.Timer > 0.5f)
+                if (_jumpingStateConfig.Timer > _jumpingStateConfig.JumpTimer)
                 {
-                    StateSwitcher.SwitchState<FallingState>();
+                    if (_groundChecker.isTouches)
+                    {
+                        StateSwitcher.SwitchState<LightLandingState>();
+                     
+                        // if (Data.MovementInput == Vector2.zero)
+                        // {
+                        //     StateSwitcher.SwitchState<IdlingState>();
+                        // }
+                        #region WITHOUT LANDING
+                        // OnMove();
+                        #endregion
+                    }
+                    
+                    // StateSwitcher.SwitchState<FallingState>();
                 }
 
                 if (_jumpingStateConfig.Timer < _jumpingStateConfig.JumpTimer)
@@ -77,6 +101,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             {
                 Exit();
             }
+        }
+        
+        private bool InAnimationTransition(int layerIndex = 0)
+        {
+            return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }
     }
 }
