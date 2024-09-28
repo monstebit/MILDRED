@@ -7,6 +7,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
     public class LightLandingState : LandingState
     {
         private PlayerCompositionRoot _playerCompositionRoot;
+        private PlayerConfig _playerConfig;
         
         public LightLandingState(
             IStateSwitcher stateSwitcher,
@@ -17,37 +18,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             data)
         {
             _playerCompositionRoot = playerCompositionRoot;
+            _playerConfig = playerCompositionRoot.PlayerConfig;
         }
 
         public override void Enter()
         {
-            // _playerCompositionRoot.PlayerView.StartActionAnimation("core_main_jump_01_end");
-            
             base.Enter();
 
             Data.MovementSpeedModifier = 0f;
             
             PlayerView.StartLightLanding();
-        }
-
-        public override void Update()
-        {
-            base.Update();
-            
-            if (Data.MovementInput != Vector2.zero)
-            {
-                //  ОСТАНОВКА ИГРОКА ПОСЛЕ ПРЕЗЕМЛЕНИЯ
-                // if (InAnimationTransition())
-                // {
-                //     return;
-                // }
-                
-                OnMove();
-                
-                return;
-            }
-            
-            StateSwitcher.SwitchState<IdlingState>();
         }
 
         public override void Exit()
@@ -57,17 +37,38 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             PlayerView.StopLightLanding();
         }
         
-        //  ON TESTING
+        public override void Update()
+        {
+            base.Update();
+            
+            if (Data.MovementInput == Vector2.zero)
+            {
+                if (InAnimationTransition())
+                {
+                    return;
+                }
+                
+                StateSwitcher.SwitchState<IdlingState>();
+                return;
+            }
+            
+            OnMove();
+        }
+        
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
-            base.OnMovementCanceled(context);
+            // base.OnMovementCanceled(context);
+        }
+        
+        protected override void OnJumpStarted(InputAction.CallbackContext context)
+        {
         }
         
         #region OnAmimationEvent Methods
-        private bool InAnimationTransition(int layerIndex = 0)
-        {
-            return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
-        }
+        // private bool InAnimationTransition(int layerIndex = 0)
+        // {
+        //     return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
+        // }
         #endregion
     }
 }

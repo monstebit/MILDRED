@@ -4,7 +4,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class LandingState : GroundedState
     {
-        public LandingState(
+        protected LandingState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
             StateMachineData data) : base(
@@ -26,6 +26,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Exit();
             
             PlayerView.StopLanding();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+        }
+
+        public override void LateUpdate()
+        {
+            base.LateUpdate();
         }
     }
 }

@@ -37,14 +37,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             base.Exit();
             
             PlayerView.StopFalling();
-
-            ResetSprintState();
-        }
-        
-        private void ResetSprintState()
-        {
-            PlayerConfig.MovementStateConfig._timeButtonHeld = 0f;
-            PlayerConfig.MovementStateConfig.ShouldSprint = false;
         }
         
         public override void Update()
@@ -64,6 +56,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
                 }
         
                 StateSwitcher.SwitchState<LightLandingState>();
+                
+                #region WITHOUT LANDING
+                // if (Data.MovementInput == Vector2.zero)
+                // {
+                //     StateSwitcher.SwitchState<IdlingState>();
+                //     return;
+                // }
+                //
+                // OnMove();
+                #endregion
             }
         }
         

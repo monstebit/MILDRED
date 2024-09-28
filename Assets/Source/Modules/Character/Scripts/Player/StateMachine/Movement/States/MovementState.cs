@@ -1,5 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
+using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -33,8 +34,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 
         public virtual void Enter()
         {
-            // Debug.Log($"State: {GetType().Name}");
-            // Debug.Log($"Speed Modifier: {Data.MovementSpeedModifier}");
+            Debug.Log($"State: {GetType().Name}");
+            // Debug.Log($"Speed Modifier: {Data.JumpModifier}");
             AddInputActionsCallbacks();
         }
         
@@ -262,6 +263,23 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 playerCameraPivotRotation.eulerAngles.z);
             
             _playerCameraMovement.CameraPivotTransform.localRotation = playerCameraPivotRotation;
+        }
+        
+        protected virtual void OnMove()
+        {
+            if (PlayerConfig.MovementStateConfig.ShouldSprint)
+            {
+                StateSwitcher.SwitchState<SprintingState>();
+                return;
+            }
+            
+            if (PlayerConfig.MovementStateConfig.ShouldWalk)
+            {
+                StateSwitcher.SwitchState<WalkingState>();
+                return;
+            }
+            
+            StateSwitcher.SwitchState<RunningState>();
         }
         
         public virtual void OnAnimationEnterEvent()

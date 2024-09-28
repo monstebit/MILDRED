@@ -28,8 +28,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             base.Enter();
 
             PlayerView.StartGrounded();
-            
-            UpdateShouldSprintState();
+
+            UpdateShouldSprintState();  //  FOW WHAT?
         }
         
         private void UpdateShouldSprintState()
@@ -46,7 +46,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             _playerConfig.MovementStateConfig.ShouldSprint = false;
         }
-
+        
         public override void Exit()
         {
             base.Exit();
@@ -75,23 +75,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 // Переход в состояние падения
                 StateSwitcher.SwitchState<FallingState>();
             }
-        }
-        
-        protected virtual void OnMove()
-        {
-            if (_playerConfig.MovementStateConfig.ShouldSprint)
-            {
-                StateSwitcher.SwitchState<SprintingState>();
-                return;
-            }
-            
-            if (_playerConfig.MovementStateConfig.ShouldWalk)
-            {
-                StateSwitcher.SwitchState<WalkingState>();
-                return;
-            }
-            
-            StateSwitcher.SwitchState<RunningState>();
         }
         
         protected override void AddInputActionsCallbacks()
