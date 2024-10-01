@@ -1,5 +1,4 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
-using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
