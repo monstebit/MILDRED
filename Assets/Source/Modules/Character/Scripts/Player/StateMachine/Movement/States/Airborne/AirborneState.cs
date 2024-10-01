@@ -7,9 +7,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
     public abstract class AirborneState : MovementState
     {
         private readonly PlayerCompositionRoot _playerCompositionRoot;
-        private readonly PlayerConfig _playerConfig;
-
-        private float _aiborneRotationSpeed;
+        private PlayerConfig _playerConfig;
+        private float _airborneRotationSpeed;
         
         protected AirborneState(
             IStateSwitcher stateSwitcher,
@@ -34,8 +33,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Exit();
             
-            _playerConfig.MovementStateConfig.YVelocity.x = 0;
-            
             PlayerView.StopAirborne();
 
             ResetSprintState();
@@ -48,7 +45,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             ApplyGravity();
             AirborneMove();
         }
-
+        
         private void ApplyGravity()
         {
             _playerConfig.MovementStateConfig.YVelocity.y += _playerConfig.AirborneStateConfig.Gravity * Time.deltaTime;
@@ -62,40 +59,42 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
                 PlayerView.transform.forward * (Data.JumpModifier * PlayerConfig.AirborneStateConfig.JumpingStateConfig.ForwardSpeed * Time.deltaTime));
         }
         
-        protected override void Move()
-        {
-            // if (_playerCompositionRoot.GroundChecker.isTouches == false && Data.JumppeedModifier == 0f)
-            if (_playerCompositionRoot.GroundChecker.isTouches == false)
-            {
-                PlayerConfig.MovementStateConfig._movementDirection = GetMovementInputDirection();
-            
-                _playerCompositionRoot.CharacterController.Move(
-                    // PlayerConfig.MovementStateConfig._movementDirection * (Data.BaseSpeed * Data.MovementSpeedModifier * Time.deltaTime));
-                    PlayerConfig.MovementStateConfig._movementDirection * (_playerConfig.AirborneStateConfig.JumpingStateConfig.IdleJumpingSpeed * Time.deltaTime));
-            }
-        }
-
-        protected override void Rotate()
-        {
-            _aiborneRotationSpeed = 1f; //  ON TESTING
-            
-            if (PlayerConfig.MovementStateConfig._movementDirection != Vector3.zero)
-            {
-                Quaternion newRotation = Quaternion.LookRotation(PlayerConfig.MovementStateConfig._movementDirection);
-
-                Quaternion targetRotation = Quaternion.Slerp(
-                    PlayerView.transform.rotation,
-                    newRotation,
-                    _aiborneRotationSpeed * Time.deltaTime);
-
-                PlayerView.transform.rotation = targetRotation;
-            }
-        }
-        
         private void ResetSprintState()
         {
             PlayerConfig.MovementStateConfig._timeButtonHeld = 0f;
             PlayerConfig.MovementStateConfig.ShouldSprint = false;
+        }
+        
+        protected override void Move()
+        {
+            if (_playerCompositionRoot.GroundChecker.isTouches)
+            {
+                return;
+            }
+            
+            PlayerConfig.MovementStateConfig._movementDirection = GetMovementInputDirection();
+            
+            _playerCompositionRoot.CharacterController.Move(
+                PlayerConfig.MovementStateConfig._movementDirection * (_playerConfig.AirborneStateConfig.JumpingStateConfig.IdleJumpingSpeed * Time.deltaTime));
+        }
+
+        protected override void Rotate()
+        {
+            _airborneRotationSpeed = 1f;
+
+            if (PlayerConfig.MovementStateConfig._movementDirection == Vector3.zero)
+            {
+                return;
+            }
+            
+            Quaternion newRotation = Quaternion.LookRotation(PlayerConfig.MovementStateConfig._movementDirection);
+
+            Quaternion targetRotation = Quaternion.Slerp(
+                PlayerView.transform.rotation,
+                newRotation,
+                _airborneRotationSpeed * Time.deltaTime);
+
+            PlayerView.transform.rotation = targetRotation;
         }
         
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
@@ -108,20 +107,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         
         protected override void OnDodgeStarted(InputAction.CallbackContext context)
         {
-        }        
-        // protected override void OnStaticActionCanceled(InputAction.CallbackContext context)
-        // {
-        //     if (PlayerConfig.MovementStateConfig._isButtonHeld == false)
-        //     {
-        //         return;
-        //     }
-        //
-        //     PlayerConfig.MovementStateConfig._isButtonHeld = false;
-        //
-        //     if (PlayerConfig.MovementStateConfig.ShouldSprint)
-        //     {
-        //         PlayerConfig.MovementStateConfig.ShouldSprint = false;
-        //     }
-        // }
+        }
     }
 }
