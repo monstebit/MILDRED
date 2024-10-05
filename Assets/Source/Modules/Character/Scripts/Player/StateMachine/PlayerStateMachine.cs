@@ -53,7 +53,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             _currentState.Enter();
         }
         
-        public void HandleInput() => _currentState.HandleAllInputs();
+        // public void HandleInput() => _currentState.HandleAllInputs();
+        public void HandleInput()
+        {
+            if (IsOwner() == false)
+            {
+                return;
+            }
+            
+            _currentState.HandleAllInputs();
+        }
         
         public void Update()
         {
