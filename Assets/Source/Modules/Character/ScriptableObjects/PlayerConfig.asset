@@ -19,9 +19,9 @@ MonoBehaviour:
     MovementInput: {x: 0, y: 0}
     VerticalInput: 0
     HorizontalInput: 0
-    MoveAmount: 2
-    _movementDirection: {x: 0.18223564, y: 0, z: 0.9832549}
-    YVelocity: {x: 0, y: -14.552908, z: 0}
+    MoveAmount: 1
+    _movementDirection: {x: -0.7253747, y: 0, z: -0.6883542}
+    YVelocity: {x: 0, y: -2, z: 0}
     GroundedGravityForce: 0
     ShouldWalk: 0
     ShouldSprint: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
   _runningStateConfig:
     <SpeedModifier>k__BackingField: 1
   _walkingStateConfig:
-    <SpeedModifier>k__BackingField: 0.5
+    <SpeedModifier>k__BackingField: 0.3
   _sprintingStateConfig:
     <SpeedModifier>k__BackingField: 1.7
     <RunToWalkTime>k__BackingField: 0.5
@@ -71,7 +71,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     DodgeTimer: 0.5
-    Timer: 0.50211644
+    Timer: 0.5058609
   _backSteppingStateConfig:
     <BackStepToMoveTime>k__BackingField: 0.7
     BackStepCurve:
@@ -117,7 +117,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     BackStepTimer: 0.5
-    Timer: 0.7062103
+    Timer: 0.7107253
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:

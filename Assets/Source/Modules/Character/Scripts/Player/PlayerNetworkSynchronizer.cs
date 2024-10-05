@@ -1,3 +1,4 @@
+using System;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,11 +10,20 @@ namespace Source.Modules.Character.Scripts.Player
         [SerializeField] private PlayerCompositionRoot _playerCompositionRoot;
 
         [Header("Player Name")] 
-        public NetworkVariable<FixedString64Bytes> characterName = 
-            new NetworkVariable<FixedString64Bytes>(
+        public NetworkVariable<FixedString128Bytes> characterName = 
+            new NetworkVariable<FixedString128Bytes>(
                 "Character", 
                 NetworkVariableReadPermission.Everyone, 
                 NetworkVariableWritePermission.Owner);
+
+        [Header("Control Scheme")]
+        // public NetworkVariable<FixedString128Bytes> ControlScheme = 
+        //     new NetworkVariable<FixedString128Bytes>(
+        //         "ControlScheme", 
+        //         NetworkVariableReadPermission.Everyone, 
+        //         NetworkVariableWritePermission.Owner);
+        public NetworkVariable<float> ControlScheme = 
+            new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
         [Header("Position")] 
         public NetworkVariable<Vector3> NetworkPosition = new NetworkVariable<Vector3>(
