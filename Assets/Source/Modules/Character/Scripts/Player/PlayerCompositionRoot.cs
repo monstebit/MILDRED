@@ -9,6 +9,8 @@ namespace Source.Modules.Character.Scripts.Player
 {
     public class PlayerCompositionRoot : NetworkBehaviour
     {
+        [SerializeField] private PlayerInput _playerInput;
+        //
         [SerializeField] private PlayerNetworkSynchronizer _playerNetworkSynchronizer;
         [SerializeField] private PlayerCameraMovement _playerCameraMovement;
         [SerializeField] private PlayerView _playerView;
@@ -19,25 +21,32 @@ namespace Source.Modules.Character.Scripts.Player
         private CharacterController _characterController;
         
         public PlayerNetworkSynchronizer PlayerNetworkSynchronizer => _playerNetworkSynchronizer;
-        
         public CharacterController CharacterController => _characterController;
         public PlayerControls PlayerControls => _playerControls;
         public PlayerCameraMovement PlayerCameraMovement => _playerCameraMovement;
         public PlayerView PlayerView => _playerView;
         public PlayerConfig PlayerConfig => _playerConfig;
         public GroundChecker GroundChecker => _groundChecker;
+        public PlayerInput PlayerInput => _playerInput;
+        //  ON TESTING
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            //  INIT PLAYER CONTROL SCHEME FOR EACH PLAYER (OLD INPUT)
+            if (IsOwner)
+            {
+                _playerInput = GetComponent<PlayerInput>();
+                _playerInput.enabled = true;
+            }
+        }
 
         private void Awake()
         {
             DontDestroyOnLoad(this);
-            
             PlayerView.Initialize();
-            
             _characterController = PlayerView.GetComponent<CharacterController>();
-            
             _playerControls = new PlayerControls();
             _playerStateMachine = new PlayerStateMachine(this);
-            
             _playerNetworkSynchronizer = GetComponent<PlayerNetworkSynchronizer>();
         }
 
@@ -48,8 +57,36 @@ namespace Source.Modules.Character.Scripts.Player
             
             _playerStateMachine.HandleInput();
             _playerStateMachine.Update();
+
+            UpdateAnimatorMovementParameters();
+        }
+        //  ON TESTING
+        private void UpdateAnimatorMovementParameters()
+        {
+            int vertical = Animator.StringToHash("Vertical");
+            int horizontal = Animator.StringToHash("Horizontal");
+            
+            PlayerView.Animator.SetFloat(horizontal, 0f, 0.1f, Time.deltaTime);
+            
+            if (IsOwner) return;
+            
+            PlayerView.Animator.SetFloat(
+                vertical, PlayerNetworkSynchronizer.MoveAmount.Value, 
+                0.1f, Time.deltaTime);
+        }
+        
+        private void LateUpdate()
+        {
+            _playerStateMachine.LateUpdate();
         }
 
+        private void OnEnable()
+        {
+            _playerControls.Enable();
+        }
+        
+        private void OnDisable() => _playerControls.Disable();
+        
         private void UpdateNetworkTransform()
         {
             if (IsOwner)
@@ -79,15 +116,6 @@ namespace Source.Modules.Character.Scripts.Player
                 PlayerCameraMovement.Camera.enabled = false;
             }
         }
-
-        private void LateUpdate()
-        {
-            _playerStateMachine.LateUpdate();
-        }
-
-        private void OnEnable() => _playerControls.Enable();
-
-        private void OnDisable() => _playerControls.Disable();
         
         public void OnMovementStateAnimationEnterEvent()
         {
@@ -104,7 +132,7 @@ namespace Source.Modules.Character.Scripts.Player
             _playerStateMachine.OnAnimationTransitionEvent();
         }
         
-        #region DisableActionFor
+        #region DisableActionFor METHOD
         public void DisableActionFor(InputAction action, float seconds)
         {
             StartCoroutine(DisableAction(action, seconds));
@@ -118,6 +146,6 @@ namespace Source.Modules.Character.Scripts.Player
 
             action.Enable();
         }
-        #endregion
+        #endregion DisableActionFor
     }
 }
