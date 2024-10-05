@@ -26,7 +26,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             PlayerView.StartIdling();
 
-            ResetShouldWalk();
+            // ResetShouldWalk();
         }
 
         public override void Exit()
