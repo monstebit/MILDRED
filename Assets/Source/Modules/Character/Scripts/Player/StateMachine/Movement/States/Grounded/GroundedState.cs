@@ -44,10 +44,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             if (_playerCompositionRoot.GroundChecker.isTouches == false)
             {
-                if (InAnimationTransition())
-                {
-                    return;
-                }
+                if (InAnimationTransition()) return;
 
                 StateSwitcher.SwitchState<FallingState>();
             }

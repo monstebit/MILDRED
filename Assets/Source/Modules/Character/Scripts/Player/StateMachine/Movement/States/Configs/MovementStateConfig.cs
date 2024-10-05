@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Configs
@@ -6,6 +7,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.C
     [Serializable]
     public class MovementStateConfig
     {
+        [SerializeField] public string ControlScheme;  // Порог времени удержания для спринта
+        
         [Header("ЗАЖАТИЕ СПРИНТА И НАЖАТИЕ ДОДЖА")]
         [SerializeField] public float _holdTimeThreshold = 0.2f;  // Порог времени удержания для спринта
         [SerializeField] public float _timeButtonHeld = 0f;       // Время удержания кнопки

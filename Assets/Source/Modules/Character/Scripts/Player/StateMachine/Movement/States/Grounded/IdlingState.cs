@@ -1,5 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
 {
