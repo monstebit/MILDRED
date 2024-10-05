@@ -45,11 +45,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Update();
 
-            if (Time.time < _startTime + _playerConfig.SprintingStateConfig.RunToWalkTime)
-            {
-                return;
-            }
-            
+            // if (Time.time < _startTime + _playerConfig.SprintingStateConfig.RunToWalkTime) return;
             OnMove();
         }
         
@@ -60,7 +56,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 StateSwitcher.SwitchState<SprintingState>();
                 return;
             }
-
+            
             if (_playerConfig.MovementStateConfig.ShouldWalk)
             {
                 StateSwitcher.SwitchState<WalkingState>();
@@ -68,9 +64,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         }
         
         //  PC CONTROL
-        protected override void OnWalkToggleStarted(InputAction.CallbackContext context)
+        protected override void OnWalkTogglePerformed(InputAction.CallbackContext context)
         {
-            base.OnWalkToggleStarted(context);
+            base.OnWalkTogglePerformed(context);
             
             StateSwitcher.SwitchState<WalkingState>();
         }
