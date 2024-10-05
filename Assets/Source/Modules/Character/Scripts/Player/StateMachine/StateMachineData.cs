@@ -1,18 +1,21 @@
 using System;
+using Unity.Collections;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
     public class StateMachineData
     {
+        // public FixedString128Bytes ControlScheme { get; set; }
+        // public string ControlScheme;
+        public float ControlScheme;
         public Vector2 CameraInput { get; set; }
         public Vector2 MovementInput { get; set; }
         public float BaseSpeed { get; set; } = 5f;
         public float MovementSpeedModifier { get; set; } = 1f;
         public float JumpModifier { get; set; } = 1f;
-
+        
         private Vector3 _currentTargetRotation;
-
         private float _verticalInput;
         private float _horizontalInput;
         private float _cameraVerticalInput;
