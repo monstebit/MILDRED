@@ -5,36 +5,65 @@ namespace Source.Modules.Character.Scripts.Player
     [RequireComponent(typeof(Animator))]
     public class PlayerView : MonoBehaviour
     {
-        [SerializeField] PlayerCompositionRoot _playerCompositionRoot;
+        [SerializeField] private PlayerCompositionRoot _playerCompositionRoot;
+        private bool IsOwner => _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner; 
         
-        [Header("State Group Parameter Names")]
         private const string IsGrounded = "IsGrounded";
         private const string IsMoving = "IsMoving";
         private const string IsStaticAction = "IsStaticAction";
         private const string IsLanding = "IsLanding";
         private const string IsAirborne = "IsAirborne";
-        
-        [Header("Grounded Parameter Names")]
         private const string IsIdling = "IsIdling";
         private const string IsWalking = "IsWalking";
         private const string IsRunning = "IsRunning";
         private const string IsSprinting = "IsSprinting";
-        
-        [Header("Static Action Parameter Names")]
         private const string IsDodging = "IsDodging";
         private const string IsBackStepping = "IsBackStepping";
-        
-        [Header("Landing Parameter Names")]
         private const string IsLightLanding = "IsLightLanding";
-        
-        [Header("Airborne Parameter Names")]
         private const string IsJumping = "IsJumping";
         private const string IsFalling = "IsFalling";
         
         public Animator Animator;
         
         public void Initialize() => Animator = GetComponent<Animator>();
+        
+        public void UpdateNetworkTransform()
+        {
+            var playerNetworkSynchronizer = _playerCompositionRoot.PlayerNetworkSynchronizer;
+            var playerView = _playerCompositionRoot.PlayerView;
+            
+            if (IsOwner)
+            {
+                playerNetworkSynchronizer.NetworkPosition.Value = playerView.transform.position;
+                playerNetworkSynchronizer.NetworkRotation.Value = playerView.transform.rotation;
+            }
+            else
+            {
+                playerView.transform.position = Vector3.SmoothDamp(
+                    playerView.transform.position,
+                    playerNetworkSynchronizer.NetworkPosition.Value,
+                    ref playerNetworkSynchronizer.NetworkPositionVelocity,
+                    playerNetworkSynchronizer.NetworkPositionSmoothTime);
 
+                playerView.transform.rotation = Quaternion.Slerp(
+                    playerView.transform.rotation,
+                    playerNetworkSynchronizer.NetworkRotation.Value,
+                    playerNetworkSynchronizer.NetworkRotationSmoothTime);
+            }
+        }
+        
+        public void UpdateAnimatorMovementParameters()
+        {
+            int vertical = Animator.StringToHash("Vertical");
+            int horizontal = Animator.StringToHash("Horizontal");
+            Animator.SetFloat(horizontal, 0f, 0.1f, Time.deltaTime);
+            Animator.SetFloat(
+                vertical, 
+                _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value, 
+                0.1f, 
+                Time.deltaTime);
+        }
+        
         private void Awake()
         {
             if (_playerCompositionRoot == null)
@@ -78,10 +107,10 @@ namespace Source.Modules.Character.Scripts.Player
             _playerCompositionRoot.PlayerNetworkSynchronizer.IsJumping.OnValueChanged -= OnIsJumpingChanged;
             _playerCompositionRoot.PlayerNetworkSynchronizer.IsFalling.OnValueChanged -= OnIsFallingChanged;
         }
-
+        
         public void StartGrounded()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.Value = true;
             }
@@ -89,7 +118,7 @@ namespace Source.Modules.Character.Scripts.Player
         
         public void StopGrounded()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsGrounded.Value = false;
             }
@@ -97,7 +126,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartMoving()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsMoving.Value = true;
             }
@@ -105,7 +134,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopMoving()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsMoving.Value = false;
             }
@@ -113,14 +142,15 @@ namespace Source.Modules.Character.Scripts.Player
         
         public void StartStaticAction()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsStaticAction.Value = true;
             }
         }
+        
         public void StopStaticAction()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsStaticAction.Value = false;
             }
@@ -128,7 +158,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartLanding()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsLanding.Value = true;
             }
@@ -136,7 +166,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopLanding()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsLanding.Value = false;
             }
@@ -144,7 +174,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartAirborne()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsAirborne.Value = true;
             }
@@ -152,7 +182,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopAirborne()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsAirborne.Value = false;
             }
@@ -160,7 +190,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartIdling()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsIdling.Value = true;
             }
@@ -168,7 +198,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopIdling()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsIdling.Value = false;
             }
@@ -176,7 +206,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartWalking()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsWalking.Value = true;
             }
@@ -184,7 +214,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopWalking()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsWalking.Value = false;
             }
@@ -192,7 +222,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartRunning()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsRunning.Value = true;
             }
@@ -200,7 +230,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopRunning()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsRunning.Value = false;
             }
@@ -208,7 +238,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartSprinting()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.Value = true;
             }
@@ -216,7 +246,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopSprinting()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsSprinting.Value = false;
             }
@@ -224,7 +254,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartDodging()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsDodging.Value = true;
             }
@@ -232,7 +262,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopDodging()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsDodging.Value = false;
             }
@@ -240,7 +270,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartBackStepping()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsBackStepping.Value = true;
             }
@@ -248,7 +278,7 @@ namespace Source.Modules.Character.Scripts.Player
         
         public void StopBackStepping()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsBackStepping.Value = false;
             }
@@ -256,7 +286,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StartLightLanding()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsLightLanding.Value = true;
             }
@@ -264,7 +294,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopLightLanding()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsLightLanding.Value = false;
             }
@@ -272,7 +302,7 @@ namespace Source.Modules.Character.Scripts.Player
         
         public void StartJumping()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsJumping.Value = true;
             }
@@ -280,7 +310,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopJumping()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsJumping.Value = false;
             }
@@ -288,7 +318,7 @@ namespace Source.Modules.Character.Scripts.Player
         
         public void StartFalling()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsFalling.Value = true;
             }
@@ -296,7 +326,7 @@ namespace Source.Modules.Character.Scripts.Player
 
         public void StopFalling()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            if (IsOwner)
             {
                 _playerCompositionRoot.PlayerNetworkSynchronizer.IsFalling.Value = false;
             }
@@ -306,6 +336,7 @@ namespace Source.Modules.Character.Scripts.Player
         {
             Animator.SetBool(IsGrounded, newValue);
         }
+        
         private void OnIsMovingChanged(bool previousValue, bool newValue)
         {
             Animator.SetBool(IsMoving, newValue);
