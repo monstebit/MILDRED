@@ -17,11 +17,13 @@ namespace Source.Modules.Character.Scripts.Player
                 NetworkVariableWritePermission.Owner);
 
         [Header("Control Scheme")]
+        #region ControlScheme (FixedString128Bytes)
         // public NetworkVariable<FixedString128Bytes> ControlScheme = 
         //     new NetworkVariable<FixedString128Bytes>(
         //         "ControlScheme", 
         //         NetworkVariableReadPermission.Everyone, 
         //         NetworkVariableWritePermission.Owner);
+        #endregion ControlScheme (FixedString128Bytes)
         public NetworkVariable<float> ControlScheme = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
@@ -40,7 +42,7 @@ namespace Source.Modules.Character.Scripts.Player
         public float NetworkPositionSmoothTime = 0.1f;
         public float NetworkRotationSmoothTime = 0.1f;
         
-        [Header("Animator")]
+        [Header("Locomotion")]
         public NetworkVariable<float> HorizontalMovement = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
@@ -57,29 +59,37 @@ namespace Source.Modules.Character.Scripts.Player
         public NetworkVariable<float> CameraVerticalMovement = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-        [Header("Flags")]
+        [Header("Animation States")]
         public NetworkVariable<bool> IsGrounded = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         public NetworkVariable<bool> IsMoving = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         public NetworkVariable<bool> IsStaticAction = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         public NetworkVariable<bool> IsAirborne = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         public NetworkVariable<bool> IsLanding = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
         public NetworkVariable<bool> IsIdling = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         public NetworkVariable<bool> IsWalking = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); 
+        
         public NetworkVariable<bool> IsRunning = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); 
+        
         public NetworkVariable<bool> IsSprinting = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner); 
         
         public NetworkVariable<bool> IsDodging = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         public NetworkVariable<bool> IsBackStepping = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
@@ -88,6 +98,7 @@ namespace Source.Modules.Character.Scripts.Player
         
         public NetworkVariable<bool> IsJumping = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         public NetworkVariable<bool> IsFalling = 
             new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
@@ -98,5 +109,34 @@ namespace Source.Modules.Character.Scripts.Player
                 Debug.LogError("PlayerCompositionRoot is null");
             }
         }
+
+        #region RPC
+        // //  A SERVER RPS IS A FUNCTION CALLED FROM A CLIENT, TO THE SERVER (IN OUR CASE THE HOST)
+        // [ServerRpc]
+        // public void NotifyTheServerOfActionAnimationServerRpc(ulong clientID, string stateName, bool state)
+        // {
+        //     //  IF THIS CHARACTER IS THE HOST/SERVER, THEN ACTIVATE THE CLIENT RPC
+        //     if (IsServer)
+        //     {
+        //         PlayActionAnimationForAllClientsClientRpc(clientID, stateName, state);
+        //     }
+        // }
+        //
+        // //  A CLIENT RPC IS SENT TO ALL CLIENTS PRESENT, FROM THE SERVER
+        // [ClientRpc]
+        // public void PlayActionAnimationForAllClientsClientRpc(ulong clientID, string stateName, bool state)
+        // {
+        //     //  WE MAKE SURE TO NOT RUN THE FUNCTION ON THE CHARACTER WHO SENT IT (SO WE DON'T PLAY THE ANIMATION TWICE)
+        //     if (clientID != NetworkManager.Singleton.LocalClientId)
+        //     {
+        //         PerformActionAnimationFromServer(stateName, state);
+        //     }
+        // }
+        //
+        // private void PerformActionAnimationFromServer(string stateName, bool state)
+        // {
+        //     _playerCompositionRoot.PlayerView.Animator.SetBool(stateName, state);
+        // }
+        #endregion RPC
     }
 }

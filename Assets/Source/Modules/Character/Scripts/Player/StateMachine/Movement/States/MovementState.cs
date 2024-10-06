@@ -9,13 +9,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
 {
     public abstract class MovementState : IState
     {
-        //
-        private bool IsOwner => _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner; 
-        //
-        
         private readonly PlayerCompositionRoot _playerCompositionRoot;
         private readonly PlayerCameraMovement _playerCameraMovement;
 
+        private bool IsOwner => _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner; 
+        
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
         protected PlayerConfig PlayerConfig;
@@ -67,11 +65,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             HandleMovementInput();
             HandleCameraInput();
             
-            UpdateAnimatorMovementParameters();
             HandleMovementByControlScheme();//
-            
-            SyncMovementInput();
-            SyncCameraInput();
             SyncControlScheme();//
         }
         
@@ -81,23 +75,18 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             if (stringScheme == "Gamepad")
             {
                 Data.ControlScheme = 1;
-                // _playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value = 1;
             }
             else if (stringScheme == "KeyboardAndMouse")
             {
                 Data.ControlScheme = 2;
-                // _playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value = 1;
             }
-            // Data.ControlScheme = _playerCompositionRoot.PlayerInput.currentControlScheme;
-            // PlayerConfig.MovementStateConfig.ControlScheme = Data.ControlScheme.ToString();
-            //
-            
             
             Data.MovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
             
             Data.VerticalInput = Data.MovementInput.y;
             Data.HorizontalInput = Data.MovementInput.x;
-            Data.MoveAmount = Mathf.Clamp01(Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
+            _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = 
+                Mathf.Clamp01(Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
 
             if (Data.MovementInput == Vector2.zero) return;
 
@@ -110,20 +99,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             if (PlayerConfig.MovementStateConfig.ShouldSprint &&
                 PlayerConfig.MovementStateConfig._timeButtonHeld >= PlayerConfig.MovementStateConfig._holdTimeThreshold)
             {
-                Data.MoveAmount = 2f;
+                _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = 2f;
             }
         }
         
         private void HandleMovementByControlScheme()
         {
-            // if (Data.ControlScheme == "Gamepad")
-            // if (Data.ControlScheme == 1)
             if (_playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value == 1)
             {
                 HandleGamepadMovement();
             }
-            // else if (Data.ControlScheme == "KeyboardAndMouse")
-            // else if (Data.ControlScheme == 2)
             else if (_playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value == 2)
             {
                 HandleKeyboardMovement();
@@ -132,23 +117,32 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         
         private void HandleGamepadMovement()
         {
-            if (Data.MoveAmount <= 0.5f && Data.MoveAmount > 0f)
-            {
-                PlayerConfig.MovementStateConfig.ShouldWalk = true;
-                Data.MoveAmount = 0.5f;
-            }
-            else if (Data.MoveAmount > 0.5f && Data.MoveAmount <= 1f)
+            if (Data.MovementInput == Vector2.zero)
             {
                 PlayerConfig.MovementStateConfig.ShouldWalk = false;
-                Data.MoveAmount = 1f;
+                return;
+            }
+            
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value <= 0.5f && _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value > 0f)
+            {
+                PlayerConfig.MovementStateConfig.ShouldWalk = true;
+                _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = 0.5f;
+            }
+            else if (_playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value > 0.5f && _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value <= 1f)
+            {
+                PlayerConfig.MovementStateConfig.ShouldWalk = false;
+                _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = 1f;
             }
         }
 
         private void HandleKeyboardMovement()
         {
-            if (PlayerConfig.MovementStateConfig.ShouldWalk && PlayerConfig.MovementStateConfig.ShouldSprint == false)
+            if (Data.MovementInput == Vector2.zero) return;
+            
+            if (PlayerConfig.MovementStateConfig.ShouldWalk &&
+                PlayerConfig.MovementStateConfig.ShouldSprint == false)
             {
-                Data.MoveAmount = 0.5f;
+                _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = 0.5f;
             }
         }
         
@@ -160,65 +154,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             Data.CameraHorizontalInput = Data.CameraInput.x;
         }
         
-        private void SyncMovementInput()
-        {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
-            {
-                _playerCompositionRoot.PlayerNetworkSynchronizer.VerticalMovement.Value = Data.VerticalInput;
-                _playerCompositionRoot.PlayerNetworkSynchronizer.HorizontalMovement.Value = Data.HorizontalInput;
-                _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = Data.MoveAmount;
-            }
-            else
-            {
-                Data.VerticalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.VerticalMovement.Value;
-                Data.HorizontalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.HorizontalMovement.Value;
-                Data.MoveAmount = _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value;
-            }
-        }
-        
-        private void SyncCameraInput()
-        {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
-            {
-                _playerCompositionRoot.PlayerNetworkSynchronizer.CameraVerticalMovement.Value = Data.CameraVerticalInput;
-                _playerCompositionRoot.PlayerNetworkSynchronizer.CameraHorizontalMovement.Value = Data.CameraHorizontalInput;
-            }
-            else
-            {
-                Data.CameraVerticalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.CameraVerticalMovement.Value;
-                Data.CameraHorizontalInput = _playerCompositionRoot.PlayerNetworkSynchronizer.CameraHorizontalMovement.Value;
-            }
-        }
-        
         private void SyncControlScheme()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
-            {
-                _playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value = Data.ControlScheme;
-            }
-            else
-            {
-                Data.ControlScheme = _playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value;
-            }
-        }
-        
-        private void UpdateAnimatorMovementParameters()
-        {
-            int vertical = Animator.StringToHash("Vertical");
-            int horizontal = Animator.StringToHash("Horizontal");
-            
-            PlayerView.Animator.SetFloat(horizontal, 0f, 0.1f, Time.deltaTime);
-            
-            if (IsOwner)
-            {
-                PlayerView.Animator.SetFloat(vertical, Data.MoveAmount, 0.1f, Time.deltaTime);
-            }
-            else
-            {
-                PlayerView.Animator.SetFloat(
-                    vertical, _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value, 
-                    0.1f, Time.deltaTime);
-            }
+            _playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value = Data.ControlScheme;
+            // if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            // {
+            //     _playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value = Data.ControlScheme;
+            // }
         }
         
         private void CheckButtonHeld()
