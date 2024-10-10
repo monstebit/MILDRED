@@ -20,14 +20,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
             
-            PlayerView.StartMoving();
+            // PlayerView.StartMoving();
+            PlayerView.UpdateState("IsMoving", true);
         }
         
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopMoving();
+            // PlayerView.StopMoving();
+            PlayerView.UpdateState("IsMoving", false);
         }
 
         public override void Update()

@@ -29,7 +29,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Enter();
             
-            PlayerView.StartJumping();
+            // PlayerView.StartJumping();
+            PlayerView.UpdateState("IsJumping", true);
             
             Data.MovementSpeedModifier = 0f;
             
@@ -50,13 +51,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             _jumpingStateConfig.Timer = 0;
             _jumpingStateConfig.IsJumping = false;
             
-            PlayerView.StopJumping();
+            // PlayerView.StopJumping();
+            PlayerView.UpdateState("IsJumping", false);
         }
         
         public override void Update()
         {
             base.Update();
-            
+                
             HandleJump();
         }
         

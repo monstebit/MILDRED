@@ -30,7 +30,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            PlayerView.StartDodging();
+            // PlayerView.StartDodging();
+            PlayerView.UpdateState("IsDodging", true);
             
             _playerConfig.DodgeStateConfig.Timer = 0f;
             Keyframe LastFrame = _playerConfig.DodgeStateConfig.DodgeCurve[_playerConfig.DodgeStateConfig.DodgeCurve.length - 1];
@@ -41,7 +42,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            PlayerView.StopDodging();
+            // PlayerView.StopDodging();
+            PlayerView.UpdateState("IsDodging", false);
         }
         
         public override void Update()

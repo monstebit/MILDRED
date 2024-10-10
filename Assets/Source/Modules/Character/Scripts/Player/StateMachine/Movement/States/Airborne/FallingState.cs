@@ -26,14 +26,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             Data.MovementSpeedModifier = 0f;
             Data.JumpModifier = 0f;
             
-            PlayerView.StartFalling();
+            // PlayerView.StartFalling();
+            PlayerView.UpdateState("IsFalling", true);
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopFalling();
+            // PlayerView.StopFalling();
+            PlayerView.UpdateState("IsFalling", false);
         }
         
         public override void Update()

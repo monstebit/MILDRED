@@ -23,14 +23,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
             
-            PlayerView.StartStaticAction();
+            // PlayerView.StartStaticAction();
+            PlayerView.UpdateState("IsStaticAction", true);
         }
         
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopStaticAction();
+            // PlayerView.StopStaticAction();
+            PlayerView.UpdateState("IsStaticAction", false);
         }
         
         public override void Update()

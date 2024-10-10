@@ -1,5 +1,6 @@
 using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Airborne;
+using Unity.Netcode;
 using UnityEngine.InputSystem;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded
@@ -23,14 +24,20 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
             
-            PlayerView.StartGrounded();
+            // PlayerView.StartGrounded();
+            PlayerView.UpdateState("IsGrounded", true);
+            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
+            //     NetworkManager.Singleton.LocalClientId, "IsGrounded", true);
         }
         
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopGrounded();
+            // PlayerView.StopGrounded();
+            PlayerView.UpdateState("IsGrounded", false);
+            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
+            //     NetworkManager.Singleton.LocalClientId, "IsGrounded", false);
         }
 
         public override void Update()

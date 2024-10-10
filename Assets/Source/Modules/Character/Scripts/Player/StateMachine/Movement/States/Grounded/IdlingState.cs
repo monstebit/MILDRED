@@ -24,7 +24,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             base.Enter();
             
-            PlayerView.StartIdling();
+            // PlayerView.StartIdling();
+            PlayerView.UpdateState("IsIdling", true);
 
             // ResetShouldWalk();
         }
@@ -33,7 +34,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            PlayerView.StopIdling();
+            // PlayerView.StopIdling();
+            PlayerView.UpdateState("IsIdling", false);
         }
 
         public override void Update()

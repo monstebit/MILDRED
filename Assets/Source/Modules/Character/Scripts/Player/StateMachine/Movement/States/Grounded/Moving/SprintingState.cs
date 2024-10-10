@@ -26,14 +26,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             base.Enter();
 
-            PlayerView.StartSprinting();
+            // PlayerView.StartSprinting();
+            PlayerView.UpdateState("IsSprinting", true);
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            PlayerView.StopSprinting();
+            // PlayerView.StopSprinting();
+            PlayerView.UpdateState("IsSprinting", false);
         }
 
         public override void Update()

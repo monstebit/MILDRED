@@ -26,14 +26,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Enter();
             
-            PlayerView.StartAirborne();
+            // PlayerView.StartAirborne();
+            PlayerView.UpdateState("IsAirborne", true);
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopAirborne();
+            // PlayerView.StopAirborne();
+            PlayerView.UpdateState("IsAirborne", false);
 
             ResetSprintState();
         }

@@ -24,14 +24,16 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             Data.MovementSpeedModifier = _playerConfig.WalkingStateConfig.SpeedModifier; ;
             Data.JumpModifier = 0.5f;
             
-            PlayerView.StartWalking();
+            // PlayerView.StartWalking();
+            PlayerView.UpdateState("IsWalking", true);
         }
 
         public override void Exit()
         {
             base.Exit();
             
-            PlayerView.StopWalking();
+            // PlayerView.StopWalking();
+            PlayerView.UpdateState("IsWalking", false);
         }
 
         public override void Update()
