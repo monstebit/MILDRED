@@ -27,7 +27,6 @@ namespace Source.Modules.Character.Scripts.Player
         public PlayerConfig PlayerConfig => _playerConfig;
         public GroundChecker GroundChecker => _groundChecker;
         public PlayerInput PlayerInput => _playerInput;
-        //  ON TESTING
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -51,25 +50,14 @@ namespace Source.Modules.Character.Scripts.Player
 
         private void Update()
         {
-            // UpdateNetworkTransform();
             DisableNonLocalPlayerCamera();
             
             _playerStateMachine.HandleInput();
             _playerStateMachine.Update();
 
-            // UpdateAnimatorMovementParameters();
             PlayerView.UpdateAnimatorMovementParameters();
             PlayerView.UpdateNetworkTransform();
         }
-        
-        //  ON TESTING
-        // private void UpdateAnimatorMovementParameters()
-        // {
-        //     int vertical = Animator.StringToHash("Vertical");
-        //     int horizontal = Animator.StringToHash("Horizontal");
-        //     PlayerView.Animator.SetFloat(horizontal, 0f, 0.1f, Time.deltaTime);
-        //     PlayerView.Animator.SetFloat(vertical, PlayerNetworkSynchronizer.MoveAmount.Value, 0.1f, Time.deltaTime);
-        // }
         
         private void LateUpdate()
         {
@@ -82,29 +70,6 @@ namespace Source.Modules.Character.Scripts.Player
         }
         
         private void OnDisable() => _playerControls.Disable();
-        
-        //  ON TESTING
-        // private void UpdateNetworkTransform()
-        // {
-        //     if (IsOwner)
-        //     {
-        //         _playerNetworkSynchronizer.NetworkPosition.Value = _playerView.transform.position;
-        //         _playerNetworkSynchronizer.NetworkRotation.Value = _playerView.transform.rotation;
-        //     }
-        //     else
-        //     {
-        //         _playerView.transform.position = Vector3.SmoothDamp(
-        //             _playerView.transform.position,
-        //             _playerNetworkSynchronizer.NetworkPosition.Value,
-        //             ref _playerNetworkSynchronizer.NetworkPositionVelocity,
-        //             _playerNetworkSynchronizer.NetworkPositionSmoothTime);
-        //
-        //         _playerView.transform.rotation = Quaternion.Slerp(
-        //             _playerView.transform.rotation,
-        //             _playerNetworkSynchronizer.NetworkRotation.Value,
-        //             _playerNetworkSynchronizer.NetworkRotationSmoothTime);
-        //     }
-        // }
 
         private void DisableNonLocalPlayerCamera()
         {
