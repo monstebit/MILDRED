@@ -1,5 +1,5 @@
-using System;
-using Unity.Collections;
+using Source.Modules.Shared;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,23 +12,35 @@ namespace Source.Modules.Character.Scripts.Player
         private NetworkVariable<int> playerInGame = new NetworkVariable<int>();
         
         [Header("Player Name")] 
-        // public NetworkVariable<FixedString64Bytes> characterName = 
-        //     new NetworkVariable<FixedString64Bytes>(
-        //         "Character", 
-        //         NetworkVariableReadPermission.Everyone, 
-        //         NetworkVariableWritePermission.Owner);
-        public NetworkVariable<float> characterName = 
-            new NetworkVariable<float>(
-                0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        
+        [SerializeField] private NetworkVariable<NetworkString> playerName = new NetworkVariable<NetworkString>();
+        private bool overlaySet = false;
+
+        public override void OnNetworkSpawn()
+        {
+            if (IsServer)
+            {
+                playerName.Value = $"Player {OwnerClientId}";   
+            }
+        }
+
+        public void SetOverlay()
+        {
+            var localPlayerOverlay = gameObject.GetComponentInChildren<TextMeshProUGUI>();
+            localPlayerOverlay.text = playerName.Value.ToString();
+        }
+
+        private void Update()
+        {
+            if (!overlaySet && !string.IsNullOrEmpty(playerName.Value))
+            {
+                SetOverlay();
+                overlaySet = true;
+            }
+        }
+
+
+        //ON TESTING
         [Header("Control Scheme")]
-        #region ControlScheme (FixedString128Bytes)
-        // public NetworkVariable<FixedString64Bytes> ControlScheme = 
-        //     new NetworkVariable<FixedString64Bytes>(
-        //         "ControlScheme", 
-        //         NetworkVariableReadPermission.Everyone, 
-        //         NetworkVariableWritePermission.Owner);
-        #endregion ControlScheme (FixedString64Bytes)
         public NetworkVariable<float> ControlScheme = 
             new NetworkVariable<float>(
                 0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -49,27 +61,8 @@ namespace Source.Modules.Character.Scripts.Player
         public float NetworkRotationSmoothTime = 0.1f;
         
         [Header("Locomotion")]
-        public NetworkVariable<float> HorizontalMovement = 
-            new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        
-        public NetworkVariable<float> VerticalMovement = 
-            new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        
         public NetworkVariable<float> MoveAmount = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        
-        [Header("Camera")]
-        public NetworkVariable<float> CameraHorizontalMovement = 
-            new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        
-        public NetworkVariable<float> CameraVerticalMovement = 
-            new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        
-        public NetworkVariable<Vector3> CameraPosition = 
-            new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        
-        public NetworkVariable<Vector3> CameraForward = 
-            new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
         private void Awake()
         {

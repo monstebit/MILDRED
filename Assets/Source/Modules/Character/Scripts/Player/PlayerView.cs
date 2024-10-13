@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player
@@ -9,92 +7,16 @@ namespace Source.Modules.Character.Scripts.Player
     [RequireComponent(typeof(Animator))]
     public class PlayerView : MonoBehaviour
     {
-        [SerializeField] public TextMeshProUGUI playerName;
-        [SerializeField] public Canvas _canvas;
-        public Camera ownerCamera; // Камера, на которую должен смотреть Canvas
-        public Vector3 ownerPos; // Камера, на которую должен смотреть Canvas
-        //
+        // [SerializeField] public TextMeshProUGUI playerName;
+        // [SerializeField] public Canvas _canvas;
         [SerializeField] private PlayerCompositionRoot _playerCompositionRoot;
-        private bool IsOwner => _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner; 
-        
-        private HashSet<string> _activeStates = new HashSet<string>();
+        private HashSet<string> _activeStates = new();
         
         public Animator Animator;
+        
+        private bool IsOwner => _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner; 
+        
         public void Initialize() => Animator = GetComponent<Animator>();
-        
-        
-        
-        
-        
-        
-        private void Awake()
-        {
-            if (_playerCompositionRoot == null)
-            {
-                Debug.LogError("PlayerView: No player composition root");
-            }
-
-            ownerPos = _playerCompositionRoot.PlayerNetworkSynchronizer.CameraPosition.Value;
-
-            //  ЕСЛИТ Я OWNER
-            // if (IsOwner)
-            // {
-            //     ownerCamera = GetComponentInChildren<Camera>();
-            // }
-
-            // // Проходим по всем подключенным клиентам
-            // foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
-            // {
-            //     if (client.ClientId == NetworkManager.Singleton.LocalClientId && client.PlayerObject != null)
-            //     {
-            //         // Предполагаем, что камера владельца находится в его объекте
-            //         ownerCamera = client.PlayerObject.GetComponentInChildren<Camera>();
-            //         break;
-            //     }
-            // }
-        }
-        
-        
-        //IsLocalPlayer — это свойство, которое возвращает true,
-        //если данный игровой объект (игрок) является локальным игроком на данном клиенте.
-        //Локальный игрок — это игрок, который управляется текущим клиентом.
-        private void LateUpdate()
-        {
-            // var localCamera = _playerCompositionRoot.PlayerCameraMovement.Camera;
-            //
-            // if (!IsOwner) return;
-            //
-            // foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
-            // {
-            //     if (client.ClientId != NetworkManager.Singleton.LocalClientId && client.PlayerObject != null)
-            //     {
-            //         var otherPlayerCanvas = client.PlayerObject.GetComponentInChildren<Canvas>();
-            //         if (otherPlayerCanvas != null)
-            //         {
-            //             otherPlayerCanvas.transform.LookAt(localCamera.transform);
-            //         }
-            //         else
-            //         {
-            //             Debug.LogWarning("PlayerView: No player canvas");
-            //         }
-            //     }
-            // }
-        }
-
-        
-        
-        
-        
-        private void Update()
-        {
-            if (IsOwner)
-            {
-                _playerCompositionRoot.PlayerNetworkSynchronizer.characterName.Value = NetworkManager.Singleton.LocalClientId;
-                playerName.text = _playerCompositionRoot.PlayerNetworkSynchronizer.characterName.Value.ToString();
-            }
-            
-            playerName.text = _playerCompositionRoot.PlayerNetworkSynchronizer.characterName.Value.ToString();
-        }
 
         public void UpdateNetworkTransform()
         {
