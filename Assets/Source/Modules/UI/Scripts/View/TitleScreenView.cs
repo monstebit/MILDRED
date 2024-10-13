@@ -36,6 +36,11 @@ namespace Source.Modules.UI.Scripts.View
             HideButton(_pressStartAsClientButton);  //  ON TESTING
             ShowButton(_startNewGameButton);
         }
+        
+        public void HideStartNewGameButton()
+        {
+            HideButton(_startNewGameButton);
+        }
 
         private void HideButton(Button button)
         {

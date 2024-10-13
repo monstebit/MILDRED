@@ -2,7 +2,6 @@ using System;
 using Source.Modules.Character.Scripts;
 using Source.Modules.UI.Scripts.Model;
 using Source.Modules.UI.Scripts.View;
-using UnityEngine;
 
 namespace Source.Modules.UI.Scripts.Presenter
 {
@@ -30,11 +29,12 @@ namespace Source.Modules.UI.Scripts.Presenter
             _titleScreenView.ShowStartNewGameButton();
         }
         
-        //  ON TESTING
         public void OnPressStartButtonAsClientPressed()
         {
             _networkLauncher.StartNetworkAsClient();
+            
             _titleScreenView.ShowStartNewGameButton();
+            _titleScreenView.HideStartNewGameButton();
         }
 
         public void OnPressNewGameButtonPressed()
