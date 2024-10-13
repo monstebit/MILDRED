@@ -30,7 +30,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            // PlayerView.StartDodging();
             PlayerView.UpdateState("IsDodging", true);
             
             _playerConfig.DodgeStateConfig.Timer = 0f;
@@ -42,7 +41,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            // PlayerView.StopDodging();
             PlayerView.UpdateState("IsDodging", false);
         }
         

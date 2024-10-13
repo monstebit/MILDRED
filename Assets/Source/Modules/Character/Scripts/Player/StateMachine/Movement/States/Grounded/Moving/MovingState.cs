@@ -20,7 +20,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
             
-            // PlayerView.StartMoving();
             PlayerView.UpdateState("IsMoving", true);
         }
         
@@ -28,7 +27,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            // PlayerView.StopMoving();
             PlayerView.UpdateState("IsMoving", false);
         }
 

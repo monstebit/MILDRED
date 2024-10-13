@@ -26,7 +26,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
             Data.MovementSpeedModifier = 0f;
             Data.JumpModifier = 0f;
             
-            // PlayerView.StartFalling();
             PlayerView.UpdateState("IsFalling", true);
         }
 
@@ -34,7 +33,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Exit();
             
-            // PlayerView.StopFalling();
             PlayerView.UpdateState("IsFalling", false);
         }
         

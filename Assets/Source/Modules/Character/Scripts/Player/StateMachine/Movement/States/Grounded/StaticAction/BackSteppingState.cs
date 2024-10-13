@@ -32,7 +32,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
                 return;
             }
             
-            // PlayerView.StartBackStepping();
             PlayerView.UpdateState("IsBackStepping", true);
             
             _startTime = Time.time;
@@ -43,11 +42,8 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
         public override void Exit()
         {
-            // Завершаем текущее состояние
             base.Exit();
 
-            // Останавливаем анимацию backstep
-            // PlayerView.StopBackStepping();
             PlayerView.UpdateState("IsBackStepping", false);
         }
 

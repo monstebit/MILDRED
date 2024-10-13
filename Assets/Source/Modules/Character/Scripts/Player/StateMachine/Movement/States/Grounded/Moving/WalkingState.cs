@@ -24,7 +24,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             Data.MovementSpeedModifier = _playerConfig.WalkingStateConfig.SpeedModifier; ;
             Data.JumpModifier = 0.5f;
             
-            // PlayerView.StartWalking();
             PlayerView.UpdateState("IsWalking", true);
         }
 
@@ -32,7 +31,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            // PlayerView.StopWalking();
             PlayerView.UpdateState("IsWalking", false);
         }
 

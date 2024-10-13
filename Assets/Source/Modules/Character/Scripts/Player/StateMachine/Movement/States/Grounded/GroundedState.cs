@@ -24,20 +24,14 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
             
-            // PlayerView.StartGrounded();
             PlayerView.UpdateState("IsGrounded", true);
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "IsGrounded", true);
         }
         
         public override void Exit()
         {
             base.Exit();
             
-            // PlayerView.StopGrounded();
             PlayerView.UpdateState("IsGrounded", false);
-            // _playerCompositionRoot.PlayerNetworkSynchronizer.NotifyTheServerOfActionAnimationServerRpc(
-            //     NetworkManager.Singleton.LocalClientId, "IsGrounded", false);
         }
 
         public override void Update()

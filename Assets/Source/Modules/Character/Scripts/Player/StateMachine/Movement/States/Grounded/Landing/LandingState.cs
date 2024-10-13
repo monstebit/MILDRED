@@ -18,7 +18,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
             
-            // PlayerView.StartLanding();
             PlayerView.UpdateState("IsLanding", true);
         }
 
@@ -26,7 +25,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            // PlayerView.StopLanding();
             PlayerView.UpdateState("IsLanding", false);
         }
 

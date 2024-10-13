@@ -23,7 +23,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Enter();
             
-            // PlayerView.StartStaticAction();
             PlayerView.UpdateState("IsStaticAction", true);
         }
         
@@ -31,7 +30,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            // PlayerView.StopStaticAction();
             PlayerView.UpdateState("IsStaticAction", false);
         }
         

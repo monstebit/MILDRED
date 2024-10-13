@@ -26,7 +26,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Enter();
             
-            // PlayerView.StartAirborne();
             PlayerView.UpdateState("IsAirborne", true);
         }
 
@@ -34,7 +33,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Exit();
             
-            // PlayerView.StopAirborne();
             PlayerView.UpdateState("IsAirborne", false);
 
             ResetSprintState();

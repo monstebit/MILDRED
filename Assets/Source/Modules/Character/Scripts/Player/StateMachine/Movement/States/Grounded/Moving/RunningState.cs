@@ -29,7 +29,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             
             base.Enter();
 
-            // PlayerView.StartRunning();
             PlayerView.UpdateState("IsRunning", true);
             
             _startTime = Time.time;
@@ -39,7 +38,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
             
-            // PlayerView.StopRunning();
             PlayerView.UpdateState("IsRunning", false);
         }
         

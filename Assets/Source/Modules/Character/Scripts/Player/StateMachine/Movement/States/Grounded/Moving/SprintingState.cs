@@ -26,7 +26,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 
             base.Enter();
 
-            // PlayerView.StartSprinting();
             PlayerView.UpdateState("IsSprinting", true);
         }
 
@@ -34,7 +33,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
         {
             base.Exit();
 
-            // PlayerView.StopSprinting();
             PlayerView.UpdateState("IsSprinting", false);
         }
 

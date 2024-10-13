@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,48 +9,93 @@ namespace Source.Modules.Character.Scripts.Player
     [RequireComponent(typeof(Animator))]
     public class PlayerView : MonoBehaviour
     {
-        // private const string IsGrounded = "IsGrounded";
-        // private const string IsMoving = "IsMoving";
-        // private const string IsStaticAction = "IsStaticAction";
-        // private const string IsLanding = "IsLanding";
-        // private const string IsAirborne = "IsAirborne";
-        // private const string IsIdling = "IsIdling";
-        // private const string IsWalking = "IsWalking";
-        // private const string IsRunning = "IsRunning";
-        // private const string IsSprinting = "IsSprinting";
-        // private const string IsDodging = "IsDodging";
-        // private const string IsBackStepping = "IsBackStepping";
-        // private const string IsLightLanding = "IsLightLanding";
-        // private const string IsJumping = "IsJumping";
-        // private const string IsFalling = "IsFalling";
-        
+        [SerializeField] public TextMeshProUGUI playerName;
+        [SerializeField] public Canvas _canvas;
+        public Camera ownerCamera; // Камера, на которую должен смотреть Canvas
+        public Vector3 ownerPos; // Камера, на которую должен смотреть Canvas
+        //
         [SerializeField] private PlayerCompositionRoot _playerCompositionRoot;
         private bool IsOwner => _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner; 
         
-        // Словарь для хранения состояний
-        // private Dictionary<string, bool> _animationStates = new Dictionary<string, bool>()
-        // {
-        //     { "IsGrounded", false },
-        //     { "IsMoving", false },
-        //     { "IsStaticAction", false },
-        //     { "IsLanding", false },
-        //     { "IsAirborne", false },
-        //     { "IsIdling", false },
-        //     { "IsWalking", false },
-        //     { "IsRunning", false },
-        //     { "IsSprinting", false },
-        //     { "IsDodging", false },
-        //     { "IsBackStepping", false },
-        //     { "IsLightLanding", false },
-        //     { "IsJumping", false },
-        //     { "IsFalling", false },
-        // };
         private HashSet<string> _activeStates = new HashSet<string>();
         
         public Animator Animator;
-        
         public void Initialize() => Animator = GetComponent<Animator>();
         
+        
+        
+        
+        
+        
+        private void Awake()
+        {
+            if (_playerCompositionRoot == null)
+            {
+                Debug.LogError("PlayerView: No player composition root");
+            }
+
+            ownerPos = _playerCompositionRoot.PlayerNetworkSynchronizer.CameraPosition.Value;
+
+            //  ЕСЛИТ Я OWNER
+            // if (IsOwner)
+            // {
+            //     ownerCamera = GetComponentInChildren<Camera>();
+            // }
+
+            // // Проходим по всем подключенным клиентам
+            // foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+            // {
+            //     if (client.ClientId == NetworkManager.Singleton.LocalClientId && client.PlayerObject != null)
+            //     {
+            //         // Предполагаем, что камера владельца находится в его объекте
+            //         ownerCamera = client.PlayerObject.GetComponentInChildren<Camera>();
+            //         break;
+            //     }
+            // }
+        }
+        
+        
+        //IsLocalPlayer — это свойство, которое возвращает true,
+        //если данный игровой объект (игрок) является локальным игроком на данном клиенте.
+        //Локальный игрок — это игрок, который управляется текущим клиентом.
+        private void LateUpdate()
+        {
+            // var localCamera = _playerCompositionRoot.PlayerCameraMovement.Camera;
+            //
+            // if (!IsOwner) return;
+            //
+            // foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+            // {
+            //     if (client.ClientId != NetworkManager.Singleton.LocalClientId && client.PlayerObject != null)
+            //     {
+            //         var otherPlayerCanvas = client.PlayerObject.GetComponentInChildren<Canvas>();
+            //         if (otherPlayerCanvas != null)
+            //         {
+            //             otherPlayerCanvas.transform.LookAt(localCamera.transform);
+            //         }
+            //         else
+            //         {
+            //             Debug.LogWarning("PlayerView: No player canvas");
+            //         }
+            //     }
+            // }
+        }
+
+        
+        
+        
+        
+        private void Update()
+        {
+            if (IsOwner)
+            {
+                _playerCompositionRoot.PlayerNetworkSynchronizer.characterName.Value = NetworkManager.Singleton.LocalClientId;
+                playerName.text = _playerCompositionRoot.PlayerNetworkSynchronizer.characterName.Value.ToString();
+            }
+            
+            playerName.text = _playerCompositionRoot.PlayerNetworkSynchronizer.characterName.Value.ToString();
+        }
+
         public void UpdateNetworkTransform()
         {
             var playerNetworkSynchronizer = _playerCompositionRoot.PlayerNetworkSynchronizer;
@@ -86,26 +133,6 @@ namespace Source.Modules.Character.Scripts.Player
                 Time.deltaTime);
         }
         
-        private void Awake()
-        {
-            if (_playerCompositionRoot == null)
-            {
-                Debug.LogError("PlayerView: No player composition root");
-            }
-        }
-        
-        // public void UpdateState(string stateName, bool newState)
-        // {
-        //     if (IsOwner && _animationStates.ContainsKey(stateName))
-        //     {
-        //         if (_animationStates[stateName] != newState) // Проверяем, изменилось ли состояние
-        //         {
-        //             _animationStates[stateName] = newState; // Обновляем текущее состояние
-        //             _playerCompositionRoot.PlayerNetworkSynchronizer.UpdateAnimationStateServerRpc(
-        //                 stateName, newState);
-        //         }
-        //     }
-        // }
         public void UpdateState(string stateName, bool newState)
         {
             if (IsOwner)
