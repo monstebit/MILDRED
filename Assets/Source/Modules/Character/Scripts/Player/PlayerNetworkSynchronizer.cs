@@ -9,21 +9,26 @@ namespace Source.Modules.Character.Scripts.Player
     {
         [SerializeField] private PlayerCompositionRoot _playerCompositionRoot;
 
+        private NetworkVariable<int> playerInGame = new NetworkVariable<int>();
+        
         [Header("Player Name")] 
-        public NetworkVariable<FixedString128Bytes> characterName = 
-            new NetworkVariable<FixedString128Bytes>(
-                "Character", 
-                NetworkVariableReadPermission.Everyone, 
-                NetworkVariableWritePermission.Owner);
-
+        // public NetworkVariable<FixedString64Bytes> characterName = 
+        //     new NetworkVariable<FixedString64Bytes>(
+        //         "Character", 
+        //         NetworkVariableReadPermission.Everyone, 
+        //         NetworkVariableWritePermission.Owner);
+        public NetworkVariable<float> characterName = 
+            new NetworkVariable<float>(
+                0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         [Header("Control Scheme")]
         #region ControlScheme (FixedString128Bytes)
-        // public NetworkVariable<FixedString128Bytes> ControlScheme = 
-        //     new NetworkVariable<FixedString128Bytes>(
+        // public NetworkVariable<FixedString64Bytes> ControlScheme = 
+        //     new NetworkVariable<FixedString64Bytes>(
         //         "ControlScheme", 
         //         NetworkVariableReadPermission.Everyone, 
         //         NetworkVariableWritePermission.Owner);
-        #endregion ControlScheme (FixedString128Bytes)
+        #endregion ControlScheme (FixedString64Bytes)
         public NetworkVariable<float> ControlScheme = 
             new NetworkVariable<float>(
                 0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -59,6 +64,13 @@ namespace Source.Modules.Character.Scripts.Player
         
         public NetworkVariable<float> CameraVerticalMovement = 
             new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
+        public NetworkVariable<Vector3> CameraPosition = 
+            new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
+        public NetworkVariable<Vector3> CameraForward = 
+            new NetworkVariable<Vector3>(Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         private void Awake()
         {
             if (_playerCompositionRoot == null)
@@ -66,7 +78,26 @@ namespace Source.Modules.Character.Scripts.Player
                 Debug.LogError("PlayerCompositionRoot is null");
             }
         }
-        
+
+        private void Start()
+        {
+            NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
+            {
+                if (IsServer)
+                {
+                    playerInGame.Value++;
+                }
+            };
+            
+            NetworkManager.Singleton.OnClientDisconnectCallback += (id) =>
+            {
+                if (IsServer)
+                {
+                    playerInGame.Value--;
+                }
+            };
+        }
+
         //  только сервер может инициировать обновление состояния
         [ServerRpc]
         // public void UpdateAnimationStateServerRpc(ulong clientID, string stateName, bool state)
