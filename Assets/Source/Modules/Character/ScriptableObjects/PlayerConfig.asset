@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   _movementStateConfig:
+    ControlScheme: 
     _holdTimeThreshold: 0.2
     _timeButtonHeld: 0
     _isButtonHeld: 0
@@ -20,8 +21,8 @@ MonoBehaviour:
     VerticalInput: 0
     HorizontalInput: 0
     MoveAmount: 1
-    _movementDirection: {x: -0.7253747, y: 0, z: -0.6883542}
-    YVelocity: {x: 0, y: -2, z: 0}
+    _movementDirection: {x: 0.9426407, y: 0, z: 0.33380905}
+    YVelocity: {x: 0, y: -14.618968, z: 0}
     GroundedGravityForce: 0
     ShouldWalk: 0
     ShouldSprint: 0
@@ -71,7 +72,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     DodgeTimer: 0.5
-    Timer: 0.5058609
+    Timer: 0.5047586
   _backSteppingStateConfig:
     <BackStepToMoveTime>k__BackingField: 0.7
     BackStepCurve:
@@ -117,7 +118,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     BackStepTimer: 0.5
-    Timer: 0.7107253
+    Timer: 0.70961756
   _airborneStateConfig:
     _speed: 1
     _jumpingStateConfig:
@@ -136,17 +137,8 @@ MonoBehaviour:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.15
-          value: -2
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
-        - serializedVersion: 3
           time: 0.25
-          value: 10
+          value: 8
           inSlope: -0.15687089
           outSlope: -0.15687089
           tangentMode: 0
