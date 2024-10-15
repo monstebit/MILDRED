@@ -2,7 +2,6 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Interfaces;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,8 +11,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
     {
         private readonly PlayerCompositionRoot _playerCompositionRoot;
         private readonly PlayerCameraMovement _playerCameraMovement;
-
-        private bool IsOwner => _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner; 
         
         protected readonly IStateSwitcher StateSwitcher;
         protected readonly StateMachineData Data;
@@ -65,9 +62,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         {
             HandleMovementInput();
             HandleCameraInput();
-            
-            HandleMovementByControlScheme();//
-            SyncControlScheme();//
+            //  NETWORK
+            HandleMovementByControlScheme();
+            SyncControlScheme();
+            //  NETWORK
         }
         
         private void HandleMovementInput()
@@ -86,9 +84,10 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             
             Data.VerticalInput = Data.MovementInput.y;
             Data.HorizontalInput = Data.MovementInput.x;
+            //  NETWORK
             _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = 
                 Mathf.Clamp01(Mathf.Abs(Data.VerticalInput) + Mathf.Abs(Data.HorizontalInput));
-
+            //  NETWORK
             if (Data.MovementInput == Vector2.zero) return;
 
             HandleSprinting();
@@ -100,10 +99,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             if (PlayerConfig.MovementStateConfig.ShouldSprint &&
                 PlayerConfig.MovementStateConfig._timeButtonHeld >= PlayerConfig.MovementStateConfig._holdTimeThreshold)
             {
+                //  NETWORK
                 _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = 2f;
+                //  NETWORK
             }
         }
-        
+        //  NETWORK
         private void HandleMovementByControlScheme()
         {
             if (_playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value == 1)
@@ -115,7 +116,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 HandleKeyboardMovement();
             }
         }
-        
+        //  NETWORK
         private void HandleGamepadMovement()
         {
             if (Data.MovementInput == Vector2.zero)
@@ -123,7 +124,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 PlayerConfig.MovementStateConfig.ShouldWalk = false;
                 return;
             }
-            
+            //  NETWORK
             if (_playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value <= 0.5f && _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value > 0f)
             {
                 PlayerConfig.MovementStateConfig.ShouldWalk = true;
@@ -134,6 +135,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
                 PlayerConfig.MovementStateConfig.ShouldWalk = false;
                 _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = 1f;
             }
+            //  NETWORK
         }
 
         private void HandleKeyboardMovement()
@@ -143,7 +145,9 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             if (PlayerConfig.MovementStateConfig.ShouldWalk &&
                 PlayerConfig.MovementStateConfig.ShouldSprint == false)
             {
+                //  NETWORK
                 _playerCompositionRoot.PlayerNetworkSynchronizer.MoveAmount.Value = 0.5f;
+                //  NETWORK
             }
         }
         
@@ -154,15 +158,12 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             Data.CameraVerticalInput = Data.CameraInput.y;
             Data.CameraHorizontalInput = Data.CameraInput.x;
         }
-        
+        //  NETWORK
         private void SyncControlScheme()
         {
             _playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value = Data.ControlScheme;
-            // if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
-            // {
-            //     _playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value = Data.ControlScheme;
-            // }
         }
+        //  NETWORK
         
         private void CheckButtonHeld()
         {
@@ -288,7 +289,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             PlayerControls.Player.WalkToggle.canceled -= OnWalkToggleCanceled;
         }
 
-        protected virtual bool InAnimationTransition(int layerIndex = 0)
+        protected bool InAnimationTransition(int layerIndex = 0)
         {
             return _playerCompositionRoot.PlayerView.Animator.IsInTransition(layerIndex);
         }

@@ -28,7 +28,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             Data.MovementSpeedModifier = 0f;
             
             PlayerView.UpdateState("IsLightLanding", true);
-
         }
 
         public override void Exit()

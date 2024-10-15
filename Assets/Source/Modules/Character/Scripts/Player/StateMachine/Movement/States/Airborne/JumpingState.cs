@@ -42,13 +42,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         {
             base.Exit();
             
+            _jumpingStateConfig.Timer = 0;
+            _jumpingStateConfig.IsJumping = false;
+            
             if (InAnimationTransition())
             {
                 return;
             }
-            
-            _jumpingStateConfig.Timer = 0;
-            _jumpingStateConfig.IsJumping = false;
             
             PlayerView.UpdateState("IsJumping", false);
         }
@@ -56,7 +56,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.A
         public override void Update()
         {
             base.Update();
-                
+            
             HandleJump();
         }
         
