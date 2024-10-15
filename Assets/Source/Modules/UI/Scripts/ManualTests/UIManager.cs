@@ -1,4 +1,3 @@
-using System;
 using Source.Modules.Character.Scripts.Player.ManualTests;
 using Source.Modules.Core;
 using TMPro;
