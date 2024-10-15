@@ -11398,10 +11398,9 @@ GameObject:
   - component: {fileID: 4566869115855999759}
   - component: {fileID: 1299038019869553046}
   - component: {fileID: -5955600267259754508}
-  - component: {fileID: 5453862367645235176}
   m_Layer: 7
   m_Name: Modular Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11435,7 +11434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2495288058
+  GlobalObjectIdHash: 3098400874
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -11461,7 +11460,8 @@ MonoBehaviour:
   _playerView: {fileID: 5480646130530779359}
   _playerConfig: {fileID: 11400000, guid: a0f151924a2d23c428c0ef7e8c12708b, type: 2}
   _groundChecker: {fileID: 2655478851268259377}
-  _playerInput: {fileID: 5453862367645235176}
+  _playerInput: {fileID: 0}
+  _characterController: {fileID: 5783436113821547025}
 --- !u!114 &-5955600267259754508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11475,7 +11475,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerCompositionRoot: {fileID: 1299038019869553046}
-  characterName:
+  forwardBackPosition:
+    m_InternalValue: 0
+  leftRightPosition:
     m_InternalValue: 0
   ControlScheme:
     m_InternalValue: 1
@@ -11486,50 +11488,8 @@ MonoBehaviour:
   NetworkPositionVelocity: {x: 0, y: 0, z: 0}
   NetworkPositionSmoothTime: 0.1
   NetworkRotationSmoothTime: 0.1
-  HorizontalMovement:
-    m_InternalValue: 0
-  VerticalMovement:
-    m_InternalValue: 0
   MoveAmount:
     m_InternalValue: 0
-  CameraHorizontalMovement:
-    m_InternalValue: 0
-  CameraVerticalMovement:
-    m_InternalValue: 0
-  CameraPosition:
-    m_InternalValue: {x: 0, y: 0, z: 0}
-  CameraForward:
-    m_InternalValue: {x: 0, y: 0, z: 0}
---- !u!114 &5453862367645235176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1473210677857036890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 617acff4649677744b2152e3a9ec12ae, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &1490208136286268023
 GameObject:
   m_ObjectHideFlags: 0
@@ -18522,11 +18482,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32fa52f244b4c434687e79bf9c2fa31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: {fileID: 1141602786759562521}
-  _canvas: {fileID: 892927478830364545}
-  ownerCamera: {fileID: 0}
-  ownerPos: {x: 0, y: 0, z: 0}
   _playerCompositionRoot: {fileID: 1299038019869553046}
+  _defaultPositionRange: {x: 0, y: 0}
   Animator: {fileID: 1555457626910836205}
 --- !u!114 &8235258558802954092
 MonoBehaviour:
@@ -67052,7 +67009,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: characterName
+  m_text: '[INFO]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
