@@ -7,6 +7,7 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Groun
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
+using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
@@ -14,12 +15,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     {
         private List<IState> _states;
         private IState _currentState;
-        
-        private PlayerCompositionRoot _playerCompositionRoot; // Добавляем поле
+        private PlayerCompositionRoot _playerCompositionRoot;
 
         public PlayerStateMachine(PlayerCompositionRoot playerCompositionRoot)
         {
-            _playerCompositionRoot = playerCompositionRoot; // Сохраняем переданное значение
+            _playerCompositionRoot = playerCompositionRoot;
             
             StateMachineData data = new StateMachineData();
             
@@ -53,7 +53,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
             _currentState.Enter();
         }
         
-        // public void HandleInput() => _currentState.HandleAllInputs();
         public void HandleInput()
         {
             if (IsOwner() == false)
@@ -66,6 +65,13 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         
         public void Update()
         {
+            // if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsClient &&
+            //     _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
+            // {
+            //     _playerCompositionRoot.asUpdateClientPositionAndRotationServerRpc(
+            //         _playerCompositionRoot.PlayerView.transform.position, _playerCompositionRoot.PlayerView.transform.rotation);
+            // }
+            
             if (IsOwner() == false)
             {
                 return;

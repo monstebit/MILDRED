@@ -1,47 +1,35 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Source.Modules.Character.Scripts.Player
 {
     [RequireComponent(typeof(Animator))]
-    public class PlayerView : MonoBehaviour
+    public class PlayerView : NetworkBehaviour
     {
-        // [SerializeField] public TextMeshProUGUI playerName;
-        // [SerializeField] public Canvas _canvas;
+        // public void Initialize() => Animator = GetComponent<Animator>();
         [SerializeField] private PlayerCompositionRoot _playerCompositionRoot;
+        [SerializeField] private Vector2 _defaultInitialPosition = new Vector2(-4, 4);
+        [SerializeField] public Animator Animator;
+        
         private HashSet<string> _activeStates = new();
         
-        public Animator Animator;
+        // //  ON TESTING
+        // private void Start()
+        // {
+        //     if (IsClient && IsOwner)
+        //     {
+        //         transform.position = new Vector3(Random.Range(
+        //                 _defaultInitialPosition.x, _defaultInitialPosition.y), 0,
+        //             Random.Range(_defaultInitialPosition.x, _defaultInitialPosition.y));
+        //     }
+        // }
+        // //  ON TESTING
         
         private bool IsOwner => _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner; 
-        
-        public void Initialize() => Animator = GetComponent<Animator>();
-
-        public void UpdateNetworkTransform()
-        {
-            var playerNetworkSynchronizer = _playerCompositionRoot.PlayerNetworkSynchronizer;
-            var playerView = _playerCompositionRoot.PlayerView;
-            
-            if (IsOwner)
-            {
-                playerNetworkSynchronizer.NetworkPosition.Value = playerView.transform.position;
-                playerNetworkSynchronizer.NetworkRotation.Value = playerView.transform.rotation;
-            }
-            else
-            {
-                playerView.transform.position = Vector3.SmoothDamp(
-                    playerView.transform.position,
-                    playerNetworkSynchronizer.NetworkPosition.Value,
-                    ref playerNetworkSynchronizer.NetworkPositionVelocity,
-                    playerNetworkSynchronizer.NetworkPositionSmoothTime);
-
-                playerView.transform.rotation = Quaternion.Slerp(
-                    playerView.transform.rotation,
-                    playerNetworkSynchronizer.NetworkRotation.Value,
-                    playerNetworkSynchronizer.NetworkRotationSmoothTime);
-            }
-        }
         
         public void UpdateAnimatorMovementParameters()
         {
@@ -65,16 +53,34 @@ namespace Source.Modules.Character.Scripts.Player
                 if (newState && !isStateActive)
                 {
                     _activeStates.Add(stateName); // Добавляем активное состояние
-                    _playerCompositionRoot.PlayerNetworkSynchronizer.UpdateAnimationStateServerRpc(
+                    UpdateAnimationStateServerRpc(
                         stateName, true);
                 }
                 else if (!newState && isStateActive)
                 {
                     _activeStates.Remove(stateName); // Убираем неактивное состояние
-                    _playerCompositionRoot.PlayerNetworkSynchronizer.UpdateAnimationStateServerRpc(
+                    UpdateAnimationStateServerRpc(
                         stateName, false);
                 }
             }
         }
+        
+        //  NETWORK
+        [ServerRpc]
+        public void UpdateAnimationStateServerRpc(string stateName, bool state)
+        {
+            // Если это сервер, то инициируем обновление состояния на клиентах
+            if (IsServer)
+            {
+                SyncAnimationStateClientRpc(stateName, state);
+            }
+        }
+
+        [ClientRpc]
+        private void SyncAnimationStateClientRpc(string stateName, bool state)
+        {
+            _playerCompositionRoot.PlayerView.Animator.SetBool(stateName, state);
+        }
+        //  NETWORK
     }
 }
