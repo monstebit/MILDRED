@@ -33,12 +33,6 @@ namespace Source.Modules.Character.Scripts.Player
 
         private void InitializePlayerPosition()
         {
-            // if (IsClient && IsOwner)
-            // {
-            //     transform.position = new Vector3(Random.Range(
-            //             _defaultInitialPosition.x, _defaultInitialPosition.y), 0,
-            //         Random.Range(_defaultInitialPosition.x, _defaultInitialPosition.y));
-            // }
             transform.position = new Vector3(Random.Range(
                     _defaultInitialPosition.x, _defaultInitialPosition.y), 0,
                 Random.Range(_defaultInitialPosition.x, _defaultInitialPosition.y));
