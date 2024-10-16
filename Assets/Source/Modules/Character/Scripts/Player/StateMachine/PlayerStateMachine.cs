@@ -7,7 +7,6 @@ using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Groun
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Landing;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.Moving;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded.StaticAction;
-using UnityEngine;
 
 namespace Source.Modules.Character.Scripts.Player.StateMachine
 {
@@ -65,13 +64,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
         
         public void Update()
         {
-            // if (_playerCompositionRoot.PlayerNetworkSynchronizer.IsClient &&
-            //     _playerCompositionRoot.PlayerNetworkSynchronizer.IsOwner)
-            // {
-            //     _playerCompositionRoot.asUpdateClientPositionAndRotationServerRpc(
-            //         _playerCompositionRoot.PlayerView.transform.position, _playerCompositionRoot.PlayerView.transform.rotation);
-            // }
-            
             if (IsOwner() == false)
             {
                 return;
