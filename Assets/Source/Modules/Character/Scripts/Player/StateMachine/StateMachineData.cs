@@ -8,7 +8,7 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine
     {
         // public FixedString128Bytes ControlScheme { get; set; }
         // public string ControlScheme;
-        public float ControlScheme;
+        public string ControlScheme;
         public Vector2 CameraInput { get; set; }
         public Vector2 MovementInput { get; set; }
         public float BaseSpeed { get; set; } = 5f;

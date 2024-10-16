@@ -73,11 +73,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
             var stringScheme = _playerCompositionRoot.PlayerInput.currentControlScheme;
             if (stringScheme == "Gamepad")
             {
-                Data.ControlScheme = 1;
+                Data.ControlScheme = "Gamepad";
             }
             else if (stringScheme == "KeyboardAndMouse")
             {
-                Data.ControlScheme = 2;
+                Data.ControlScheme = "KeyboardAndMouse";
             }
             
             Data.MovementInput = PlayerControls.Player.Move.ReadValue<Vector2>();
@@ -107,11 +107,11 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States
         //  NETWORK
         private void HandleMovementByControlScheme()
         {
-            if (_playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value == 1)
+            if (_playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value == "Gamepad")
             {
                 HandleGamepadMovement();
             }
-            else if (_playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value == 2)
+            else if (_playerCompositionRoot.PlayerNetworkSynchronizer.ControlScheme.Value == "KeyboardAndMouse")
             {
                 HandleKeyboardMovement();
             }
