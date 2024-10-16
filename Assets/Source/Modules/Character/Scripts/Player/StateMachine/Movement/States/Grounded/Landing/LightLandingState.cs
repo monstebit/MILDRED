@@ -6,9 +6,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
 {
     public class LightLandingState : LandingState
     {
-        private PlayerCompositionRoot _playerCompositionRoot;
-        private PlayerConfig _playerConfig;
-        
         public LightLandingState(
             IStateSwitcher stateSwitcher,
             PlayerCompositionRoot playerCompositionRoot, 
@@ -17,8 +14,6 @@ namespace Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.G
             playerCompositionRoot,
             data)
         {
-            _playerCompositionRoot = playerCompositionRoot;
-            _playerConfig = playerCompositionRoot.PlayerConfig;
         }
 
         public override void Enter()
