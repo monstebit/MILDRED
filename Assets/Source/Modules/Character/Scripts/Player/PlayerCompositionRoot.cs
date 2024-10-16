@@ -1,18 +1,14 @@
-using System;
 using System.Collections;
 using Source.Modules.Character.Scripts.Player.StateMachine;
 using Source.Modules.Character.Scripts.Player.StateMachine.Movement.States.Grounded;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Random = UnityEngine.Random;
 
 namespace Source.Modules.Character.Scripts.Player
 {
     public class PlayerCompositionRoot : NetworkBehaviour
     {
-        private Vector3 playerPos;
-        //
         [SerializeField] private PlayerNetworkSynchronizer _playerNetworkSynchronizer;
         [SerializeField] private PlayerCameraMovement _playerCameraMovement;
         [SerializeField] private PlayerView _playerView;
@@ -20,7 +16,6 @@ namespace Source.Modules.Character.Scripts.Player
         [SerializeField] private GroundChecker _groundChecker;
         [SerializeField] private PlayerInput _playerInput;
         [SerializeField] private CharacterController _characterController;
-        [SerializeField] private Vector2 _defaultInitialPosition = new Vector2(-4, 4);
         
         private PlayerControls _playerControls;
         private PlayerStateMachine _playerStateMachine;
@@ -34,16 +29,6 @@ namespace Source.Modules.Character.Scripts.Player
         public GroundChecker GroundChecker => _groundChecker;
         public PlayerInput PlayerInput => _playerInput;
         
-        public override void OnNetworkSpawn()
-        {
-            base.OnNetworkSpawn();
-            
-            if (IsOwner)
-            {
-                InitControlSchemePlayerInput();
-            }
-        }
-
         private void Awake()
         {
             DontDestroyOnLoad(this);
@@ -53,24 +38,21 @@ namespace Source.Modules.Character.Scripts.Player
             _playerStateMachine = new PlayerStateMachine(this);
         }
         
+        public override void OnNetworkSpawn()
+        {
+            // base.OnNetworkSpawn();
+            if (IsOwner)
+            {
+                InitControlSchemePlayerInput();
+            }
+        }
+        
         private void Update()
         {
             DisableNonLocalPlayerCamera();
             
-            //  RPC METHOD
-            if (IsOwner && IsClient)
-            {
-                UpdateClientPositionAndRotationServerRpc(PlayerView.transform.position, PlayerView.transform.rotation);
-                // UpdatePosition();
-            }
-            //  RPC METHOD
-            
             _playerStateMachine.HandleInput();
             _playerStateMachine.Update();
-            //  NETWORK
-            PlayerView.UpdateAnimatorMovementParameters();
-            // UpdateNetworkTransform();   //  NetworkVariable METHOD
-            //  NETWORK
         }
         
         private void LateUpdate()
@@ -131,52 +113,5 @@ namespace Source.Modules.Character.Scripts.Player
             action.Enable();
         }
         #endregion DisableActionFor
-        
-        //  RPC METHOD
-        [ServerRpc]
-        public void UpdateClientPositionAndRotationServerRpc(Vector3 newPosition, Quaternion newRotation)
-        {
-            // Обновляем данные на сервере
-            PlayerNetworkSynchronizer.NetworkPosition.Value = newPosition;
-            PlayerNetworkSynchronizer.NetworkRotation.Value = newRotation;
-            
-            // Отправляем данные всем клиентам
-            UpdateClientPositionAndRotationClientRpc(newPosition, newRotation);
-        }
-        
-        [ClientRpc]
-        public void UpdateClientPositionAndRotationClientRpc(Vector3 newPosition, Quaternion newRotation)
-        {
-            // Обновляем позицию и поворот на всех клиентах
-            if (IsOwner) return; // Пропускаем владельца, так как он уже обновил свои данные
-            PlayerView.transform.position = newPosition;
-            PlayerView.transform.rotation = newRotation;
-        }
-        
-        //  NetworkVariable METHOD
-        public void UpdateNetworkTransform()
-        {
-            var playerNetworkSynchronizer = PlayerNetworkSynchronizer;
-            var playerView = PlayerView;
-            
-            if (IsOwner)
-            {
-                playerNetworkSynchronizer.NetworkPosition.Value = playerView.transform.position;
-                playerNetworkSynchronizer.NetworkRotation.Value = playerView.transform.rotation;
-            }
-            else
-            {
-                playerView.transform.position = Vector3.SmoothDamp(
-                    playerView.transform.position,
-                    playerNetworkSynchronizer.NetworkPosition.Value,
-                    ref playerNetworkSynchronizer.NetworkPositionVelocity,
-                    playerNetworkSynchronizer.NetworkPositionSmoothTime);
-
-                playerView.transform.rotation = Quaternion.Slerp(
-                    playerView.transform.rotation,
-                    playerNetworkSynchronizer.NetworkRotation.Value,
-                    playerNetworkSynchronizer.NetworkRotationSmoothTime);
-            }
-        }
     }
 }
